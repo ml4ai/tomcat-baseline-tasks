@@ -1,6 +1,6 @@
 from common import NotImplementedError
 
 
-class ClientTask:
+class ClientBaseTask:
     def __init__(self):
         raise NotImplementedError

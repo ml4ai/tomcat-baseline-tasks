@@ -3,13 +3,13 @@ import threading
 
 import pygame
 from common import UPDATE_RATE
-from task import ClientTask
+from tasks.base_task import ClientBaseTask
 
 from .utils import receive, send
 
 
 class Client:
-    def __init__(self, host: str, port: int, client_name: str, client_task: ClientTask) -> None:
+    def __init__(self, host: str, port: int, client_name: str, client_task: ClientBaseTask) -> None:
         self._client_name = client_name
 
         self._from_server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)

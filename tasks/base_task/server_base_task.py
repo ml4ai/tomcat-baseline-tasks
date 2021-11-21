@@ -1,7 +1,7 @@
 from common import NotImplementedError
 
 
-class ServerTask:
+class ServerBaseTask:
     def __init__(self):
         raise NotImplementedError
 

@@ -4,13 +4,13 @@ from select import select
 
 from common import UPDATE_RATE
 from pygame import time
-from task import ServerTask
+from tasks.base_task import ServerBaseTask
 
 from .utils import receive, send
 
 
 class Server:
-    def __init__(self, host: str, port: int, server_task: ServerTask) -> None:
+    def __init__(self, host: str, port: int, server_task: ServerBaseTask) -> None:
         # Establish connection where clients can get game state update
         self._to_client_request = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self._to_client_request.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1) # Reuse socket
