@@ -2,12 +2,9 @@ from common import NotImplementedError
 
 
 class ServerBaseTask:
-    def __init__(self):
-        raise NotImplementedError
-
-    def update(self):
+    def update(self) -> None:
         raise NotImplementedError
 
     @property
-    def data():
+    def data(self) -> dict:
         raise NotImplementedError

@@ -50,7 +50,7 @@ class Client:
 
             screen.fill((0, 0, 0))
 
-            # provide data, modify screen
+            self._client_task.update(data, screen)
 
             pygame.display.flip()
 
@@ -71,7 +71,7 @@ class Client:
             keys = pygame.key.get_pressed()
 
             # send key to client task, return data to send
-            data = None
+            data = self._client_task.get_data(keys)
 
             if data is not None:
                 send([self._to_server], data, wait_time=0.0)
