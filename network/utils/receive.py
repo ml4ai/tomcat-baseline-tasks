@@ -2,7 +2,7 @@ import json
 from select import select
 from typing import Optional
 
-from .config import HEADER
+from common import HEADER
 
 
 def receive(senders: list, wait_time: Optional[float] = None) -> list:

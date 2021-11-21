@@ -2,8 +2,10 @@ import socket
 import threading
 
 import pygame
-from network import UPDATE_RATE, receive, send
+from common import UPDATE_RATE
 from task import ClientTask
+
+from .utils import receive, send
 
 
 class Client:

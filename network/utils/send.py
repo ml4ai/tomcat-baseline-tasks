@@ -2,7 +2,7 @@ import json
 from select import select
 from typing import Optional
 
-from .config import HEADER
+from common import HEADER
 
 
 def send(receivers: list, payload, wait_time: Optional[float] = None) -> None:

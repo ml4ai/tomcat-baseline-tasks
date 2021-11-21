@@ -2,9 +2,11 @@ import socket
 import threading
 from select import select
 
-from network import UPDATE_RATE, receive, send
+from common import UPDATE_RATE
 from pygame import time
 from task import ServerTask
+
+from .utils import receive, send
 
 
 class Server:
@@ -104,13 +106,13 @@ class Server:
     def _to_client_update_state(self):
         clock = time.Clock()
         while self._running:
-            # Update state of the game here
+            if self._to_client_connections:
+                data = self._server_task.data
+                send(self._to_client_connections, data)
 
             clock.tick(UPDATE_RATE)
 
     def _from_client_commands(self):
         while self._running:
-            all_data = receive(self._from_client_connections.keys(), 0.1)
-
-            for data in all_data:
-                pass
+            data = receive(self._from_client_connections.keys(), 0.1)
+            self._server_task.update(data)

@@ -1,8 +1,8 @@
 import argparse
 
+from common import DEFAULT_SERVER_ADDR
 from finger_tapping_task import ServerFingerTappingTask
-from network import DEFAULT_SERVER_ADDR
-from server import Server
+from network import Server
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Run server of finger tapping task.')
