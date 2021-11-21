@@ -1,5 +1,6 @@
 import argparse
 
+from finger_tapping_task import ServerFingerTappingTask
 from network import DEFAULT_SERVER_ADDR
 from server import Server
 
@@ -12,5 +13,7 @@ if __name__ == "__main__":
     server_address = DEFAULT_SERVER_ADDR if args.address is None else args.address
     server_port = args.port
 
-    server = Server(server_address, server_port)
+    server_finger_tapping_task = ServerFingerTappingTask()
+
+    server = Server(server_address, server_port, server_finger_tapping_task)
     server.run()
