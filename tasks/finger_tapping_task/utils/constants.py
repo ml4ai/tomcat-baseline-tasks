@@ -1,2 +1,0 @@
-TAPPED = 1
-UNTAPPED = 0
