@@ -1,5 +1,6 @@
 import socket
 
+import pygame
 from common import send
 
 
@@ -18,3 +19,5 @@ class Client:
         send([self.to_server], self.client_name)
 
         print("Connected to server")
+
+        self.screen = pygame.display.set_mode((0, 0), pygame.FULLSCREEN)

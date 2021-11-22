@@ -17,5 +17,6 @@ if __name__ == "__main__":
 
     server.establish_connections()
 
-    server_finger_tapping_task = ServerFingerTappingTask(server.to_client_connections, server.from_client_connections)
+    server_finger_tapping_task = ServerFingerTappingTask(server.to_client_connections, 
+                                                         server.from_client_connections)
     server_finger_tapping_task.run()
