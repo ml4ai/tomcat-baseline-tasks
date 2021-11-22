@@ -46,6 +46,8 @@ class Server:
         from_client_request_thread.join()
         terminal_input_thread.join()
 
+        print("[STATUS] Closed connection gate")
+
     def close_connections(self) -> None:
         self._to_client_request.close()
         self._from_client_request.close()

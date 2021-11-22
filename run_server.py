@@ -15,6 +15,3 @@ if __name__ == "__main__":
     server = Server(server_address, server_port)
 
     server.establish_connections()
-
-    print(server.to_client_connections)
-    print(server.from_client_connections)
