@@ -3,6 +3,8 @@ import threading
 from common import UPDATE_RATE, receive, send
 from pygame import time
 
+from .config_finger_tapping_task import (SECONDS_COUNT_DOWN,
+                                         SECONDS_PER_SESSION, SESSION)
 from .utils import TAPPED, UNTAPPED
 
 
@@ -35,13 +37,36 @@ class ServerFingerTappingTask:
         print("[STATUS] Finger tapping task ended")
 
     def _to_client_update_state(self):
+        current_session_index = -1
+        counter_target = SECONDS_COUNT_DOWN
+
+        start_ticks = time.get_ticks()
+
+        seconds = 0.0
+
         clock = time.Clock()
         while self._running:
+            if seconds >= counter_target:
+                current_session_index += 1
+
+                if current_session_index >= len(SESSION):
+                    self._running = False
+                    break
+
+                counter_target = SECONDS_PER_SESSION[current_session_index]
+                start_ticks = time.get_ticks()
+
             data = {}
             data["type"] = "state"
             data["state"] = self._state
+            data["reveal"] = 1 if current_session_index < 0 else SESSION[current_session_index]
+
+            seconds_to_send = int(counter_target) - int(seconds)
+            data["seconds"] = 1 if seconds_to_send <= 0 else seconds_to_send
 
             send(self._to_client_connections, data)
+
+            seconds = (time.get_ticks() - start_ticks) / 1000.0
 
             clock.tick(UPDATE_RATE)
 

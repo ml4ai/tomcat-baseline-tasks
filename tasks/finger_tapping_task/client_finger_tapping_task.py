@@ -41,6 +41,7 @@ class ClientFingerTappingTask:
                 [data] = data
 
             self._state = data["state"]
+            reveal_others = data["reveal"]
 
             num_other_players = len(self._state) - 1
             player_counter = 0
@@ -54,22 +55,29 @@ class ClientFingerTappingTask:
                     color = (255, 0, 255) if state else (100, 0, 100)
                     subject = PlayerSquare(main_player_coordinate, color)
                     all_sprites_list.add(subject)
-                elif num_other_players == 1:
-                    color = (255, 255, 255) if state else (100, 100, 100)
-                    subject = PlayerSquare((main_player_coordinate[0], other_player_height), color)
-                    all_sprites_list.add(subject)
-                elif player_counter == 0:
-                    color = (255, 255, 255) if state else (100, 100, 100)
-                    subject = PlayerSquare((main_player_coordinate[0] - other_player_width_offset, other_player_height), color)
-                    all_sprites_list.add(subject)
-                    player_counter += 1
-                else:
-                    color = (255, 255, 255) if state else (100, 100, 100)
-                    subject = PlayerSquare((main_player_coordinate[0] + other_player_width_offset, other_player_height), color)
-                    all_sprites_list.add(subject)
+                elif reveal_others:
+                    if num_other_players == 1:
+                        color = (255, 255, 255) if state else (100, 100, 100)
+                        subject = PlayerSquare((main_player_coordinate[0], other_player_height), color)
+                        all_sprites_list.add(subject)
+                    elif player_counter == 0:
+                        color = (255, 255, 255) if state else (100, 100, 100)
+                        subject = PlayerSquare((main_player_coordinate[0] - other_player_width_offset, other_player_height), color)
+                        all_sprites_list.add(subject)
+                        player_counter += 1
+                    else:
+                        color = (255, 255, 255) if state else (100, 100, 100)
+                        subject = PlayerSquare((main_player_coordinate[0] + other_player_width_offset, other_player_height), color)
+                        all_sprites_list.add(subject)
 
             # Draw sprite group
             all_sprites_list.draw(self._screen)
+
+            # Display timer
+            font = pygame.font.Font(None, 74)
+            text = font.render(str(data["seconds"]), 1, (255, 255, 255))
+            text_rect = text.get_rect(center=((win_width / 2), main_player_coordinate[1] - 25))
+            self._screen.blit(text, text_rect)
 
             pygame.display.flip()
 
