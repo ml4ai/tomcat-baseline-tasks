@@ -1,6 +1,7 @@
 import argparse
 
 from common import DEFAULT_SERVER_ADDR
+from network import Server
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Run server of finger tapping task.')
@@ -10,3 +11,10 @@ if __name__ == "__main__":
 
     server_address = DEFAULT_SERVER_ADDR if args.address is None else args.address
     server_port = args.port
+
+    server = Server(server_address, server_port)
+
+    server.establish_connections()
+
+    print(server.to_client_connections)
+    print(server.from_client_connections)

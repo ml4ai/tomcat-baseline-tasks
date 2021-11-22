@@ -3,6 +3,7 @@ import argparse
 import pygame
 
 from common import DEFAULT_SERVER_ADDR
+from network import Client, server
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Run client of finger tapping task.')
@@ -16,3 +17,5 @@ if __name__ == "__main__":
     client_name = args.name
 
     pygame.init()
+
+    client = Client(server_address, server_port, client_name)

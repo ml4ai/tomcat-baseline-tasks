@@ -1,2 +1,2 @@
-from .receive import receive
-from .send import send
+from .client import Client
+from .server import Server
