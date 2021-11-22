@@ -3,6 +3,9 @@ import threading
 import pygame
 from common import UPDATE_RATE, receive, send
 
+from .config_finger_tapping_task import BOX_WIDTH
+from .utils import PlayerSquare
+
 
 class ClientFingerTappingTask:
     def __init__(self, from_server, to_server, screen, client_name) -> None:
@@ -23,6 +26,11 @@ class ClientFingerTappingTask:
 
         print("[STATUS] Running client finger tapping task")
 
+        win_width, win_height = pygame.display.get_surface().get_size()
+        main_player_coordinate = ((win_width - BOX_WIDTH) / 2, (win_height / 2) - BOX_WIDTH - 1)
+        other_player_height = (win_height / 2) + 1
+        other_player_width_offset = (BOX_WIDTH / 2) + 1
+
         while self._running:
             pygame.event.get()
 
@@ -34,15 +42,34 @@ class ClientFingerTappingTask:
 
             self._state = data["state"]
 
-            print(self._state)
+            num_other_players = len(self._state) - 1
+            player_counter = 0
 
             self._screen.fill((0, 0, 0))
 
-            # Display timer
-            font = pygame.font.Font(None, 74)
-            text = font.render(str(self._state[self._client_name]), 1, (255, 255, 255))
-            text_rect = text.get_rect(center=(500, 1000))
-            self._screen.blit(text, text_rect)
+            # Add sprites to sprite group
+            all_sprites_list = pygame.sprite.Group()
+            for name, state in self._state.items():
+                if name == self._client_name:
+                    color = (255, 0, 255) if state else (100, 0, 100)
+                    subject = PlayerSquare(main_player_coordinate, color)
+                    all_sprites_list.add(subject)
+                elif num_other_players == 1:
+                    color = (255, 255, 255) if state else (100, 100, 100)
+                    subject = PlayerSquare((main_player_coordinate[0], other_player_height), color)
+                    all_sprites_list.add(subject)
+                elif player_counter == 0:
+                    color = (255, 255, 255) if state else (100, 100, 100)
+                    subject = PlayerSquare((main_player_coordinate[0] - other_player_width_offset, other_player_height), color)
+                    all_sprites_list.add(subject)
+                    player_counter += 1
+                else:
+                    color = (255, 255, 255) if state else (100, 100, 100)
+                    subject = PlayerSquare((main_player_coordinate[0] + other_player_width_offset, other_player_height), color)
+                    all_sprites_list.add(subject)
+
+            # Draw sprite group
+            all_sprites_list.draw(self._screen)
 
             pygame.display.flip()
 
