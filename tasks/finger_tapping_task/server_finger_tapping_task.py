@@ -34,6 +34,12 @@ class ServerFingerTappingTask:
         to_client_update_state_thread.join()
         from_client_commands_thread.join()
 
+        data = {}
+        data["type"] = "request"
+        data["request"] = "end"
+
+        send(self._to_client_connections, data)
+
         print("[STATUS] Finger tapping task ended")
 
     def _to_client_update_state(self):

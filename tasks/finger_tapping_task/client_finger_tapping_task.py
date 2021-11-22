@@ -40,8 +40,13 @@ class ClientFingerTappingTask:
             else:
                 [data] = data
 
-            self._state = data["state"]
-            reveal_others = data["reveal"]
+            if data["type"] == "state":
+                self._state = data["state"]
+                reveal_others = data["reveal"]
+            elif data["type"] == "request":
+                if data["request"] == "end":
+                    self._running = False
+                    break
 
             num_other_players = len(self._state) - 1
             player_counter = 0
@@ -83,6 +88,8 @@ class ClientFingerTappingTask:
 
         # Wait for threads to finish
         client_input_thread.join()
+
+        print("[STATUS] Finger tapping task ended")
 
     def _client_input_handle(self):
         """
