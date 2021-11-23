@@ -2,11 +2,10 @@ import threading
 
 import pygame
 from common import UPDATE_RATE, receive, send
-from tasks.ping_pong_task.utils.constants import WINDOW_HEIGHT
 
 from .utils import (BALL_SIZE, CLIENT_WINDOW_HEIGHT, CLIENT_WINDOW_WIDTH,
-                    COLOR_BACKGROUND, COLOR_FOREGROUND, WINDOW_HEIGHT,
-                    WINDOW_WIDTH, Ball, Paddle)
+                    COLOR_BACKGROUND, COLOR_BORDER, COLOR_FOREGROUND,
+                    COLOR_PLAYER, WINDOW_HEIGHT, WINDOW_WIDTH, Ball, Paddle)
 
 
 class ClientPingPongTask:
@@ -65,45 +64,50 @@ class ClientPingPongTask:
             all_sprites_list = pygame.sprite.Group()
             for name, position in state.items():
                 if name == "ball":
-                    ball = Ball(BALL_SIZE)
-                    ball.rect.x, ball.rect.y = position
-                    all_sprites_list.add(ball)
-                else:
-                    paddle = Paddle(position, 
+                    object = Ball(BALL_SIZE)
+                    object.rect.x, object.rect.y = position
+                elif name == self._client_name:
+                    object = Paddle(position, 
                                     paddle_width=self._paddle_width, 
                                     paddle_height=self._paddle_height, 
                                     color=COLOR_FOREGROUND)
-                    all_sprites_list.add(paddle)
+                else:
+                    object = Paddle(position, 
+                                    paddle_width=self._paddle_width, 
+                                    paddle_height=self._paddle_height, 
+                                    color=COLOR_PLAYER)
+
+                all_sprites_list.add(object)
 
             # Draw sprite group
             all_sprites_list.draw(self._screen)
 
             # Draw game border
             pygame.draw.line(self._screen,
-                             COLOR_FOREGROUND,
+                             COLOR_BORDER,
                              (self._game_x_lower_bound, self._game_y_lower_bound),
                              (self._game_x_upper_bound, self._game_y_lower_bound))
             pygame.draw.line(self._screen,
-                             COLOR_FOREGROUND,
+                             COLOR_BORDER,
                              (self._game_x_lower_bound, self._game_y_upper_bound),
                              (self._game_x_upper_bound, self._game_y_upper_bound))
             pygame.draw.line(self._screen,
-                             COLOR_FOREGROUND,
+                             COLOR_BORDER,
                              (self._game_x_lower_bound, self._game_y_lower_bound),
                              (self._game_x_lower_bound, self._game_y_upper_bound))
             pygame.draw.line(self._screen,
-                             COLOR_FOREGROUND,
+                             COLOR_BORDER,
                              (self._game_x_upper_bound, self._game_y_lower_bound),
                              (self._game_x_upper_bound, self._game_y_upper_bound))
 
             # Display scores:
             font = pygame.font.Font(None, 74)
-            text_score_left = font.render(str(score_left), 1, (255, 255, 255))
-            text_score_left_rect = text_score_left.get_rect(center=(25, 25))
+            text_score_left = font.render(str(score_left), 1, COLOR_FOREGROUND)
+            text_score_left_rect = text_score_left.get_rect(center=(self._game_x_lower_bound, self._game_y_lower_bound - 20))
             self._screen.blit(text_score_left, text_score_left_rect)
 
-            text_score_right = font.render(str(score_right), 1, (255, 255, 255))
-            text_score_right_rect = text_score_right.get_rect(center=(WINDOW_WIDTH - 25, 25))
+            text_score_right = font.render(str(score_right), 1, COLOR_FOREGROUND)
+            text_score_right_rect = text_score_right.get_rect(center=(self._game_x_upper_bound, self._game_y_lower_bound - 20))
             self._screen.blit(text_score_right, text_score_right_rect)
 
             pygame.display.flip()
