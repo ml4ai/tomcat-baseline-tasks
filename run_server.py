@@ -3,6 +3,7 @@ import argparse
 from common import DEFAULT_SERVER_ADDR
 from network import Server
 from tasks.finger_tapping_task import ServerFingerTappingTask
+from tasks.ping_pong_task import ServerPingPongTask
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Run server of finger tapping task.')
@@ -17,6 +18,10 @@ if __name__ == "__main__":
 
     server.establish_connections()
 
-    server_finger_tapping_task = ServerFingerTappingTask(server.to_client_connections, 
-                                                         server.from_client_connections)
-    server_finger_tapping_task.run()
+    # server_finger_tapping_task = ServerFingerTappingTask(server.to_client_connections, 
+    #                                                      server.from_client_connections)
+    # server_finger_tapping_task.run()
+
+    server_ping_pong_task = ServerPingPongTask(server.to_client_connections, 
+                                               server.from_client_connections)
+    server_ping_pong_task.run()
