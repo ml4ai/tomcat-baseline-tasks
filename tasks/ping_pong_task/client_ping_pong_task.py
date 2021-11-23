@@ -26,7 +26,7 @@ class ClientPingPongTask:
         self._game_y_upper_bound = self._game_y_lower_bound + WINDOW_HEIGHT
 
         self._game_x_lower_bound = int((CLIENT_WINDOW_WIDTH - WINDOW_WIDTH) / 2)
-        self._game_x_upper_bound = self._game_y_lower_bound + WINDOW_WIDTH
+        self._game_x_upper_bound = self._game_x_lower_bound + WINDOW_WIDTH
 
         self._running = False
 
