@@ -3,6 +3,8 @@ import threading
 from common import UPDATE_RATE, receive, send
 from pygame import time
 
+from .utils import Paddle
+
 
 class ServerPingPongTask:
     def __init__(self, to_client_connections: list, from_client_connections: dict) -> None:
@@ -11,7 +13,7 @@ class ServerPingPongTask:
 
         self._state = {}
         for client_name in self._from_client_connections.values():
-            self._state[client_name] = 0
+            self._state[client_name] = Paddle(500, 10, 100, 980, 0, (0, 0, 0))
 
         self._running = False
 
@@ -43,7 +45,10 @@ class ServerPingPongTask:
         while self._running:
             data = {}
             data["type"] = "state"
-            data["state"] = self._state
+
+            data["state"] = {}
+            for client_name, paddle in self._state.items():
+                data["state"][client_name] = (paddle.rect.x, paddle.rect.y)
 
             send(self._to_client_connections, data)
 
@@ -55,4 +60,4 @@ class ServerPingPongTask:
 
             for data in all_data:
                 if data["type"] == "change":
-                    self._state[data["sender"]] = data["change"]
+                    self._state[data["sender"]].update_location(data["change"])
