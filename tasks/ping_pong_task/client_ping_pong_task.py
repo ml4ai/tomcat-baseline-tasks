@@ -3,7 +3,7 @@ import threading
 import pygame
 from common import UPDATE_RATE, receive, send
 
-from .utils import COLOR_BACKGROUND, COLOR_FOREGROUND, Paddle
+from .utils import BALL_SIZE, COLOR_BACKGROUND, COLOR_FOREGROUND, Ball, Paddle
 
 
 class ClientPingPongTask:
@@ -53,11 +53,16 @@ class ClientPingPongTask:
             # Add sprites to sprite group
             all_sprites_list = pygame.sprite.Group()
             for name, position in state.items():
-                paddle = Paddle(position, 
-                                paddle_width=self._paddle_width, 
-                                paddle_height=self._paddle_height, 
-                                color=COLOR_FOREGROUND)
-                all_sprites_list.add(paddle)
+                if name == "ball":
+                    ball = Ball(BALL_SIZE)
+                    ball.rect.x, ball.rect.y = position
+                    all_sprites_list.add(ball)
+                else:
+                    paddle = Paddle(position, 
+                                    paddle_width=self._paddle_width, 
+                                    paddle_height=self._paddle_height, 
+                                    color=COLOR_FOREGROUND)
+                    all_sprites_list.add(paddle)
 
             # Draw sprite group
             all_sprites_list.draw(self._screen)
