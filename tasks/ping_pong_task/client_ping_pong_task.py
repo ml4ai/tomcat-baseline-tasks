@@ -2,8 +2,10 @@ import threading
 
 import pygame
 from common import UPDATE_RATE, receive, send
+from tasks.ping_pong_task.utils.constants import WINDOW_HEIGHT
 
-from .utils import (BALL_SIZE, COLOR_BACKGROUND, COLOR_FOREGROUND,
+from .utils import (BALL_SIZE, CLIENT_WINDOW_HEIGHT, CLIENT_WINDOW_WIDTH,
+                    COLOR_BACKGROUND, COLOR_FOREGROUND, WINDOW_HEIGHT,
                     WINDOW_WIDTH, Ball, Paddle)
 
 
@@ -19,6 +21,12 @@ class ClientPingPongTask:
 
         self._paddle_height = cfg.PADDLE_HEIGHT
         self._paddle_width = cfg.PADDLE_WIDTH
+
+        self._game_y_lower_bound = int((CLIENT_WINDOW_HEIGHT - WINDOW_HEIGHT) / 2)
+        self._game_y_upper_bound = self._game_y_lower_bound + WINDOW_HEIGHT
+
+        self._game_x_lower_bound = int((CLIENT_WINDOW_WIDTH - WINDOW_WIDTH) / 2)
+        self._game_x_upper_bound = self._game_y_lower_bound + WINDOW_WIDTH
 
         self._running = False
 
@@ -69,6 +77,24 @@ class ClientPingPongTask:
 
             # Draw sprite group
             all_sprites_list.draw(self._screen)
+
+            # Draw game border
+            pygame.draw.line(self._screen,
+                             COLOR_FOREGROUND,
+                             (self._game_x_lower_bound, self._game_y_lower_bound),
+                             (self._game_x_upper_bound, self._game_y_lower_bound))
+            pygame.draw.line(self._screen,
+                             COLOR_FOREGROUND,
+                             (self._game_x_lower_bound, self._game_y_upper_bound),
+                             (self._game_x_upper_bound, self._game_y_upper_bound))
+            pygame.draw.line(self._screen,
+                             COLOR_FOREGROUND,
+                             (self._game_x_lower_bound, self._game_y_lower_bound),
+                             (self._game_x_lower_bound, self._game_y_upper_bound))
+            pygame.draw.line(self._screen,
+                             COLOR_FOREGROUND,
+                             (self._game_x_upper_bound, self._game_y_lower_bound),
+                             (self._game_x_upper_bound, self._game_y_upper_bound))
 
             # Display scores:
             font = pygame.font.Font(None, 74)

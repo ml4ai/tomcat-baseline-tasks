@@ -16,8 +16,6 @@ if __name__ == "__main__":
     server_address = DEFAULT_SERVER_ADDR if args.address is None else args.address
     server_port = args.port
 
-    pygame.init()
-
     server = Server(server_address, server_port)
 
     server.establish_connections()
