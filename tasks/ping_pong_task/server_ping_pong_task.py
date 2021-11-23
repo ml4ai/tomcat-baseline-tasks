@@ -3,6 +3,7 @@ import threading
 import pygame
 from common import UPDATE_RATE, receive, send
 
+from .config_ping_pong_task import SESSION_TIME_SECONDS
 from .utils import (BALL_SIZE, CLIENT_WINDOW_HEIGHT, CLIENT_WINDOW_WIDTH,
                     WINDOW_HEIGHT, WINDOW_WIDTH, Ball, Paddle)
 
@@ -75,8 +76,18 @@ class ServerPingPongTask:
         print("[STATUS] Ping pong task ended")
 
     def _to_client_update_state(self):
+        counter_target = SESSION_TIME_SECONDS
+
+        start_ticks = pygame.time.get_ticks()
+
+        seconds = 0.0
+
         clock = pygame.time.Clock()
         while self._running:
+            if seconds >= counter_target:
+                self._running = False
+                break
+
             # Update state of the ball
             self._ball.update()
 
@@ -133,7 +144,12 @@ class ServerPingPongTask:
             for client_name, paddle in self._paddles.items():
                 data["state"][client_name] = (paddle.rect.x, paddle.rect.y)
 
+            seconds_to_send = int(counter_target) - int(seconds)
+            data["seconds"] = 1 if seconds_to_send <= 0 else seconds_to_send
+
             send(self._to_client_connections, data)
+
+            seconds = (pygame.time.get_ticks() - start_ticks) / 1000.0
 
             clock.tick(UPDATE_RATE)
 

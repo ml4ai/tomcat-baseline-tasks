@@ -53,6 +53,7 @@ class ClientPingPongTask:
                 state = data["state"]
                 score_left = data["score_left"]
                 score_right = data["score_right"]
+                seconds = data["seconds"]
             elif data["type"] == "request":
                 if data["request"] == "end":
                     self._running = False
@@ -109,6 +110,11 @@ class ClientPingPongTask:
             text_score_right = font.render(str(score_right), 1, COLOR_FOREGROUND)
             text_score_right_rect = text_score_right.get_rect(center=(self._game_x_upper_bound, self._game_y_lower_bound - 20))
             self._screen.blit(text_score_right, text_score_right_rect)
+
+            # Display timer
+            timer = font.render(str(seconds), 1, COLOR_BORDER)
+            timer_rect = timer.get_rect(center=(CLIENT_WINDOW_WIDTH / 2, self._game_y_lower_bound - 20))
+            self._screen.blit(timer, timer_rect)
 
             pygame.display.flip()
 
