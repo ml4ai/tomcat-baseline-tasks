@@ -3,15 +3,21 @@ import threading
 import pygame
 from common import UPDATE_RATE, receive, send
 
-from .utils import Paddle
+from .utils import COLOR_BACKGROUND, COLOR_FOREGROUND, Paddle
 
 
 class ClientPingPongTask:
-    def __init__(self, from_server, to_server, screen, client_name) -> None:
+    def __init__(self, from_server, to_server, screen, client_name, cooperative: bool = False) -> None:
         self._from_server = from_server
         self._to_server = to_server
         self._screen = screen
         self._client_name = client_name
+
+        if not cooperative:
+            from . import config_ping_pong_competitive as cfg
+
+        self._paddle_height = cfg.PADDLE_HEIGHT
+        self._paddle_width = cfg.PADDLE_WIDTH
 
         self._running = False
 
@@ -42,12 +48,15 @@ class ClientPingPongTask:
                     self._running = False
                     break
 
-            self._screen.fill((0, 0, 0))
+            self._screen.fill(COLOR_BACKGROUND)
 
             # Add sprites to sprite group
             all_sprites_list = pygame.sprite.Group()
             for name, position in state.items():
-                paddle = Paddle(position, paddle_width=10, paddle_height=100, color=(255, 255, 255))
+                paddle = Paddle(position, 
+                                paddle_width=self._paddle_width, 
+                                paddle_height=self._paddle_height, 
+                                color=COLOR_FOREGROUND)
                 all_sprites_list.add(paddle)
 
             # Draw sprite group

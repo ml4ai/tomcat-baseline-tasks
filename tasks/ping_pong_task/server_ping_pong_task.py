@@ -7,19 +7,21 @@ from .utils import Paddle
 
 
 class ServerPingPongTask:
-    def __init__(self, to_client_connections: list, from_client_connections: dict) -> None:
+    def __init__(self, to_client_connections: list, from_client_connections: dict, cooperative: bool = False) -> None:
         self._to_client_connections = to_client_connections
         self._from_client_connections = from_client_connections
 
+        if not cooperative:
+            from . import config_ping_pong_competitive as cfg
+
         self._state = {}
         for client_name in self._from_client_connections.values():
-            self._state[client_name] = Paddle(position=(500, 500), 
-                                              paddle_width=10, 
-                                              paddle_height=100, 
-                                              upper_bound=980, 
-                                              lower_bound=0, 
-                                              speed_scaling=0.6,
-                                              max_speed=150)
+            self._state[client_name] = Paddle(position=cfg.INITIAL_POSITION_LEFT,
+                                              paddle_width=cfg.PADDLE_WIDTH,
+                                              paddle_height=cfg.PADDLE_HEIGHT,
+                                              upper_bound=cfg.UPPER_BOUND,
+                                              speed_scaling=cfg.SPEED_SCALING,
+                                              max_speed=cfg.MAX_SPEED)
 
         self._running = False
 
