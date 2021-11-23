@@ -13,7 +13,13 @@ class ServerPingPongTask:
 
         self._state = {}
         for client_name in self._from_client_connections.values():
-            self._state[client_name] = Paddle((500, 500), paddle_width=10, paddle_height=100, upper_bound=980, lower_bound=0, speed_scaling=0.6)
+            self._state[client_name] = Paddle(position=(500, 500), 
+                                              paddle_width=10, 
+                                              paddle_height=100, 
+                                              upper_bound=980, 
+                                              lower_bound=0, 
+                                              speed_scaling=0.6,
+                                              max_speed=150)
 
         self._running = False
 

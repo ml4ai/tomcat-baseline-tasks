@@ -76,6 +76,6 @@ class ClientPingPongTask:
             data["sender"] = self._client_name
             data["change"] = mouse_y_change
 
-            send([self._to_server], data, wait_time=0.0)
+            send([self._to_server], data)
 
             clock.tick(UPDATE_RATE)
