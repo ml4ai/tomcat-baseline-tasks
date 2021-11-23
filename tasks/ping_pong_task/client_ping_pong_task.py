@@ -49,6 +49,8 @@ class ClientPingPongTask:
             else:
                 [data] = data
 
+            self._screen.fill(COLOR_BACKGROUND)
+
             if data["type"] == "state":
                 state = data["state"]
                 score_left = data["score_left"]
@@ -57,9 +59,8 @@ class ClientPingPongTask:
             elif data["type"] == "request":
                 if data["request"] == "end":
                     self._running = False
+                    pygame.display.flip()
                     break
-
-            self._screen.fill(COLOR_BACKGROUND)
 
             # Add sprites to sprite group
             all_sprites_list = pygame.sprite.Group()
