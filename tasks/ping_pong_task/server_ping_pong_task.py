@@ -3,7 +3,8 @@ import threading
 import pygame
 from common import UPDATE_RATE, receive, send
 
-from .utils import BALL_SIZE, WINDOW_HEIGHT, WINDOW_WIDTH, Ball, Paddle
+from .utils import (BALL_SIZE, CLIENT_WINDOW_HEIGHT, CLIENT_WINDOW_WIDTH,
+                    WINDOW_HEIGHT, WINDOW_WIDTH, Ball, Paddle)
 
 
 class ServerPingPongTask:
@@ -18,17 +19,28 @@ class ServerPingPongTask:
         self._paddle_width = cfg.PADDLE_WIDTH
         self._ball_bounce_on_paddle_scale = cfg.BALL_BOUNCE_ON_PADDLE_SCALE
 
+        self._game_y_lower_bound = int((CLIENT_WINDOW_HEIGHT - WINDOW_HEIGHT) / 2)
+        self._game_y_upper_bound = self._game_y_lower_bound + WINDOW_HEIGHT
+
+        self._game_x_lower_bound = int((CLIENT_WINDOW_WIDTH - WINDOW_WIDTH) / 2)
+        self._game_x_upper_bound = self._game_y_lower_bound + WINDOW_WIDTH
+
+        center_paddle_y = int((self._game_y_upper_bound + cfg.PADDLE_HEIGHT) / 2)
+
         self._paddles = {}
         for count, client_name in enumerate(self._from_client_connections.values()):
             if count == 0:
-                initial_position = cfg.INITIAL_POSITION_LEFT
+                left_paddle_x = self._game_x_lower_bound
+                initial_position = (left_paddle_x, center_paddle_y)
             else:
-                initial_position = cfg.INITIAL_POSITION_RIGHT
+                right_paddle_x = self._game_x_upper_bound - cfg.PADDLE_WIDTH
+                initial_position = (right_paddle_x, center_paddle_y)
 
             self._paddles[client_name] = Paddle(position=initial_position,
                                                 paddle_width=cfg.PADDLE_WIDTH,
                                                 paddle_height=cfg.PADDLE_HEIGHT,
-                                                upper_bound=cfg.UPPER_BOUND,
+                                                upper_bound=self._game_y_upper_bound - cfg.PADDLE_HEIGHT,
+                                                lower_bound=self._game_y_lower_bound,
                                                 speed_scaling=cfg.SPEED_SCALING,
                                                 max_speed=cfg.MAX_SPEED)
 
@@ -76,12 +88,12 @@ class ServerPingPongTask:
                                                  (paddle.rect.y + self._paddle_height / 2.0))
                                                 * self._ball_bounce_on_paddle_scale)
                     self._ball.bounce(ball_bound_y_velocity)
-                    
-                    if self._ball.rect.x < WINDOW_WIDTH / 2:
-                        self._ball.rect.x = self._paddle_width
+
+                    if self._ball.rect.x < CLIENT_WINDOW_WIDTH / 2:
+                        self._ball.rect.x = self._game_x_lower_bound + self._paddle_width
 
                     else:
-                        self._ball.rect.x = WINDOW_WIDTH - self._paddle_width - BALL_SIZE
+                        self._ball.rect.x = self._game_x_upper_bound - self._paddle_width - BALL_SIZE
 
                     paddle_collide_ball = True
                     break
@@ -89,27 +101,27 @@ class ServerPingPongTask:
             # If ball has not collided with paddle, check if it collides with the wall
             if not paddle_collide_ball:
                 # Collides with right wall
-                if self._ball.rect.x >= WINDOW_WIDTH - BALL_SIZE:
+                if self._ball.rect.x >= self._game_x_upper_bound - BALL_SIZE:
                     self._score_left += 1
                     self._ball.bounce()
                     # Offset the ball to avoid collision with paddle
-                    self._ball.rect.x = WINDOW_WIDTH - BALL_SIZE
+                    self._ball.rect.x = self._game_x_upper_bound - BALL_SIZE
 
                 # Collides left wall
-                elif self._ball.rect.x <= 0:
+                elif self._ball.rect.x <= self._game_x_lower_bound:
                     self._score_right += 1
                     self._ball.bounce()
                     # Offset the ball to avoid collision with paddle
-                    self._ball.rect.x = 0
+                    self._ball.rect.x = self._game_x_lower_bound
 
                 # Collides with bottom wall
-                elif self._ball.rect.y >= WINDOW_HEIGHT - BALL_SIZE:
-                    self._ball.rect.y = WINDOW_HEIGHT - BALL_SIZE - 1
+                elif self._ball.rect.y >= self._game_y_upper_bound - BALL_SIZE:
+                    self._ball.rect.y = self._game_y_upper_bound - BALL_SIZE - 1
                     self._ball.velocity[1] = -self._ball.velocity[1]
 
                 # Collides with top wall
-                elif self._ball.rect.y <= 0:
-                    self._ball.rect.y = 1
+                elif self._ball.rect.y <= self._game_y_lower_bound:
+                    self._ball.rect.y = self._game_y_lower_bound + 1
                     self._ball.velocity[1] = -self._ball.velocity[1]
 
             data = {}
