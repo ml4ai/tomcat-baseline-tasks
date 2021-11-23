@@ -9,7 +9,7 @@ class Paddle(pygame.sprite.Sprite):
                  position,
                  paddle_width: int,
                  paddle_height: int,
-                 color,
+                 color: tuple = (0, 0, 0),
                  upper_bound: int = 0,
                  lower_bound: int = 0,
                  speed_scaling: float = 1.0):

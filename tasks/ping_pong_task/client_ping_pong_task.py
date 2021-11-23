@@ -21,6 +21,9 @@ class ClientPingPongTask:
         client_input_thread = threading.Thread(target=self._client_input_handle, daemon=True)
         client_input_thread.start()
 
+        pygame.mouse.set_visible(False)
+        pygame.event.set_grab(True)
+
         print("[STATUS] Running ping pong task")
 
         while self._running:
@@ -44,7 +47,7 @@ class ClientPingPongTask:
             # Add sprites to sprite group
             all_sprites_list = pygame.sprite.Group()
             for name, position in state.items():
-                paddle = Paddle(position, 10, 100, (255, 255, 255))
+                paddle = Paddle(position, paddle_width=10, paddle_height=100, color=(255, 255, 255))
                 all_sprites_list.add(paddle)
 
             # Draw sprite group
@@ -54,6 +57,9 @@ class ClientPingPongTask:
 
         # Wait for threads to finish
         client_input_thread.join()
+
+        pygame.mouse.set_visible(True)
+        pygame.event.set_grab(False)
 
         print("[STATUS] Ping pong task ended")
 
