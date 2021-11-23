@@ -26,11 +26,11 @@ class ServerPingPongTask:
                 initial_position = cfg.INITIAL_POSITION_RIGHT
 
             self._paddles[client_name] = Paddle(position=initial_position,
-                                              paddle_width=cfg.PADDLE_WIDTH,
-                                              paddle_height=cfg.PADDLE_HEIGHT,
-                                              upper_bound=cfg.UPPER_BOUND,
-                                              speed_scaling=cfg.SPEED_SCALING,
-                                              max_speed=cfg.MAX_SPEED)
+                                                paddle_width=cfg.PADDLE_WIDTH,
+                                                paddle_height=cfg.PADDLE_HEIGHT,
+                                                upper_bound=cfg.UPPER_BOUND,
+                                                speed_scaling=cfg.SPEED_SCALING,
+                                                max_speed=cfg.MAX_SPEED)
 
         self._ball = Ball(BALL_SIZE, cfg.BALL_X_SPEED)
 
@@ -72,6 +72,7 @@ class ServerPingPongTask:
             paddle_collide_ball = False
             for paddle in self._paddles.values():
                 if pygame.sprite.collide_mask(self._ball, paddle):
+                    print("COLLIDE")
                     ball_bound_y_velocity = int(((self._ball.rect.y + BALL_SIZE / 2.0) -
                                                  (paddle.rect.y + self._paddle_height / 2.0))
                                                 * self._ball_bounce_on_paddle_scale)

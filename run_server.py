@@ -1,5 +1,7 @@
 import argparse
 
+import pygame
+
 from common import DEFAULT_SERVER_ADDR
 from network import Server
 from tasks.finger_tapping_task import ServerFingerTappingTask
@@ -13,6 +15,8 @@ if __name__ == "__main__":
 
     server_address = DEFAULT_SERVER_ADDR if args.address is None else args.address
     server_port = args.port
+
+    pygame.init()
 
     server = Server(server_address, server_port)
 

@@ -16,10 +16,12 @@ class Ball(pygame.sprite.Sprite):
                  ball_x_speed: int = 0):
         # Set up pygame sprite
         super().__init__()
-        self.image = pygame.Surface([ball_size, ball_size])
+        self.image = pygame.Surface((ball_size, ball_size))
         self.image.fill((0, 0, 0))
-        self.image.set_colorkey((0, 0, 0))
-        pygame.draw.rect(self.image, COLOR_FOREGROUND, [0, 0, ball_size, ball_size])
+
+        self.mask = pygame.mask.from_surface(self.image)
+
+        pygame.draw.rect(self.image, COLOR_FOREGROUND, (0, 0, ball_size, ball_size))
 
         self._ball_size = ball_size
         self._ball_x_speed = ball_x_speed

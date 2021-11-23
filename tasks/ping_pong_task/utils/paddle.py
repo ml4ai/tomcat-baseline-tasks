@@ -25,7 +25,9 @@ class Paddle(pygame.sprite.Sprite):
         # Set up pygame sprite
         self.image = pygame.Surface((paddle_width, paddle_height))
         self.image.fill((0, 0 ,0))
-        self.image.set_colorkey((0, 0 ,0))
+
+        self.mask = pygame.mask.from_surface(self.image)
+
         pygame.draw.rect(self.image, color, (0, 0, paddle_width, paddle_height))
 
         self.rect = self.image.get_rect()

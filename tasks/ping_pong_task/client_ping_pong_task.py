@@ -3,7 +3,8 @@ import threading
 import pygame
 from common import UPDATE_RATE, receive, send
 
-from .utils import BALL_SIZE, COLOR_BACKGROUND, COLOR_FOREGROUND, Ball, Paddle
+from .utils import (BALL_SIZE, COLOR_BACKGROUND, COLOR_FOREGROUND,
+                    WINDOW_WIDTH, Ball, Paddle)
 
 
 class ClientPingPongTask:
@@ -43,6 +44,8 @@ class ClientPingPongTask:
 
             if data["type"] == "state":
                 state = data["state"]
+                score_left = data["score_left"]
+                score_right = data["score_right"]
             elif data["type"] == "request":
                 if data["request"] == "end":
                     self._running = False
@@ -66,6 +69,16 @@ class ClientPingPongTask:
 
             # Draw sprite group
             all_sprites_list.draw(self._screen)
+
+            # Display scores:
+            font = pygame.font.Font(None, 74)
+            text_score_left = font.render(str(score_left), 1, (255, 255, 255))
+            text_score_left_rect = text_score_left.get_rect(center=(25, 25))
+            self._screen.blit(text_score_left, text_score_left_rect)
+
+            text_score_right = font.render(str(score_right), 1, (255, 255, 255))
+            text_score_right_rect = text_score_right.get_rect(center=(WINDOW_WIDTH - 25, 25))
+            self._screen.blit(text_score_right, text_score_right_rect)
 
             pygame.display.flip()
 
