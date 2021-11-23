@@ -13,7 +13,7 @@ class ServerPingPongTask:
 
         self._state = {}
         for client_name in self._from_client_connections.values():
-            self._state[client_name] = Paddle(500, 10, 100, 980, 0, (0, 0, 0))
+            self._state[client_name] = Paddle((500, 500), 10, 100, (0, 0, 0), 980, 0)
 
         self._running = False
 
@@ -26,7 +26,7 @@ class ServerPingPongTask:
         from_client_commands_thread = threading.Thread(target=self._from_client_commands, daemon=True)
         from_client_commands_thread.start()
 
-        print("[STATUS] Running finger tapping task")
+        print("[STATUS] Running ping pong task")
 
         # Wait for threads to finish
         to_client_update_state_thread.join()
@@ -38,7 +38,7 @@ class ServerPingPongTask:
 
         send(self._to_client_connections, data)
 
-        print("[STATUS] Finger tapping task ended")
+        print("[STATUS] Ping pong task ended")
 
     def _to_client_update_state(self):
         clock = time.Clock()

@@ -24,7 +24,7 @@ class ClientFingerTappingTask:
         client_input_thread = threading.Thread(target=self._client_input_handle, daemon=True)
         client_input_thread.start()
 
-        print("[STATUS] Running client finger tapping task")
+        print("[STATUS] Running finger tapping task")
 
         win_width, win_height = pygame.display.get_surface().get_size()
         main_player_coordinate = ((win_width - BOX_WIDTH) / 2, (win_height / 2) - BOX_WIDTH - 1)

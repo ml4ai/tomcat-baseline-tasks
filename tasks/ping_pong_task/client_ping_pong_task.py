@@ -3,6 +3,8 @@ import threading
 import pygame
 from common import UPDATE_RATE, receive, send
 
+from .utils import Paddle
+
 
 class ClientPingPongTask:
     def __init__(self, from_server, to_server, screen, client_name) -> None:
@@ -19,7 +21,7 @@ class ClientPingPongTask:
         client_input_thread = threading.Thread(target=self._client_input_handle, daemon=True)
         client_input_thread.start()
 
-        print("[STATUS] Running client finger tapping task")
+        print("[STATUS] Running ping pong task")
 
         while self._running:
             pygame.event.get()
@@ -39,14 +41,21 @@ class ClientPingPongTask:
 
             self._screen.fill((0, 0, 0))
 
-            print(state)
+            # Add sprites to sprite group
+            all_sprites_list = pygame.sprite.Group()
+            for name, position in state.items():
+                paddle = Paddle(position, 10, 100, (255, 255, 255))
+                all_sprites_list.add(paddle)
+
+            # Draw sprite group
+            all_sprites_list.draw(self._screen)
 
             pygame.display.flip()
 
         # Wait for threads to finish
         client_input_thread.join()
 
-        print("[STATUS] Finger tapping task ended")
+        print("[STATUS] Ping pong task ended")
 
     def _client_input_handle(self):
         """
