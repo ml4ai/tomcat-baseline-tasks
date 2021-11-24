@@ -12,6 +12,8 @@ class Client:
         self.from_server.connect((host, port))
         self.from_server.setblocking(False)
 
+        send([self.from_server], self.client_name)
+
         self.to_server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.to_server.connect((host, port + 1))
         self.to_server.setblocking(False)

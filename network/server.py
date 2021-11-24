@@ -22,7 +22,7 @@ class Server:
 
         print(f"Address: {host}, {port}")
 
-        self.to_client_connections = []
+        self.to_client_connections = {}
         self.from_client_connections = {}
 
         self._establishing_connections = False
@@ -67,7 +67,9 @@ class Server:
                 client_conn, client_addr = connection.accept()
                 client_conn.setblocking(False)
 
-                self.to_client_connections.append(client_conn)
+                [client_name] = receive([client_conn])
+
+                self.to_client_connections[client_name] = client_conn
 
                 print("Sending replies to [" + client_addr[0] + ", " + str(client_addr[1]) + ']')
 
