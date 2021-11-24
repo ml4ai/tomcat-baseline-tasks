@@ -1,0 +1,2 @@
+class PingPongTaskInstructions:
+    pass
