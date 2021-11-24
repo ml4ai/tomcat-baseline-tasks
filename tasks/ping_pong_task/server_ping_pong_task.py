@@ -1,11 +1,11 @@
 import threading
 
 import pygame
-from common import UPDATE_RATE, receive, send
+from common import (CLIENT_WINDOW_HEIGHT, CLIENT_WINDOW_WIDTH, UPDATE_RATE,
+                    receive, send)
 
 from .config_ping_pong_task import SESSION_TIME_SECONDS
-from .utils import (BALL_SIZE, CLIENT_WINDOW_HEIGHT, CLIENT_WINDOW_WIDTH,
-                    WINDOW_HEIGHT, WINDOW_WIDTH, Ball, Paddle)
+from .utils import BALL_SIZE, WINDOW_HEIGHT, WINDOW_WIDTH, Ball, Paddle
 
 
 class ServerPingPongTask:

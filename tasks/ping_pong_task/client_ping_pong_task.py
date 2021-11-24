@@ -1,11 +1,12 @@
 import threading
 
 import pygame
-from common import UPDATE_RATE, receive, send
+from common import (CLIENT_WINDOW_HEIGHT, CLIENT_WINDOW_WIDTH, UPDATE_RATE,
+                    receive, send)
 
-from .utils import (BALL_SIZE, CLIENT_WINDOW_HEIGHT, CLIENT_WINDOW_WIDTH,
-                    COLOR_BACKGROUND, COLOR_BORDER, COLOR_FOREGROUND,
-                    COLOR_PLAYER, WINDOW_HEIGHT, WINDOW_WIDTH, Ball, Paddle)
+from .utils import (BALL_SIZE, COLOR_BACKGROUND, COLOR_BORDER,
+                    COLOR_FOREGROUND, COLOR_PLAYER, WINDOW_HEIGHT,
+                    WINDOW_WIDTH, Ball, Paddle)
 
 
 class ClientPingPongTask:
@@ -72,12 +73,12 @@ class ClientPingPongTask:
                     object = Paddle(position, 
                                     paddle_width=self._paddle_width, 
                                     paddle_height=self._paddle_height, 
-                                    color=COLOR_FOREGROUND)
+                                    color=COLOR_PLAYER)
                 else:
                     object = Paddle(position, 
                                     paddle_width=self._paddle_width, 
                                     paddle_height=self._paddle_height, 
-                                    color=COLOR_PLAYER)
+                                    color=COLOR_FOREGROUND)
 
                 all_sprites_list.add(object)
 
