@@ -116,7 +116,8 @@ class Server:
                                 del self.from_client_connections[connection]
                                 break
 
-                        print(f"Closed connection to {sender_name}")
+                        num_connections = len(self.to_client_connections)
+                        print(f"Closed connection to {sender_name}, {num_connections} connections remain")
 
 
     def _terminal_input(self) -> None:
