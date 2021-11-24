@@ -9,12 +9,11 @@ from .utils import BALL_SIZE, WINDOW_HEIGHT, WINDOW_WIDTH, Ball, Paddle
 
 
 class ServerPingPongTask:
-    def __init__(self, to_client_connections: list, from_client_connections: dict, cooperative: bool = False) -> None:
+    def __init__(self, to_client_connections: list, from_client_connection_teams: dict, easy_mode: bool = True) -> None:
         self._to_client_connections = to_client_connections
-        self._from_client_connections = from_client_connections
 
-        if not cooperative:
-            from . import config_ping_pong_competitive as cfg
+        if easy_mode:
+            from . import config_easy_mode as cfg
 
         self._paddle_height = cfg.PADDLE_HEIGHT
         self._paddle_width = cfg.PADDLE_WIDTH
@@ -28,16 +27,25 @@ class ServerPingPongTask:
 
         center_paddle_y = int((self._game_y_upper_bound + cfg.PADDLE_HEIGHT) / 2)
 
+        # TODO: figure out the teaming from client connections
+        self._from_client_connections = {}
         self._paddles = {}
-        for count, client_name in enumerate(self._from_client_connections.values()):
-            if count == 0:
-                left_paddle_x = self._game_x_lower_bound
-                initial_position = (left_paddle_x, center_paddle_y)
-            else:
-                right_paddle_x = self._game_x_upper_bound - cfg.PADDLE_WIDTH
-                initial_position = (right_paddle_x, center_paddle_y)
 
-            self._paddles[client_name] = Paddle(position=initial_position,
+        from_client_connection_team_left, from_client_connection_team_right = from_client_connection_teams
+
+        for from_client_connection, client_name in from_client_connection_team_left.items():
+            self._from_client_connections[from_client_connection] = client_name
+            self._paddles[client_name] = Paddle(position=(self._game_x_lower_bound, center_paddle_y),
+                                                paddle_width=cfg.PADDLE_WIDTH,
+                                                paddle_height=cfg.PADDLE_HEIGHT,
+                                                upper_bound=self._game_y_upper_bound - cfg.PADDLE_HEIGHT,
+                                                lower_bound=self._game_y_lower_bound,
+                                                speed_scaling=cfg.SPEED_SCALING,
+                                                max_speed=cfg.MAX_SPEED)
+
+        for from_client_connection, client_name in from_client_connection_team_right.items():
+            self._from_client_connections[from_client_connection] = client_name
+            self._paddles[client_name] = Paddle(position=(self._game_x_upper_bound - cfg.PADDLE_WIDTH, center_paddle_y),
                                                 paddle_width=cfg.PADDLE_WIDTH,
                                                 paddle_height=cfg.PADDLE_HEIGHT,
                                                 upper_bound=self._game_y_upper_bound - cfg.PADDLE_HEIGHT,

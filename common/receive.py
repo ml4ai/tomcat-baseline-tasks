@@ -15,7 +15,13 @@ def receive(senders: list, wait_time: Optional[float] = None) -> list:
 
     for connection in senders:
         message = connection.recv(HEADER)
-        message = json.loads(message.decode('utf-8'))
+
+        try:
+            message = json.loads(message.decode('utf-8'))
+        except json.decoder.JSONDecodeError:
+            print("[INFO] JSON failed to decode message")
+            continue
+
         data.append(message)
 
     return data

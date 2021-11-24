@@ -1,4 +1,4 @@
-from .utils import WINDOW_HEIGHT, WINDOW_WIDTH
+from .utils import WINDOW_HEIGHT
 
 PADDLE_WIDTH = 20
 PADDLE_HEIGHT = 120

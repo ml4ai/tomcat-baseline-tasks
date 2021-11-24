@@ -10,14 +10,14 @@ from .utils import (BALL_SIZE, COLOR_BACKGROUND, COLOR_BORDER,
 
 
 class ClientPingPongTask:
-    def __init__(self, from_server, to_server, screen, client_name, cooperative: bool = False) -> None:
+    def __init__(self, from_server, to_server, screen, client_name, easy_mode: bool = True) -> None:
         self._from_server = from_server
         self._to_server = to_server
         self._screen = screen
         self._client_name = client_name
 
-        if not cooperative:
-            from . import config_ping_pong_competitive as cfg
+        if easy_mode:
+            from . import config_easy_mode as cfg
 
         self._paddle_height = cfg.PADDLE_HEIGHT
         self._paddle_width = cfg.PADDLE_WIDTH
