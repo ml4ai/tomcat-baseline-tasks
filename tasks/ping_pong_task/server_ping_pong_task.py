@@ -27,7 +27,6 @@ class ServerPingPongTask:
 
         center_paddle_y = int((self._game_y_upper_bound + cfg.PADDLE_HEIGHT) / 2)
 
-        # TODO: figure out the teaming from client connections
         self._from_client_connections = {}
         self._paddles = {}
 
