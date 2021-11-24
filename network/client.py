@@ -5,7 +5,7 @@ from common import send
 
 
 class Client:
-    def __init__(self, host: str, port: int, client_name: str) -> None:
+    def __init__(self, host: str, port: int, client_name: str, screen: bool = True) -> None:
         self.client_name = client_name
 
         self.from_server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -22,4 +22,5 @@ class Client:
 
         print("Connected to server")
 
-        self.screen = pygame.display.set_mode((0, 0), pygame.FULLSCREEN)
+        if screen:
+            self.screen = pygame.display.set_mode((0, 0), pygame.FULLSCREEN)
