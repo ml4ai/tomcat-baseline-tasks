@@ -36,7 +36,6 @@ class ClientPingPongTask:
         client_input_thread = threading.Thread(target=self._client_input_handle, daemon=True)
         client_input_thread.start()
 
-        pygame.mouse.set_visible(False)
         pygame.event.set_grab(True)
 
         print("[STATUS] Running ping pong task")
@@ -123,7 +122,6 @@ class ClientPingPongTask:
         # Wait for threads to finish
         client_input_thread.join()
 
-        pygame.mouse.set_visible(True)
         pygame.event.set_grab(False)
 
         print("[STATUS] Ping pong task ended")

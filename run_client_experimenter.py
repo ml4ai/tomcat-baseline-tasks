@@ -18,6 +18,7 @@ if __name__ == "__main__":
     client_name = args.name
 
     pygame.init()
+    pygame.mouse.set_visible(False)
 
     client = Client(server_address, server_port, client_name)
 

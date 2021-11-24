@@ -3,7 +3,9 @@ import argparse
 import pygame
 
 from common import DEFAULT_SERVER_ADDR
-from instructions import finger_tapping_task_instruction
+from instructions import (exit_instruction, finger_tapping_task_instruction,
+                          ping_pong_task_competitive_instruction,
+                          ping_pong_task_cooperative_instruction)
 from network import Client
 from tasks.finger_tapping_task import ClientFingerTappingTask
 from tasks.ping_pong_task import ClientPingPongTask
@@ -20,6 +22,7 @@ if __name__ == "__main__":
     client_name = args.name
 
     pygame.init()
+    pygame.mouse.set_visible(False)
 
     client = Client(server_address, server_port, client_name)
 
@@ -31,16 +34,22 @@ if __name__ == "__main__":
                                                          client.client_name)
     client_finger_tapping_task.run()
 
-    client_finger_tapping_task = ClientPingPongTask(client.from_server, 
-                                                    client.to_server, 
-                                                    client.screen, 
-                                                    client.client_name)
-    client_finger_tapping_task.run()
+    ping_pong_task_competitive_instruction(client.to_server, client.screen, client.client_name)
 
     client_finger_tapping_task = ClientPingPongTask(client.from_server, 
                                                     client.to_server, 
                                                     client.screen, 
                                                     client.client_name)
     client_finger_tapping_task.run()
+
+    ping_pong_task_cooperative_instruction(client.to_server, client.screen, client.client_name)
+
+    client_finger_tapping_task = ClientPingPongTask(client.from_server, 
+                                                    client.to_server, 
+                                                    client.screen, 
+                                                    client.client_name)
+    client_finger_tapping_task.run()
+
+    exit_instruction(client.to_server, client.screen, client.client_name)
 
     client.close()

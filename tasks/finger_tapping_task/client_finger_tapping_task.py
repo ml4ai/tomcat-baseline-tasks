@@ -26,8 +26,6 @@ class ClientFingerTappingTask:
 
         print("[STATUS] Running finger tapping task")
 
-        pygame.mouse.set_visible(False)
-
         win_width, win_height = pygame.display.get_surface().get_size()
         main_player_coordinate = ((win_width - BOX_WIDTH) / 2, (win_height / 2) - BOX_WIDTH - 1)
         other_player_height = (win_height / 2) + 1
@@ -91,8 +89,6 @@ class ClientFingerTappingTask:
 
         # Wait for threads to finish
         client_input_thread.join()
-
-        pygame.mouse.set_visible(False)
 
         print("[STATUS] Finger tapping task ended")
 
