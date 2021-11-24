@@ -33,3 +33,5 @@ if __name__ == "__main__":
                                                     client.screen, 
                                                     client.client_name)
     client_finger_tapping_task.run()
+
+    client.close()

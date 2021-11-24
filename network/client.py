@@ -24,3 +24,16 @@ class Client:
 
         if screen:
             self.screen = pygame.display.set_mode((0, 0), pygame.FULLSCREEN)
+
+    def close(self):
+        data = {}
+        data["type"] = "request"
+        data["request"] = "close"
+        data["sender"] = self.client_name
+
+        send([self.to_server], data)
+
+        self.from_server.close()
+        self.to_server.close()
+
+        print("Closed connection to server")

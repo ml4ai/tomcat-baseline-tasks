@@ -26,3 +26,5 @@ if __name__ == "__main__":
                                                client.screen, 
                                                client.client_name)
     client_ping_pong_task.run()
+
+    client.close()

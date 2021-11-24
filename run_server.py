@@ -65,6 +65,8 @@ if __name__ == "__main__":
 
     for process in ping_pong_processes:
         process.start()
-    
+
     for process in ping_pong_processes:
         process.join()
+
+    server.establish_connections()

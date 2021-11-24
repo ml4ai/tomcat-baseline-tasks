@@ -36,6 +36,9 @@ class Server:
         from_client_request_thread = threading.Thread(target=self._dispatch_from_client_request, daemon=True)
         from_client_request_thread.start()
 
+        from_clients_thread = threading.Thread(target=self._from_clients, daemon=True)
+        from_clients_thread.start()
+
         terminal_input_thread = threading.Thread(target=self._terminal_input, daemon=True)
         terminal_input_thread.start()
 
@@ -44,6 +47,7 @@ class Server:
         # Wait for threads to finish
         to_client_request_thread.join()
         from_client_request_thread.join()
+        from_clients_thread.join()
         terminal_input_thread.join()
 
         print("[STATUS] Closed connection gate")
@@ -94,7 +98,28 @@ class Server:
 
                 print("Receiving commands from [" + client_name + ", " + client_addr[0] + ", " + str(client_addr[1]) + ']')
 
-    def _terminal_input(self):
+    def _from_clients(self) -> None:
+        while self._establishing_connections:
+            all_data = receive(self.from_client_connections.keys(), 0.1)
+
+            for data in all_data:
+                if data["type"] == "request":
+                    if data["request"] == "close":
+                        sender_name = data["sender"]
+
+                        self.to_client_connections[sender_name].close()
+                        del self.to_client_connections[sender_name]
+
+                        for connection, name in self.from_client_connections.items():
+                            if name == sender_name:
+                                connection.close()
+                                del self.from_client_connections[connection]
+                                break
+
+                        print(f"Closed connection to {sender_name}")
+
+
+    def _terminal_input(self) -> None:
         """
         Control the server 
         """

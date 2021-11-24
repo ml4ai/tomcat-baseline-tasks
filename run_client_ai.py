@@ -27,3 +27,5 @@ if __name__ == "__main__":
                                                     client.to_server,
                                                     client.client_name)
     client_ai_ping_pong_task.run()
+
+    client.close()
