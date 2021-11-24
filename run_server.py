@@ -34,22 +34,24 @@ if __name__ == "__main__":
     server.establish_connections()
 
     # Ping pong competitive
-    # client_pairs = pairing_clients(server.to_client_connections, server.from_client_connections)
+    client_pairs = pairing_clients(server.to_client_connections, server.from_client_connections)
 
-    # ping_pong_processes = []
-    # for (to_client_connection_pair, from_client_connection_pair) in client_pairs:
-    #     to_client_connections = []
-    #     for to_client_connection_team in to_client_connection_pair:
-    #         to_client_connections = to_client_connections + list(to_client_connection_team.values())
+    ping_pong_processes = []
+    for (to_client_connection_pair, from_client_connection_pair) in client_pairs:
+        to_client_connections = []
+        for to_client_connection_team in to_client_connection_pair:
+            to_client_connections = to_client_connections + list(to_client_connection_team.values())
 
-    #     process = Process(target=run_ping_pong, args=(to_client_connections, from_client_connection_pair))
-    #     ping_pong_processes.append(process)
+        process = Process(target=run_ping_pong, args=(to_client_connections, from_client_connection_pair))
+        ping_pong_processes.append(process)
 
-    # for process in ping_pong_processes:
-    #     process.start()
+    for process in ping_pong_processes:
+        process.start()
     
-    # for process in ping_pong_processes:
-    #     process.join()
+    for process in ping_pong_processes:
+        process.join()
+
+    server.establish_connections()
 
     # Ping pong cooperative
     client_pairs = client_ai_teaming(server.to_client_connections, server.from_client_connections)

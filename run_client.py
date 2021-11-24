@@ -34,4 +34,10 @@ if __name__ == "__main__":
                                                     client.client_name)
     client_finger_tapping_task.run()
 
+    client_finger_tapping_task = ClientPingPongTask(client.from_server, 
+                                                    client.to_server, 
+                                                    client.screen, 
+                                                    client.client_name)
+    client_finger_tapping_task.run()
+
     client.close()
