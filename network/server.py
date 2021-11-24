@@ -118,6 +118,9 @@ class Server:
 
                         num_connections = len(self.to_client_connections)
                         print(f"Closed connection to {sender_name}, {num_connections} connections remain")
+                elif data["type"] == "ready":
+                    client_name = data["sender"]
+                    print(f"[INFO] Client {client_name} is ready")
 
 
     def _terminal_input(self) -> None:
