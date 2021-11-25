@@ -1,4 +1,8 @@
+import csv
+import json
+import os
 import threading
+from time import time
 
 import pygame
 from common import (CLIENT_WINDOW_HEIGHT, CLIENT_WINDOW_WIDTH, UPDATE_RATE,
@@ -9,7 +13,7 @@ from .utils import BALL_SIZE, WINDOW_HEIGHT, WINDOW_WIDTH, Ball, Paddle
 
 
 class ServerPingPongTask:
-    def __init__(self, to_client_connections: list, from_client_connection_teams: dict, easy_mode: bool = True) -> None:
+    def __init__(self, to_client_connections: list, from_client_connection_teams: dict, easy_mode: bool = True, session_name: str = '') -> None:
         self._to_client_connections = to_client_connections
 
         if easy_mode:
@@ -57,6 +61,14 @@ class ServerPingPongTask:
         self._score_left = 0
         self._score_right = 0
 
+        csv_data_path = "./data/ping_pong"
+
+        if not os.path.exists(csv_data_path):
+            os.makedirs(csv_data_path)
+
+        self._csv_file = open(csv_data_path + '/' + session_name + '_' + str(int(time())) + ".csv", 'w', newline='')
+        self._csv_writer = csv.writer(self._csv_file, delimiter=';')
+
         self._running = False
 
     def run(self):
@@ -73,6 +85,8 @@ class ServerPingPongTask:
         # Wait for threads to finish
         to_client_update_state_thread.join()
         from_client_commands_thread.join()
+
+        self._csv_file.close()
 
         data = {}
         data["type"] = "request"
@@ -153,6 +167,9 @@ class ServerPingPongTask:
 
             seconds_to_send = int(counter_target) - int(seconds)
             data["seconds"] = 1 if seconds_to_send <= 0 else seconds_to_send
+
+            # Record state of the game
+            self._csv_writer.writerow([time(), json.dumps(data)])
 
             send(self._to_client_connections, data)
 

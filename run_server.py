@@ -7,9 +7,10 @@ from tasks.finger_tapping_task import ServerFingerTappingTask
 from tasks.ping_pong_task import ServerPingPongTask
 
 
-def run_ping_pong(to_client_connections: list, from_client_connections: dict):
+def run_ping_pong(to_client_connections: list, from_client_connections: dict, session_name: str):
     server_ping_pong_task = ServerPingPongTask(to_client_connections, 
-                                               from_client_connections)
+                                               from_client_connections,
+                                               session_name=session_name)
     server_ping_pong_task.run()
 
 
@@ -37,12 +38,13 @@ if __name__ == "__main__":
     client_pairs = pairing_clients(server.to_client_connections, server.from_client_connections)
 
     ping_pong_processes = []
-    for (to_client_connection_pair, from_client_connection_pair) in client_pairs:
+    for session_id, (to_client_connection_pair, from_client_connection_pair) in enumerate(client_pairs):
         to_client_connections = []
         for to_client_connection_team in to_client_connection_pair:
             to_client_connections = to_client_connections + list(to_client_connection_team.values())
 
-        process = Process(target=run_ping_pong, args=(to_client_connections, from_client_connection_pair))
+        session_name = "competitive_" + str(session_id)
+        process = Process(target=run_ping_pong, args=(to_client_connections, from_client_connection_pair, session_name))
         ping_pong_processes.append(process)
 
     for process in ping_pong_processes:
@@ -57,12 +59,13 @@ if __name__ == "__main__":
     client_pairs = client_ai_teaming(server.to_client_connections, server.from_client_connections)
 
     ping_pong_processes = []
-    for (to_client_connection_teams, from_client_connection_teams) in client_pairs:
+    for session_id, (to_client_connection_teams, from_client_connection_teams) in enumerate(client_pairs):
         to_client_connections = []
         for to_client_connection_team in to_client_connection_teams:
             to_client_connections = to_client_connections + list(to_client_connection_team.values())
 
-        process = Process(target=run_ping_pong, args=(to_client_connections, from_client_connection_teams))
+        session_name = "cooperative_" + str(session_id)
+        process = Process(target=run_ping_pong, args=(to_client_connections, from_client_connection_teams, session_name))
         ping_pong_processes.append(process)
 
     for process in ping_pong_processes:

@@ -1,7 +1,11 @@
+import csv
+import json
+import os
 import threading
+from time import time
 
+import pygame
 from common import UPDATE_RATE, receive, send
-from pygame import time
 
 from .config_finger_tapping_task import (SECONDS_COUNT_DOWN,
                                          SECONDS_PER_SESSION, SESSION)
@@ -16,6 +20,14 @@ class ServerFingerTappingTask:
         self._state = {}
         for client_name in from_client_connections.values():
             self._state[client_name] = UNTAPPED
+
+        csv_data_path = "./data/finger_tapping"
+
+        if not os.path.exists(csv_data_path):
+            os.makedirs(csv_data_path)
+
+        self._csv_file = open(csv_data_path + '/' + str(int(time())) + ".csv", 'w', newline='')
+        self._csv_writer = csv.writer(self._csv_file, delimiter=';')
 
         self._running = False
 
@@ -34,6 +46,8 @@ class ServerFingerTappingTask:
         to_client_update_state_thread.join()
         from_client_commands_thread.join()
 
+        self._csv_file.close()
+
         data = {}
         data["type"] = "request"
         data["request"] = "end"
@@ -46,11 +60,11 @@ class ServerFingerTappingTask:
         current_session_index = -1
         counter_target = SECONDS_COUNT_DOWN
 
-        start_ticks = time.get_ticks()
+        start_ticks = pygame.time.get_ticks()
 
         seconds = 0.0
 
-        clock = time.Clock()
+        clock = pygame.time.Clock()
         while self._running:
             if seconds >= counter_target:
                 current_session_index += 1
@@ -60,7 +74,7 @@ class ServerFingerTappingTask:
                     break
 
                 counter_target = SECONDS_PER_SESSION[current_session_index]
-                start_ticks = time.get_ticks()
+                start_ticks = pygame.time.get_ticks()
 
             data = {}
             data["type"] = "state"
@@ -70,9 +84,12 @@ class ServerFingerTappingTask:
             seconds_to_send = int(counter_target) - int(seconds)
             data["seconds"] = 1 if seconds_to_send <= 0 else seconds_to_send
 
+            # Record state of the game
+            self._csv_writer.writerow([time(), json.dumps(data)])
+
             send(self._to_client_connections, data)
 
-            seconds = (time.get_ticks() - start_ticks) / 1000.0
+            seconds = (pygame.time.get_ticks() - start_ticks) / 1000.0
 
             clock.tick(UPDATE_RATE)
 
