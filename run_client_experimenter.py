@@ -3,6 +3,7 @@ import argparse
 import pygame
 
 from common import DEFAULT_SERVER_ADDR
+from instructions import ping_pong_task_competitive_instruction
 from network import Client
 from tasks.ping_pong_task import ClientPingPongTask
 
@@ -21,6 +22,8 @@ if __name__ == "__main__":
     pygame.mouse.set_visible(False)
 
     client = Client(server_address, server_port, client_name)
+
+    ping_pong_task_competitive_instruction(client.to_server, client.screen, client.client_name)
 
     client_ping_pong_task = ClientPingPongTask(client.from_server, 
                                                client.to_server, 

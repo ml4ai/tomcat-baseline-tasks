@@ -36,19 +36,19 @@ if __name__ == "__main__":
 
     ping_pong_task_competitive_instruction(client.to_server, client.screen, client.client_name)
 
-    client_finger_tapping_task = ClientPingPongTask(client.from_server, 
+    client_ping_pong_task = ClientPingPongTask(client.from_server, 
                                                     client.to_server, 
                                                     client.screen, 
                                                     client.client_name)
-    client_finger_tapping_task.run()
+    client_ping_pong_task.run()
 
     ping_pong_task_cooperative_instruction(client.to_server, client.screen, client.client_name)
 
-    client_finger_tapping_task = ClientPingPongTask(client.from_server, 
+    client_ping_pong_task = ClientPingPongTask(client.from_server, 
                                                     client.to_server, 
                                                     client.screen, 
                                                     client.client_name)
-    client_finger_tapping_task.run()
+    client_ping_pong_task.run()
 
     exit_instruction(client.to_server, client.screen, client.client_name)
 

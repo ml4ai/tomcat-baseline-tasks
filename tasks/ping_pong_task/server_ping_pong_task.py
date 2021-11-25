@@ -8,8 +8,10 @@ import pygame
 from common import (CLIENT_WINDOW_HEIGHT, CLIENT_WINDOW_WIDTH, UPDATE_RATE,
                     receive, send)
 
+from .config_easy_mode import PADDLE_WIDTH
 from .config_ping_pong_task import SECONDS_COUNT_DOWN, SESSION_TIME_SECONDS
-from .utils import BALL_SIZE, WINDOW_HEIGHT, WINDOW_WIDTH, Ball, Paddle
+from .utils import (BALL_SIZE, LEFT_TEAM, RIGHT_TEAM, WINDOW_HEIGHT,
+                    WINDOW_WIDTH, Ball, Paddle)
 
 
 class ServerPingPongTask:
@@ -44,7 +46,8 @@ class ServerPingPongTask:
                                                 upper_bound=self._game_y_upper_bound - cfg.PADDLE_HEIGHT,
                                                 lower_bound=self._game_y_lower_bound,
                                                 speed_scaling=cfg.SPEED_SCALING,
-                                                max_speed=cfg.MAX_SPEED)
+                                                max_speed=cfg.MAX_SPEED,
+                                                team=LEFT_TEAM)
 
         for from_client_connection, client_name in from_client_connection_team_right.items():
             self._from_client_connections[from_client_connection] = client_name
@@ -54,7 +57,8 @@ class ServerPingPongTask:
                                                 upper_bound=self._game_y_upper_bound - cfg.PADDLE_HEIGHT,
                                                 lower_bound=self._game_y_lower_bound,
                                                 speed_scaling=cfg.SPEED_SCALING,
-                                                max_speed=cfg.MAX_SPEED)
+                                                max_speed=cfg.MAX_SPEED,
+                                                team=RIGHT_TEAM)
 
         self._ball = Ball(BALL_SIZE, cfg.BALL_X_SPEED)
         self._ball.rect.y = self._game_y_lower_bound + int((WINDOW_HEIGHT + BALL_SIZE) / 2)
@@ -125,18 +129,26 @@ class ServerPingPongTask:
             paddle_collide_ball = False
             for paddle in self._paddles.values():
                 if pygame.sprite.collide_mask(self._ball, paddle):
-                    ball_bound_y_velocity = int(((self._ball.rect.y + BALL_SIZE / 2.0) -
-                                                 (paddle.rect.y + self._paddle_height / 2.0))
-                                                * self._ball_bounce_on_paddle_scale)
-                    self._ball.bounce(ball_bound_y_velocity)
-
-                    if self._ball.rect.x < CLIENT_WINDOW_WIDTH / 2:
-                        self._ball.rect.x = self._game_x_lower_bound + self._paddle_width
-
+                    if self._ball.velocity[0] > 0 and paddle.team == LEFT_TEAM:
+                        self._ball.velocity[1] = -self._ball.velocity[1]
+                        self._ball.rect.x = paddle.rect.x + PADDLE_WIDTH
+                    elif self._ball.velocity[0] < 0 and paddle.team == RIGHT_TEAM:
+                        self._ball.velocity[1] = -self._ball.velocity[1]
+                        self._ball.rect.x = paddle.rect.x - BALL_SIZE
                     else:
-                        self._ball.rect.x = self._game_x_upper_bound - self._paddle_width - BALL_SIZE
+                        ball_bound_y_velocity = int(((self._ball.rect.y + BALL_SIZE / 2.0) -
+                                                    (paddle.rect.y + self._paddle_height / 2.0))
+                                                    * self._ball_bounce_on_paddle_scale)
+                        self._ball.bounce(ball_bound_y_velocity)
 
-                    paddle_collide_ball = True
+                        if self._ball.rect.x < CLIENT_WINDOW_WIDTH / 2:
+                            self._ball.rect.x = self._game_x_lower_bound + self._paddle_width
+
+                        else:
+                            self._ball.rect.x = self._game_x_upper_bound - self._paddle_width - BALL_SIZE
+
+                        paddle_collide_ball = True
+
                     break
 
             # If ball has not collided with paddle, check if it collides with the wall

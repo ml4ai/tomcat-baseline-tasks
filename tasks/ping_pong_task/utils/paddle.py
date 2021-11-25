@@ -1,5 +1,7 @@
 import pygame
 
+from .constants import LEFT_TEAM
+
 
 class Paddle(pygame.sprite.Sprite):
     """
@@ -13,7 +15,8 @@ class Paddle(pygame.sprite.Sprite):
                  upper_bound: int = 0,
                  lower_bound: int = 0,
                  speed_scaling: float = 1.0,
-                 max_speed = None):
+                 max_speed = None,
+                 team: int = LEFT_TEAM):
         super().__init__()
 
          # Store game information
@@ -21,6 +24,8 @@ class Paddle(pygame.sprite.Sprite):
         self._lower_bound = lower_bound
         self._speed_scaling = speed_scaling
         self._max_speed = max_speed
+
+        self.team = team
 
         # Set up pygame sprite
         self.image = pygame.Surface((paddle_width, paddle_height))
