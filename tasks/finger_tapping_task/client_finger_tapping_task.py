@@ -3,8 +3,9 @@ import threading
 import pygame
 from common import UPDATE_RATE, receive, send
 
-from .config_finger_tapping_task import BOX_WIDTH
-from .utils import PlayerSquare
+from .config_finger_tapping_task import BOX_WIDTH, STARTING_MESSAGE
+from .utils import (COLOR_BACKGROUND, COLOR_FOREGROUND, COLOR_FOREGROUND_DIM,
+                    COLOR_PLAYER, COLOR_PLAYER_DIM, PlayerSquare)
 
 
 class ClientFingerTappingTask:
@@ -40,11 +41,12 @@ class ClientFingerTappingTask:
             else:
                 [data] = data
 
-            self._screen.fill((0, 0, 0))
+            self._screen.fill(COLOR_BACKGROUND)
 
             if data["type"] == "state":
                 self._state = data["state"]
                 reveal_others = data["reveal"]
+                session_index = data["session_index"]
             elif data["type"] == "request":
                 if data["request"] == "end":
                     self._running = False
@@ -58,21 +60,21 @@ class ClientFingerTappingTask:
             all_sprites_list = pygame.sprite.Group()
             for name, state in self._state.items():
                 if name == self._client_name:
-                    color = (255, 0, 255) if state else (100, 0, 100)
+                    color = COLOR_PLAYER if state else COLOR_PLAYER_DIM
                     subject = PlayerSquare(main_player_coordinate, color)
                     all_sprites_list.add(subject)
                 elif reveal_others:
                     if num_other_players == 1:
-                        color = (255, 255, 255) if state else (100, 100, 100)
+                        color = COLOR_FOREGROUND if state else COLOR_FOREGROUND_DIM
                         subject = PlayerSquare((main_player_coordinate[0], other_player_height), color)
                         all_sprites_list.add(subject)
                     elif player_counter == 0:
-                        color = (255, 255, 255) if state else (100, 100, 100)
+                        color = COLOR_FOREGROUND if state else COLOR_FOREGROUND_DIM
                         subject = PlayerSquare((main_player_coordinate[0] - other_player_width_offset, other_player_height), color)
                         all_sprites_list.add(subject)
                         player_counter += 1
                     else:
-                        color = (255, 255, 255) if state else (100, 100, 100)
+                        color = COLOR_FOREGROUND if state else COLOR_FOREGROUND_DIM
                         subject = PlayerSquare((main_player_coordinate[0] + other_player_width_offset, other_player_height), color)
                         all_sprites_list.add(subject)
 
@@ -81,9 +83,15 @@ class ClientFingerTappingTask:
 
             # Display timer
             font = pygame.font.Font(None, 74)
-            text = font.render(str(data["seconds"]), 1, (255, 255, 255))
+            text = font.render(str(data["seconds"]), 1, COLOR_FOREGROUND)
             text_rect = text.get_rect(center=((win_width / 2), main_player_coordinate[1] - 25))
             self._screen.blit(text, text_rect)
+
+            if session_index < 0:
+                font = pygame.font.Font(None, 50)
+                text = font.render(STARTING_MESSAGE, 1, COLOR_FOREGROUND)
+                text_rect = text.get_rect(center=((win_width / 2), other_player_height + 250))
+                self._screen.blit(text, text_rect)
 
             pygame.display.flip()
 

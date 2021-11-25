@@ -8,3 +8,5 @@ SECONDS_COUNT_DOWN = 3.0
 
 # game sprite
 BOX_WIDTH = 200
+
+STARTING_MESSAGE = "Please press the SPACEBAR on keyboard"

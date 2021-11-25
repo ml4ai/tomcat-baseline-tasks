@@ -57,7 +57,7 @@ class ServerFingerTappingTask:
         print("[STATUS] Finger tapping task ended")
 
     def _to_client_update_state(self):
-        current_session_index = -1
+        session_index = -1
         counter_target = SECONDS_COUNT_DOWN
 
         start_ticks = pygame.time.get_ticks()
@@ -67,25 +67,27 @@ class ServerFingerTappingTask:
         clock = pygame.time.Clock()
         while self._running:
             if seconds >= counter_target:
-                current_session_index += 1
+                session_index += 1
 
-                if current_session_index >= len(SESSION):
+                if session_index >= len(SESSION):
                     self._running = False
                     break
 
-                counter_target = SECONDS_PER_SESSION[current_session_index]
+                counter_target = SECONDS_PER_SESSION[session_index]
                 start_ticks = pygame.time.get_ticks()
 
             data = {}
             data["type"] = "state"
             data["state"] = self._state
-            data["reveal"] = 1 if current_session_index < 0 else SESSION[current_session_index]
+            data["reveal"] = 1 if session_index < 0 else SESSION[session_index]
+            data["session_index"] = session_index
 
             seconds_to_send = int(counter_target) - int(seconds)
             data["seconds"] = 1 if seconds_to_send <= 0 else seconds_to_send
 
             # Record state of the game
-            self._csv_writer.writerow([time(), json.dumps(data)])
+            if session_index >= 0:
+                self._csv_writer.writerow([time(), json.dumps(data)])
 
             send(self._to_client_connections, data)
 
