@@ -8,7 +8,7 @@ import pygame
 from common import (CLIENT_WINDOW_HEIGHT, CLIENT_WINDOW_WIDTH, UPDATE_RATE,
                     receive, send)
 
-from .config_ping_pong_task import SESSION_TIME_SECONDS
+from .config_ping_pong_task import SECONDS_COUNT_DOWN, SESSION_TIME_SECONDS
 from .utils import BALL_SIZE, WINDOW_HEIGHT, WINDOW_WIDTH, Ball, Paddle
 
 
@@ -57,6 +57,8 @@ class ServerPingPongTask:
                                                 max_speed=cfg.MAX_SPEED)
 
         self._ball = Ball(BALL_SIZE, cfg.BALL_X_SPEED)
+        self._ball.rect.y = self._game_y_lower_bound + int((WINDOW_HEIGHT + BALL_SIZE) / 2)
+        self._ball.rect.x = self._game_x_lower_bound + int((WINDOW_WIDTH + BALL_SIZE) / 2)
 
         self._score_left = 0
         self._score_right = 0
@@ -97,7 +99,8 @@ class ServerPingPongTask:
         print("[STATUS] Ping pong task ended")
 
     def _to_client_update_state(self):
-        counter_target = SESSION_TIME_SECONDS
+        counter_target = SECONDS_COUNT_DOWN
+        game_started = False
 
         start_ticks = pygame.time.get_ticks()
 
@@ -106,13 +109,19 @@ class ServerPingPongTask:
         clock = pygame.time.Clock()
         while self._running:
             if seconds >= counter_target:
-                self._running = False
-                break
+                if game_started:
+                    self._running = False
+                    break
+                else:
+                    counter_target = SESSION_TIME_SECONDS
+                    start_ticks = pygame.time.get_ticks()
+                    game_started = True
 
             # Update state of the ball
-            self._ball.update()
+            if game_started:
+                self._ball.update()
 
-            # Check for collision between
+            # Check for collision between ball and paddles
             paddle_collide_ball = False
             for paddle in self._paddles.values():
                 if pygame.sprite.collide_mask(self._ball, paddle):
