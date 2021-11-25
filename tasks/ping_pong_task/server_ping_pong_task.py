@@ -8,7 +8,7 @@ import pygame
 from common import (CLIENT_WINDOW_HEIGHT, CLIENT_WINDOW_WIDTH, UPDATE_RATE,
                     receive, send)
 
-from .config_easy_mode import PADDLE_WIDTH
+from .config_easy_mode import PADDLE_HEIGHT, PADDLE_WIDTH
 from .config_ping_pong_task import SECONDS_COUNT_DOWN, SESSION_TIME_SECONDS
 from .utils import (BALL_SIZE, LEFT_TEAM, RIGHT_TEAM, WINDOW_HEIGHT,
                     WINDOW_WIDTH, Ball, Paddle)
@@ -31,16 +31,21 @@ class ServerPingPongTask:
         self._game_x_lower_bound = int((CLIENT_WINDOW_WIDTH - WINDOW_WIDTH) / 2)
         self._game_x_upper_bound = self._game_x_lower_bound + WINDOW_WIDTH
 
-        center_paddle_y = int((self._game_y_upper_bound + cfg.PADDLE_HEIGHT) / 2)
-
         self._from_client_connections = {}
         self._paddles = {}
 
         from_client_connection_team_left, from_client_connection_team_right = from_client_connection_teams
 
-        for from_client_connection, client_name in from_client_connection_team_left.items():
+        segment_length_left = int((self._game_y_upper_bound - PADDLE_HEIGHT - self._game_y_lower_bound) / 
+                                  (len(from_client_connection_team_left) + 1))
+
+        segment_length_right = int((self._game_y_upper_bound - PADDLE_HEIGHT - self._game_y_lower_bound) / 
+                                   (len(from_client_connection_team_right) + 1))
+
+        for count, (from_client_connection, client_name) in enumerate(from_client_connection_team_left.items()):
             self._from_client_connections[from_client_connection] = client_name
-            self._paddles[client_name] = Paddle(position=(self._game_x_lower_bound, center_paddle_y),
+            self._paddles[client_name] = Paddle(position=(self._game_x_lower_bound, 
+                                                          self._game_y_lower_bound + segment_length_left * (count + 1)),
                                                 paddle_width=cfg.PADDLE_WIDTH,
                                                 paddle_height=cfg.PADDLE_HEIGHT,
                                                 upper_bound=self._game_y_upper_bound - cfg.PADDLE_HEIGHT,
@@ -49,9 +54,10 @@ class ServerPingPongTask:
                                                 max_speed=cfg.MAX_SPEED,
                                                 team=LEFT_TEAM)
 
-        for from_client_connection, client_name in from_client_connection_team_right.items():
+        for count, (from_client_connection, client_name) in enumerate(from_client_connection_team_right.items()):
             self._from_client_connections[from_client_connection] = client_name
-            self._paddles[client_name] = Paddle(position=(self._game_x_upper_bound - cfg.PADDLE_WIDTH, center_paddle_y),
+            self._paddles[client_name] = Paddle(position=(self._game_x_upper_bound - cfg.PADDLE_WIDTH, 
+                                                          self._game_y_lower_bound + segment_length_right * (count + 1)),
                                                 paddle_width=cfg.PADDLE_WIDTH,
                                                 paddle_height=cfg.PADDLE_HEIGHT,
                                                 upper_bound=self._game_y_upper_bound - cfg.PADDLE_HEIGHT,
