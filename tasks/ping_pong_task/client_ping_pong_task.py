@@ -4,6 +4,7 @@ import pygame
 from common import (CLIENT_WINDOW_HEIGHT, CLIENT_WINDOW_WIDTH, UPDATE_RATE,
                     receive, send)
 
+from .config_ping_pong_task import STARTING_MESSAGE
 from .utils import (BALL_SIZE, COLOR_BACKGROUND, COLOR_BORDER,
                     COLOR_FOREGROUND, COLOR_PLAYER, WINDOW_HEIGHT,
                     WINDOW_WIDTH, Ball, Paddle)
@@ -56,6 +57,7 @@ class ClientPingPongTask:
                 score_left = data["score_left"]
                 score_right = data["score_right"]
                 seconds = data["seconds"]
+                game_started = data["started"]
             elif data["type"] == "request":
                 if data["request"] == "end":
                     self._running = False
@@ -116,6 +118,13 @@ class ClientPingPongTask:
             timer = font.render(str(seconds), 1, COLOR_BORDER)
             timer_rect = timer.get_rect(center=(CLIENT_WINDOW_WIDTH / 2, self._game_y_lower_bound - 20))
             self._screen.blit(timer, timer_rect)
+
+            # Display starting message
+            if not game_started:
+                font = pygame.font.Font(None, 50)
+                timer = font.render(STARTING_MESSAGE, 1, COLOR_BORDER)
+                timer_rect = timer.get_rect(center=(CLIENT_WINDOW_WIDTH / 2, self._game_y_upper_bound + 30))
+                self._screen.blit(timer, timer_rect)
 
             pygame.display.flip()
 

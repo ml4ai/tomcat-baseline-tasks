@@ -169,6 +169,7 @@ class ServerPingPongTask:
             data["type"] = "state"
             data["score_left"] = self._score_left
             data["score_right"] = self._score_right
+            data["started"] = game_started
             data["state"] = {}
             data["state"]["ball"] = (self._ball.rect.x, self._ball.rect.y)
             for client_name, paddle in self._paddles.items():
