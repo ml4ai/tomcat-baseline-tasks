@@ -1,10 +1,8 @@
 import pygame
 
-from .utils import instruction, wait_for_experimenter
+from .utils import instruction
 
 
-def ping_pong_task_cooperative_instruction(to_server, screen, client_name):
+def ping_pong_task_cooperative_instruction(screen):
     image = pygame.image.load("instructions/images/pinkiepie.jpg")
     instruction(image, screen)
-
-    wait_for_experimenter(to_server, screen, client_name)

@@ -19,6 +19,8 @@ class ClientPingPongTask:
 
         if easy_mode:
             from . import config_easy_mode as cfg
+        else:
+            from . import config_hard_mode as cfg
 
         self._paddle_height = cfg.PADDLE_HEIGHT
         self._paddle_width = cfg.PADDLE_WIDTH

@@ -1,13 +1,11 @@
 import pygame
 
-from .utils import instruction, wait_for_experimenter
+from .utils import instruction
 
 
-def finger_tapping_task_instruction(to_server, screen, client_name):
-    image = pygame.image.load("instructions/images/TomCat_BaslineIntructions01-Introduction.png")
+def finger_tapping_task_instruction(screen):
+    image = pygame.image.load("instructions/images/TomCat_BaselineInstructions02-FingerTapGame_Pt1.png")
     instruction(image, screen)
 
-    image = pygame.image.load("instructions/images/TomCat_BaselineInstructions02-FingerTapingGame_Explanation.png")
+    image = pygame.image.load("instructions/images/TomCat_BaselineInstructions03_FingerTapGame_Pt2.png")
     instruction(image, screen)
-
-    wait_for_experimenter(to_server, screen, client_name)

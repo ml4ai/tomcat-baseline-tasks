@@ -25,7 +25,8 @@ if __name__ == "__main__":
 
     client_ai_ping_pong_task = ClientAIPingPongTask(client.from_server, 
                                                     client.to_server,
-                                                    client.client_name)
+                                                    client.client_name,
+                                                    easy_mode=False)
     client_ai_ping_pong_task.run()
 
     client.close()

@@ -4,8 +4,10 @@ import pygame
 
 from common import DEFAULT_SERVER_ADDR
 from instructions import (exit_instruction, finger_tapping_task_instruction,
+                          introduction_instruction,
                           ping_pong_task_competitive_instruction,
-                          ping_pong_task_cooperative_instruction)
+                          ping_pong_task_cooperative_instruction,
+                          wait_for_experimenter)
 from network import Client
 from tasks.finger_tapping_task import ClientFingerTappingTask
 from tasks.ping_pong_task import ClientPingPongTask
@@ -26,7 +28,11 @@ if __name__ == "__main__":
 
     client = Client(server_address, server_port, client_name)
 
-    finger_tapping_task_instruction(client.to_server, client.screen, client.client_name)
+    introduction_instruction(client.screen)
+
+    finger_tapping_task_instruction(client.screen)
+
+    wait_for_experimenter(client.to_server, client.screen, client.client_name)
 
     client_finger_tapping_task = ClientFingerTappingTask(client.from_server, 
                                                          client.to_server, 
@@ -34,7 +40,9 @@ if __name__ == "__main__":
                                                          client.client_name)
     client_finger_tapping_task.run()
 
-    ping_pong_task_competitive_instruction(client.to_server, client.screen, client.client_name)
+    ping_pong_task_competitive_instruction(client.screen)
+
+    wait_for_experimenter(client.to_server, client.screen, client.client_name)
 
     client_ping_pong_task = ClientPingPongTask(client.from_server, 
                                                     client.to_server, 
@@ -42,12 +50,15 @@ if __name__ == "__main__":
                                                     client.client_name)
     client_ping_pong_task.run()
 
-    ping_pong_task_cooperative_instruction(client.to_server, client.screen, client.client_name)
+    ping_pong_task_cooperative_instruction(client.screen)
+
+    wait_for_experimenter(client.to_server, client.screen, client.client_name)
 
     client_ping_pong_task = ClientPingPongTask(client.from_server, 
                                                     client.to_server, 
                                                     client.screen, 
-                                                    client.client_name)
+                                                    client.client_name,
+                                                    easy_mode=False)
     client_ping_pong_task.run()
 
     exit_instruction(client.to_server, client.screen, client.client_name)

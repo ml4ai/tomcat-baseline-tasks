@@ -14,16 +14,16 @@ class Paddle(pygame.sprite.Sprite):
                  color: tuple = (0, 0, 0),
                  upper_bound: int = 0,
                  lower_bound: int = 0,
-                 speed_scaling: float = 1.0,
-                 max_speed = None,
+                 paddle_speed_scaling: float = 1.0,
+                 paddle_max_speed = None,
                  team: int = LEFT_TEAM):
         super().__init__()
 
          # Store game information
         self._upper_bound = upper_bound
         self._lower_bound = lower_bound
-        self._speed_scaling = speed_scaling
-        self._max_speed = max_speed
+        self._paddle_speed_scaling = paddle_speed_scaling
+        self._paddle_max_speed = paddle_max_speed
 
         self.team = team
 
@@ -39,9 +39,9 @@ class Paddle(pygame.sprite.Sprite):
         self.rect.x, self.rect.y = position
 
     def update_location(self, change: int):
-        speed = int(change * self._speed_scaling)
+        speed = int(change * self._paddle_speed_scaling)
 
-        if self._max_speed is not None:
-            speed = max(-self._max_speed, min(self._max_speed, speed))
+        if self._paddle_max_speed is not None:
+            speed = max(-self._paddle_max_speed, min(self._paddle_max_speed, speed))
 
         self.rect.y = max(self._lower_bound, min(self._upper_bound, self.rect.y + speed))

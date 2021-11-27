@@ -20,6 +20,8 @@ class ServerPingPongTask:
 
         if easy_mode:
             from . import config_easy_mode as cfg
+        else:
+            from . import config_hard_mode as cfg
 
         self._paddle_height = cfg.PADDLE_HEIGHT
         self._paddle_width = cfg.PADDLE_WIDTH
@@ -46,25 +48,25 @@ class ServerPingPongTask:
             self._from_client_connections[from_client_connection] = client_name
             self._paddles[client_name] = Paddle(position=(self._game_x_lower_bound, 
                                                           self._game_y_lower_bound + segment_length_left * (count + 1)),
-                                                paddle_width=cfg.PADDLE_WIDTH,
-                                                paddle_height=cfg.PADDLE_HEIGHT,
-                                                upper_bound=self._game_y_upper_bound - cfg.PADDLE_HEIGHT,
-                                                lower_bound=self._game_y_lower_bound,
-                                                speed_scaling=cfg.SPEED_SCALING,
-                                                max_speed=cfg.MAX_SPEED,
-                                                team=LEFT_TEAM)
+                                                          paddle_width=cfg.PADDLE_WIDTH,
+                                                          paddle_height=cfg.PADDLE_HEIGHT,
+                                                          upper_bound=self._game_y_upper_bound - cfg.PADDLE_HEIGHT,
+                                                          lower_bound=self._game_y_lower_bound,
+                                                          paddle_speed_scaling=cfg.PADDLE_SPEED_SCALING,
+                                                          paddle_max_speed=cfg.PADDLE_MAX_SPEED,
+                                                          team=LEFT_TEAM)
 
         for count, (from_client_connection, client_name) in enumerate(from_client_connection_team_right.items()):
             self._from_client_connections[from_client_connection] = client_name
             self._paddles[client_name] = Paddle(position=(self._game_x_upper_bound - cfg.PADDLE_WIDTH, 
                                                           self._game_y_lower_bound + segment_length_right * (count + 1)),
-                                                paddle_width=cfg.PADDLE_WIDTH,
-                                                paddle_height=cfg.PADDLE_HEIGHT,
-                                                upper_bound=self._game_y_upper_bound - cfg.PADDLE_HEIGHT,
-                                                lower_bound=self._game_y_lower_bound,
-                                                speed_scaling=cfg.SPEED_SCALING,
-                                                max_speed=cfg.MAX_SPEED,
-                                                team=RIGHT_TEAM)
+                                                          paddle_width=cfg.PADDLE_WIDTH,
+                                                          paddle_height=cfg.PADDLE_HEIGHT,
+                                                          upper_bound=self._game_y_upper_bound - cfg.PADDLE_HEIGHT,
+                                                          lower_bound=self._game_y_lower_bound,
+                                                          paddle_speed_scaling=cfg.PADDLE_SPEED_SCALING,
+                                                          paddle_max_speed=cfg.PADDLE_MAX_SPEED,
+                                                          team=RIGHT_TEAM)
 
         self._ball = Ball(BALL_SIZE, cfg.BALL_X_SPEED)
         self._ball.rect.y = self._game_y_lower_bound + int((WINDOW_HEIGHT + BALL_SIZE) / 2)
