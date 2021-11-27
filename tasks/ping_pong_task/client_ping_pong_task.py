@@ -1,13 +1,12 @@
 import threading
 
 import pygame
-from common import (CLIENT_WINDOW_HEIGHT, CLIENT_WINDOW_WIDTH, UPDATE_RATE,
-                    receive, send)
+from common import (CLIENT_WINDOW_HEIGHT, CLIENT_WINDOW_WIDTH,
+                    COLOR_BACKGROUND, COLOR_DIM, COLOR_FOREGROUND,
+                    COLOR_PLAYER, UPDATE_RATE, receive, send)
 
 from .config_ping_pong_task import STARTING_MESSAGE
-from .utils import (BALL_SIZE, COLOR_BACKGROUND, COLOR_BORDER,
-                    COLOR_FOREGROUND, COLOR_PLAYER, WINDOW_HEIGHT,
-                    WINDOW_WIDTH, Ball, Paddle)
+from .utils import BALL_SIZE, WINDOW_HEIGHT, WINDOW_WIDTH, Ball, Paddle
 
 
 class ClientPingPongTask:
@@ -88,19 +87,19 @@ class ClientPingPongTask:
 
             # Draw game border
             pygame.draw.line(self._screen,
-                             COLOR_BORDER,
+                             COLOR_DIM,
                              (self._game_x_lower_bound, self._game_y_lower_bound),
                              (self._game_x_upper_bound, self._game_y_lower_bound))
             pygame.draw.line(self._screen,
-                             COLOR_BORDER,
+                             COLOR_DIM,
                              (self._game_x_lower_bound, self._game_y_upper_bound),
                              (self._game_x_upper_bound, self._game_y_upper_bound))
             pygame.draw.line(self._screen,
-                             COLOR_BORDER,
+                             COLOR_DIM,
                              (self._game_x_lower_bound, self._game_y_lower_bound),
                              (self._game_x_lower_bound, self._game_y_upper_bound))
             pygame.draw.line(self._screen,
-                             COLOR_BORDER,
+                             COLOR_DIM,
                              (self._game_x_upper_bound, self._game_y_lower_bound),
                              (self._game_x_upper_bound, self._game_y_upper_bound))
 
@@ -115,14 +114,14 @@ class ClientPingPongTask:
             self._screen.blit(text_score_right, text_score_right_rect)
 
             # Display timer
-            timer = font.render(str(seconds), 1, COLOR_BORDER)
+            timer = font.render(str(seconds), 1, COLOR_DIM)
             timer_rect = timer.get_rect(center=(CLIENT_WINDOW_WIDTH / 2, self._game_y_lower_bound - 20))
             self._screen.blit(timer, timer_rect)
 
             # Display starting message
             if not game_started:
                 font = pygame.font.Font(None, 50)
-                timer = font.render(STARTING_MESSAGE, 1, COLOR_BORDER)
+                timer = font.render(STARTING_MESSAGE, 1, COLOR_DIM)
                 timer_rect = timer.get_rect(center=(CLIENT_WINDOW_WIDTH / 2, self._game_y_upper_bound + 30))
                 self._screen.blit(timer, timer_rect)
 

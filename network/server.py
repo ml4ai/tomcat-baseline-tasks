@@ -1,9 +1,8 @@
 import socket
-import sys
 import threading
 from select import select
 
-from common import get_terminal_command, receive
+from common import get_terminal_command, receive, send
 
 
 class Server:
@@ -73,9 +72,19 @@ class Server:
 
                 [client_name] = receive([client_conn])
 
-                self.to_client_connections[client_name] = client_conn
-
-                print("Sending replies to [" + client_addr[0] + ", " + str(client_addr[1]) + ']')
+                if client_name in self.to_client_connections:
+                    data = {}
+                    data["type"] = "status"
+                    data["status"] = "failed"
+                    send([client_conn], data)
+                    print(f"[WARNING] Connection name exists for {client_name}")
+                else:
+                    self.to_client_connections[client_name] = client_conn
+                    data = {}
+                    data["type"] = "status"
+                    data["status"] = "succeeded"
+                    send([client_conn], data)
+                    print("Sending replies to [" + client_addr[0] + ", " + str(client_addr[1]) + ']')
 
     def _dispatch_from_client_request(self) -> None:
         """
@@ -94,9 +103,19 @@ class Server:
 
                 [client_name] = receive([client_conn])
 
-                self.from_client_connections[client_conn] = client_name
-
-                print("Receiving commands from [" + client_name + ", " + client_addr[0] + ", " + str(client_addr[1]) + ']')
+                if client_name in self.to_client_connections.values():
+                    data = {}
+                    data["type"] = "status"
+                    data["status"] = "failed"
+                    send([client_conn], data)
+                    print(f"[WARNING] Connection name existed for {client_name}")
+                else:
+                    self.from_client_connections[client_conn] = client_name
+                    data = {}
+                    data["type"] = "status"
+                    data["status"] = "succeeded"
+                    send([client_conn], data)
+                    print("Receiving commands from [" + client_name + ", " + client_addr[0] + ", " + str(client_addr[1]) + ']')
 
     def _from_clients(self) -> None:
         while self._establishing_connections:

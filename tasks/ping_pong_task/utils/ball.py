@@ -3,8 +3,9 @@ from random import randint
 from typing import Optional
 
 import pygame
+from common import COLOR_FOREGROUND
 
-from .constants import COLOR_FOREGROUND, WINDOW_HEIGHT, WINDOW_WIDTH
+from .constants import WINDOW_HEIGHT, WINDOW_WIDTH
 
 
 class Ball(pygame.sprite.Sprite):

@@ -1,7 +1,7 @@
 import socket
 
 import pygame
-from common import send
+from common import receive, send
 
 
 class Client:
@@ -13,14 +13,20 @@ class Client:
         self.from_server.setblocking(False)
 
         send([self.from_server], self.client_name)
+        [data] = receive([self.from_server])
+        if data["type"] != "status" or data["status"] == "failed":
+            raise RuntimeError("[ERROR] Connection to from_server failed")
 
         self.to_server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.to_server.connect((host, port + 1))
         self.to_server.setblocking(False)
 
         send([self.to_server], self.client_name)
+        [data] = receive([self.to_server])
+        if data["type"] != "status" or data["status"] == "failed":
+            raise RuntimeError("[ERROR] Connection to to_server failed")
 
-        print("Connected to server")
+        print("[INFO] Connected to server")
 
         if screen:
             self.screen = pygame.display.set_mode((0, 0), pygame.FULLSCREEN)
@@ -36,4 +42,4 @@ class Client:
         self.from_server.close()
         self.to_server.close()
 
-        print("Closed connection to server")
+        print("[INFO] Closed connection to server")

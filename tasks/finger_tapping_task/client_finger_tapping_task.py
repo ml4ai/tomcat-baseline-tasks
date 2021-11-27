@@ -1,11 +1,11 @@
 import threading
 
 import pygame
-from common import UPDATE_RATE, receive, send
+from common import (COLOR_BACKGROUND, COLOR_DIM, COLOR_FOREGROUND,
+                    COLOR_PLAYER, COLOR_PLAYER_DIM, UPDATE_RATE, receive, send)
 
 from .config_finger_tapping_task import BOX_WIDTH, STARTING_MESSAGE
-from .utils import (COLOR_BACKGROUND, COLOR_FOREGROUND, COLOR_FOREGROUND_DIM,
-                    COLOR_PLAYER, COLOR_PLAYER_DIM, PlayerSquare)
+from .utils import PlayerSquare
 
 
 class ClientFingerTappingTask:
@@ -65,16 +65,16 @@ class ClientFingerTappingTask:
                     all_sprites_list.add(subject)
                 elif reveal_others:
                     if num_other_players == 1:
-                        color = COLOR_FOREGROUND if state else COLOR_FOREGROUND_DIM
+                        color = COLOR_FOREGROUND if state else COLOR_DIM
                         subject = PlayerSquare((main_player_coordinate[0], other_player_height), color)
                         all_sprites_list.add(subject)
                     elif player_counter == 0:
-                        color = COLOR_FOREGROUND if state else COLOR_FOREGROUND_DIM
+                        color = COLOR_FOREGROUND if state else COLOR_DIM
                         subject = PlayerSquare((main_player_coordinate[0] - other_player_width_offset, other_player_height), color)
                         all_sprites_list.add(subject)
                         player_counter += 1
                     else:
-                        color = COLOR_FOREGROUND if state else COLOR_FOREGROUND_DIM
+                        color = COLOR_FOREGROUND if state else COLOR_DIM
                         subject = PlayerSquare((main_player_coordinate[0] + other_player_width_offset, other_player_height), color)
                         all_sprites_list.add(subject)
 
