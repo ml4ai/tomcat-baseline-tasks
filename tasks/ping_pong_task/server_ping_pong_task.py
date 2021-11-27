@@ -103,6 +103,8 @@ class ServerPingPongTask:
         data = {}
         data["type"] = "request"
         data["request"] = "end"
+        data["score_left"] = self._score_left
+        data["score_right"] = self._score_right
 
         send(self._to_client_connections, data)
 

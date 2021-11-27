@@ -5,7 +5,8 @@ from common import (CLIENT_WINDOW_HEIGHT, CLIENT_WINDOW_WIDTH,
                     COLOR_BACKGROUND, COLOR_DIM, COLOR_FOREGROUND,
                     COLOR_PLAYER, UPDATE_RATE, receive, send)
 
-from .config_ping_pong_task import STARTING_MESSAGE
+from .config_ping_pong_task import (SHOW_SCORE_COUNT_DOWN_MILLISECONDS,
+                                    STARTING_MESSAGE)
 from .utils import BALL_SIZE, WINDOW_HEIGHT, WINDOW_WIDTH, Ball, Paddle
 
 
@@ -60,7 +61,26 @@ class ClientPingPongTask:
             elif data["type"] == "request":
                 if data["request"] == "end":
                     self._running = False
+
+                    score_left = data["score_left"]
+                    score_right = data["score_right"]
+
+                    font = pygame.font.Font(None, 50)
+
+                    if score_left > score_right:
+                        message = f"Left team won (left {score_left} - right {score_right})"
+                    elif score_right > score_left:
+                        message = f"Right team won (left {score_left} - right {score_right})"
+                    else:
+                        message = f"Tie (left {score_left} - right {score_right})"
+
+                    score_message = font.render(message, 1, COLOR_FOREGROUND)
+                    score_message_rect = score_message.get_rect(center=(CLIENT_WINDOW_WIDTH / 2, CLIENT_WINDOW_HEIGHT / 2))
+                    self._screen.blit(score_message, score_message_rect)
+
                     pygame.display.flip()
+
+                    pygame.time.wait(SHOW_SCORE_COUNT_DOWN_MILLISECONDS)
                     break
 
             # Add sprites to sprite group
