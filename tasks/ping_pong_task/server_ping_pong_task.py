@@ -33,6 +33,10 @@ class ServerPingPongTask:
         self._game_x_lower_bound = int((CLIENT_WINDOW_WIDTH - WINDOW_WIDTH) / 2)
         self._game_x_upper_bound = self._game_x_lower_bound + WINDOW_WIDTH
 
+        metadata = {}
+        metadata["left_team"] = []
+        metadata["right_team"] = []
+
         self._from_client_connections = {}
         self._paddles = {}
 
@@ -55,6 +59,7 @@ class ServerPingPongTask:
                                                           paddle_speed_scaling=cfg.PADDLE_SPEED_SCALING,
                                                           paddle_max_speed=cfg.PADDLE_MAX_SPEED,
                                                           team=LEFT_TEAM)
+            metadata["left_team"].append(client_name)
 
         for count, (from_client_connection, client_name) in enumerate(from_client_connection_team_right.items()):
             self._from_client_connections[from_client_connection] = client_name
@@ -67,6 +72,7 @@ class ServerPingPongTask:
                                                           paddle_speed_scaling=cfg.PADDLE_SPEED_SCALING,
                                                           paddle_max_speed=cfg.PADDLE_MAX_SPEED,
                                                           team=RIGHT_TEAM)
+            metadata["right_team"].append(client_name)
 
         self._ball = Ball(BALL_SIZE, cfg.BALL_X_SPEED)
         self._ball.rect.y = self._game_y_lower_bound + int((WINDOW_HEIGHT + BALL_SIZE) / 2)
@@ -85,7 +91,6 @@ class ServerPingPongTask:
         self._csv_file = open(csv_data_path + '/' + session_name + '_' + str(int(time())) + ".csv", 'w', newline='')
         self._csv_writer = csv.writer(self._csv_file, delimiter=';')
 
-        metadata = {}
         metadata["client_window_height"] = CLIENT_WINDOW_HEIGHT
         metadata["client_window_width"] = CLIENT_WINDOW_WIDTH
         metadata["session_time_seconds"] = SESSION_TIME_SECONDS
@@ -170,6 +175,10 @@ class ServerPingPongTask:
                         ball_bound_y_velocity = int(((self._ball.rect.y + BALL_SIZE / 2.0) -
                                                     (paddle.rect.y + self._paddle_height / 2.0))
                                                     * self._ball_bounce_on_paddle_scale)
+                        
+                        # Prevent ball from ever moving pure horizontally
+                        ball_bound_y_velocity = 1 if ball_bound_y_velocity == 0 else ball_bound_y_velocity
+                        
                         self._ball.bounce(ball_bound_y_velocity)
 
                         if self._ball.rect.x < CLIENT_WINDOW_WIDTH / 2:
