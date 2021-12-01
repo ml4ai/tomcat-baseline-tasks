@@ -7,6 +7,6 @@ SECONDS_PER_SESSION = [10.0, 10.0, 10.0, 10.0]
 SECONDS_COUNT_DOWN = 10.0
 
 # game sprite
-BOX_WIDTH = 200
+SQUARE_WIDTH = 200
 
-STARTING_MESSAGE = "Practice session: Press SPACEBAR and observe the squares"
+COUNT_DOWN_MESSAGE = "Practice session: Press SPACEBAR and observe the squares"

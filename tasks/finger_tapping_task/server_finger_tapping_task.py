@@ -8,7 +8,8 @@ import pygame
 from common import UPDATE_RATE, receive, send
 
 from .config_finger_tapping_task import (SECONDS_COUNT_DOWN,
-                                         SECONDS_PER_SESSION, SESSION)
+                                         SECONDS_PER_SESSION, SESSION,
+                                         SQUARE_WIDTH, COUNT_DOWN_MESSAGE)
 from .utils import TAPPED, UNTAPPED
 
 
@@ -21,13 +22,27 @@ class ServerFingerTappingTask:
         for client_name in from_client_connections.values():
             self._state[client_name] = UNTAPPED
 
-        csv_data_path = "./data/finger_tapping"
+        data_path = "./data/finger_tapping"
 
-        if not os.path.exists(csv_data_path):
-            os.makedirs(csv_data_path)
+        if not os.path.exists(data_path):
+            os.makedirs(data_path)
 
-        self._csv_file = open(csv_data_path + '/' + str(int(time())) + ".csv", 'w', newline='')
+        csv_file_name = data_path + '/' + str(int(time()))
+
+        self._csv_file = open(csv_file_name + ".csv", 'w', newline='')
         self._csv_writer = csv.writer(self._csv_file, delimiter=';')
+
+        metadata = {}
+        metadata["session"] = SESSION
+        metadata["seconds_per_session"] = SECONDS_PER_SESSION
+        metadata["seconds_count_down"] = SECONDS_COUNT_DOWN
+        metadata["square_width"] = SQUARE_WIDTH
+        metadata["count_down_message"] = COUNT_DOWN_MESSAGE
+
+        json_file_name = csv_file_name + "_metadata"
+
+        with open(json_file_name + ".json", 'w') as json_file:
+            json.dump(metadata, json_file, indent=4)
 
         self._running = False
 

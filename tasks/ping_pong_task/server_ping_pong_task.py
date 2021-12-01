@@ -8,8 +8,8 @@ import pygame
 from common import (CLIENT_WINDOW_HEIGHT, CLIENT_WINDOW_WIDTH, UPDATE_RATE,
                     receive, send)
 
-from .config_easy_mode import PADDLE_HEIGHT, PADDLE_WIDTH
-from .config_ping_pong_task import SECONDS_COUNT_DOWN, SESSION_TIME_SECONDS
+from .config_ping_pong_task import (COUNT_DOWN_MESSAGE, SECONDS_COUNT_DOWN,
+                                    SESSION_TIME_SECONDS)
 from .utils import (BALL_SIZE, LEFT_TEAM, RIGHT_TEAM, WINDOW_HEIGHT,
                     WINDOW_WIDTH, Ball, Paddle)
 
@@ -38,19 +38,19 @@ class ServerPingPongTask:
 
         from_client_connection_team_left, from_client_connection_team_right = from_client_connection_teams
 
-        segment_length_left = int((self._game_y_upper_bound - PADDLE_HEIGHT - self._game_y_lower_bound) / 
+        segment_length_left = int((self._game_y_upper_bound - self._paddle_height - self._game_y_lower_bound) / 
                                   (len(from_client_connection_team_left) + 1))
 
-        segment_length_right = int((self._game_y_upper_bound - PADDLE_HEIGHT - self._game_y_lower_bound) / 
+        segment_length_right = int((self._game_y_upper_bound - self._paddle_height - self._game_y_lower_bound) / 
                                    (len(from_client_connection_team_right) + 1))
 
         for count, (from_client_connection, client_name) in enumerate(from_client_connection_team_left.items()):
             self._from_client_connections[from_client_connection] = client_name
             self._paddles[client_name] = Paddle(position=(self._game_x_lower_bound, 
                                                           self._game_y_lower_bound + segment_length_left * (count + 1)),
-                                                          paddle_width=cfg.PADDLE_WIDTH,
-                                                          paddle_height=cfg.PADDLE_HEIGHT,
-                                                          upper_bound=self._game_y_upper_bound - cfg.PADDLE_HEIGHT,
+                                                          paddle_width=self._paddle_width,
+                                                          paddle_height=self._paddle_height,
+                                                          upper_bound=self._game_y_upper_bound - self._paddle_height,
                                                           lower_bound=self._game_y_lower_bound,
                                                           paddle_speed_scaling=cfg.PADDLE_SPEED_SCALING,
                                                           paddle_max_speed=cfg.PADDLE_MAX_SPEED,
@@ -58,11 +58,11 @@ class ServerPingPongTask:
 
         for count, (from_client_connection, client_name) in enumerate(from_client_connection_team_right.items()):
             self._from_client_connections[from_client_connection] = client_name
-            self._paddles[client_name] = Paddle(position=(self._game_x_upper_bound - cfg.PADDLE_WIDTH, 
+            self._paddles[client_name] = Paddle(position=(self._game_x_upper_bound - self._paddle_width, 
                                                           self._game_y_lower_bound + segment_length_right * (count + 1)),
-                                                          paddle_width=cfg.PADDLE_WIDTH,
-                                                          paddle_height=cfg.PADDLE_HEIGHT,
-                                                          upper_bound=self._game_y_upper_bound - cfg.PADDLE_HEIGHT,
+                                                          paddle_width=self._paddle_width,
+                                                          paddle_height=self._paddle_height,
+                                                          upper_bound=self._game_y_upper_bound - self._paddle_height,
                                                           lower_bound=self._game_y_lower_bound,
                                                           paddle_speed_scaling=cfg.PADDLE_SPEED_SCALING,
                                                           paddle_max_speed=cfg.PADDLE_MAX_SPEED,
@@ -80,8 +80,29 @@ class ServerPingPongTask:
         if not os.path.exists(csv_data_path):
             os.makedirs(csv_data_path)
 
+        csv_file_name = csv_data_path + '/' + session_name + '_' + str(int(time()))
+
         self._csv_file = open(csv_data_path + '/' + session_name + '_' + str(int(time())) + ".csv", 'w', newline='')
         self._csv_writer = csv.writer(self._csv_file, delimiter=';')
+
+        metadata = {}
+        metadata["client_window_height"] = CLIENT_WINDOW_HEIGHT
+        metadata["client_window_width"] = CLIENT_WINDOW_WIDTH
+        metadata["session_time_seconds"] = SESSION_TIME_SECONDS
+        metadata["seconds_count_down"] = SECONDS_COUNT_DOWN
+        metadata["count_down_message"] = COUNT_DOWN_MESSAGE
+        metadata["paddle_width"] = self._paddle_width
+        metadata["paddle_height"] = self._paddle_height
+        metadata["ai_paddle_max_speed"] = cfg.AI_PADDLE_MAX_SPEED
+        metadata["paddle_speed_scaling"] = cfg.PADDLE_SPEED_SCALING
+        metadata["paddle_max_speed"] = cfg.PADDLE_MAX_SPEED
+        metadata["ball_x_speed"] = cfg.BALL_X_SPEED
+        metadata["ball_bounce_on_paddle_scale"] = cfg.BALL_BOUNCE_ON_PADDLE_SCALE
+
+        json_file_name = csv_file_name + "_metadata"
+
+        with open(json_file_name + ".json", 'w') as json_file:
+            json.dump(metadata, json_file, indent=4)
 
         self._running = False
 
@@ -141,7 +162,7 @@ class ServerPingPongTask:
                 if pygame.sprite.collide_mask(self._ball, paddle):
                     if self._ball.velocity[0] > 0 and paddle.team == LEFT_TEAM:
                         self._ball.velocity[1] = -self._ball.velocity[1]
-                        self._ball.rect.x = paddle.rect.x + PADDLE_WIDTH
+                        self._ball.rect.x = paddle.rect.x + self._paddle_width
                     elif self._ball.velocity[0] < 0 and paddle.team == RIGHT_TEAM:
                         self._ball.velocity[1] = -self._ball.velocity[1]
                         self._ball.rect.x = paddle.rect.x - BALL_SIZE

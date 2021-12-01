@@ -6,7 +6,7 @@ from common import (BLANK_SCREEN_COUNT_DOWN_MILLISECONDS, CLIENT_WINDOW_HEIGHT,
                     COLOR_FOREGROUND, COLOR_PLAYER, UPDATE_RATE, receive, send)
 
 from .config_ping_pong_task import (SHOW_SCORE_COUNT_DOWN_MILLISECONDS,
-                                    STARTING_MESSAGE)
+                                    COUNT_DOWN_MESSAGE)
 from .utils import BALL_SIZE, WINDOW_HEIGHT, WINDOW_WIDTH, Ball, Paddle
 
 
@@ -146,7 +146,7 @@ class ClientPingPongTask:
             # Display starting message
             if not game_started:
                 font = pygame.font.Font(None, 50)
-                timer = font.render(STARTING_MESSAGE, 1, COLOR_DIM)
+                timer = font.render(COUNT_DOWN_MESSAGE, 1, COLOR_DIM)
                 timer_rect = timer.get_rect(center=(CLIENT_WINDOW_WIDTH / 2, self._game_y_upper_bound + 30))
                 self._screen.blit(timer, timer_rect)
 

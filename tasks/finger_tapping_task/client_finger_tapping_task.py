@@ -5,7 +5,7 @@ from common import (BLANK_SCREEN_COUNT_DOWN_MILLISECONDS, COLOR_BACKGROUND,
                     COLOR_DIM, COLOR_FOREGROUND, COLOR_PLAYER,
                     COLOR_PLAYER_DIM, UPDATE_RATE, receive, send)
 
-from .config_finger_tapping_task import BOX_WIDTH, STARTING_MESSAGE
+from .config_finger_tapping_task import SQUARE_WIDTH, COUNT_DOWN_MESSAGE
 from .utils import PlayerSquare
 
 
@@ -29,9 +29,9 @@ class ClientFingerTappingTask:
         print("[STATUS] Running finger tapping task")
 
         win_width, win_height = pygame.display.get_surface().get_size()
-        main_player_coordinate = ((win_width - BOX_WIDTH) / 2, (win_height / 2) - BOX_WIDTH - 1)
+        main_player_coordinate = ((win_width - SQUARE_WIDTH) / 2, (win_height / 2) - SQUARE_WIDTH - 1)
         other_player_height = (win_height / 2) + 1
-        other_player_width_offset = (BOX_WIDTH / 2) + 1
+        other_player_width_offset = (SQUARE_WIDTH / 2) + 1
 
         while self._running:
             pygame.event.get()
@@ -91,7 +91,7 @@ class ClientFingerTappingTask:
 
             if session_index < 0:
                 font = pygame.font.Font(None, 50)
-                text = font.render(STARTING_MESSAGE, 1, COLOR_FOREGROUND)
+                text = font.render(COUNT_DOWN_MESSAGE, 1, COLOR_FOREGROUND)
                 text_rect = text.get_rect(center=((win_width / 2), other_player_height + 250))
                 self._screen.blit(text, text_rect)
 
