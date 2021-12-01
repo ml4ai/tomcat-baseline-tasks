@@ -1,8 +1,9 @@
 import threading
 
 import pygame
-from common import (COLOR_BACKGROUND, COLOR_DIM, COLOR_FOREGROUND,
-                    COLOR_PLAYER, COLOR_PLAYER_DIM, UPDATE_RATE, receive, send)
+from common import (BLANK_SCREEN_COUNT_DOWN_MILLISECONDS, COLOR_BACKGROUND,
+                    COLOR_DIM, COLOR_FOREGROUND, COLOR_PLAYER,
+                    COLOR_PLAYER_DIM, UPDATE_RATE, receive, send)
 
 from .config_finger_tapping_task import BOX_WIDTH, STARTING_MESSAGE
 from .utils import PlayerSquare
@@ -51,6 +52,7 @@ class ClientFingerTappingTask:
                 if data["request"] == "end":
                     self._running = False
                     pygame.display.flip()
+                    pygame.time.wait(BLANK_SCREEN_COUNT_DOWN_MILLISECONDS)
                     break
 
             num_other_players = len(self._state) - 1

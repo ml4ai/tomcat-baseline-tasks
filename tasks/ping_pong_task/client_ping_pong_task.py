@@ -1,9 +1,9 @@
 import threading
 
 import pygame
-from common import (CLIENT_WINDOW_HEIGHT, CLIENT_WINDOW_WIDTH,
-                    COLOR_BACKGROUND, COLOR_DIM, COLOR_FOREGROUND,
-                    COLOR_PLAYER, UPDATE_RATE, receive, send)
+from common import (BLANK_SCREEN_COUNT_DOWN_MILLISECONDS, CLIENT_WINDOW_HEIGHT,
+                    CLIENT_WINDOW_WIDTH, COLOR_BACKGROUND, COLOR_DIM,
+                    COLOR_FOREGROUND, COLOR_PLAYER, UPDATE_RATE, receive, send)
 
 from .config_ping_pong_task import (SHOW_SCORE_COUNT_DOWN_MILLISECONDS,
                                     STARTING_MESSAGE)
@@ -63,6 +63,9 @@ class ClientPingPongTask:
             elif data["type"] == "request":
                 if data["request"] == "end":
                     self._running = False
+
+                    pygame.display.flip()
+                    pygame.time.wait(BLANK_SCREEN_COUNT_DOWN_MILLISECONDS)
 
                     score_left = data["score_left"]
                     score_right = data["score_right"]
