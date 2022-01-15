@@ -28,12 +28,15 @@ if __name__ == "__main__":
 
     server.establish_connections()
 
-    # Finger tapping
+    # Finger tapping task
     server_finger_tapping_task = ServerFingerTappingTask(list(server.to_client_connections.values()), 
                                                          server.from_client_connections)
     server_finger_tapping_task.run()
 
     server.establish_connections()
+
+    # Affective task
+    
 
     # Ping pong competitive
     client_pairs = pairing_clients(server.to_client_connections, server.from_client_connections)
