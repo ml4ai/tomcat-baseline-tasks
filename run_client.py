@@ -28,7 +28,11 @@ if __name__ == "__main__":
 
     client = Client(server_address, server_port, client_name)
 
+    # Introduction slides
+
     introduction_instruction(client.screen)
+    
+    # Finger tapping task
 
     finger_tapping_task_instruction(client.screen)
 
@@ -40,6 +44,12 @@ if __name__ == "__main__":
                                                          client.client_name)
     client_finger_tapping_task.run()
 
+    # Affective task
+
+    
+
+    # Ping pong competitive task
+
     ping_pong_task_competitive_instruction(client.screen)
 
     wait_for_experimenter(client.to_server, client.screen, client.client_name)
@@ -49,6 +59,8 @@ if __name__ == "__main__":
                                                     client.screen, 
                                                     client.client_name)
     client_ping_pong_task.run()
+
+    # Ping pong cooperative task
 
     ping_pong_task_cooperative_instruction(client.screen)
 

@@ -21,8 +21,8 @@ class Server:
 
         print(f"Address: {host}, {port}")
 
-        self.to_client_connections = {}
-        self.from_client_connections = {}
+        self.to_client_connections = {}     # Key: client name, Value: client connection
+        self.from_client_connections = {}   # Key: client connection, Value: client name
 
         self._establishing_connections = False
 
