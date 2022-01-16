@@ -3,6 +3,9 @@ from multiprocessing import Process
 
 from common import DEFAULT_SERVER_ADDR, client_ai_teaming, pairing_clients
 from network import Server
+from tasks.affective_task import (INDIVIDUAL_IMAGE_TIMER,
+                                  INDIVIDUAL_RATING_TIMER, TEAM_IMAGE_TIMER,
+                                  TEAM_RATING_TIMER, ServerAffectiveTask)
 from tasks.finger_tapping_task import ServerFingerTappingTask
 from tasks.ping_pong_task import ServerPingPongTask
 
@@ -36,7 +39,18 @@ if __name__ == "__main__":
     server.establish_connections()
 
     # Affective task
+    server_affective_task = ServerAffectiveTask(list(server.to_client_connections.values()), 
+                                                     server.from_client_connections)
     
+    # Individual
+    server_affective_task.run(INDIVIDUAL_IMAGE_TIMER, INDIVIDUAL_RATING_TIMER, collaboration=False)
+
+    server.establish_connections()
+
+    # Team
+    server_affective_task.run(TEAM_IMAGE_TIMER, TEAM_RATING_TIMER, collaboration=True)
+
+    server.establish_connections()
 
     # Ping pong competitive
     client_pairs = pairing_clients(server.to_client_connections, server.from_client_connections)
