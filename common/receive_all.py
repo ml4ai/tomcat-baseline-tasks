@@ -6,10 +6,10 @@ from typing import Optional
 from common import HEADER
 
 
-def receive_all(senders: list, wait_time: Optional[float] = None) -> list:
-    data = []
+def receive_all(senders: dict, wait_time: Optional[float] = None) -> list:
+    data = {}
 
-    waiting_for_senders = senders.copy()
+    waiting_for_senders = senders.keys().copy()
 
     start_time = time()
 
@@ -28,11 +28,11 @@ def receive_all(senders: list, wait_time: Optional[float] = None) -> list:
                 print("[INFO] JSON failed to decode message")
                 continue
 
-            data.append(message)
+            data[senders[connection]] = message
 
             waiting_for_senders.remove(connection)
 
-        if time() - start_time > wait_time:
+        if wait_time is not None and time() - start_time > wait_time:
             break
 
     return data
