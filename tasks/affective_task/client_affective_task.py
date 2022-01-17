@@ -11,13 +11,15 @@ class ClientAffectiveTask:
         print("[STATUS] Running affective task")
 
         while True:
-            data = receive([self._from_server])
+            [data] = receive([self._from_server])
 
             if data["type"] == "request":
                 if data["request"] == "end":
                     break
 
             # TODO: Display data
+            print(data)
+            input()
 
             # TODO: submit valid responses
             response = {
