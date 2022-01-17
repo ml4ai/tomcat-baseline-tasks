@@ -75,12 +75,26 @@ class ClientAffectiveTask:
                                             each_button.selected = False
                                     break
 
-            timer(state["image_timer"], [button_response], "Team: " if state["collaboration"] else "Individual: ", self._screen)
+            timer(state["rating_timer"], [button_response], "Team: " if state["collaboration"] else "Individual: ", self._screen)
 
-            # TODO: submit valid responses
+            arousal = 0
+            for i, button in enumerate(arousal_buttons):
+                if button.selected:
+                    arousal = i - 2
+                    break
+
+            valence = 0
+            for i, button in enumerate(valence_buttons):
+                if button.selected:
+                    valence = 2 - i
+                    break
+
             response = {
-                "type": "response",
-                "response": "test test test"
+                "type": "rating",
+                "rating": {
+                    "arousal": arousal,
+                    "valence": valence
+                }
             }
 
             send([self._to_server], response)

@@ -47,8 +47,8 @@ class ServerAffectiveTask:
 
             current_time = time()
             for client_name, each_data in data.items():
-                if each_data["type"] == "response":
-                    self._csv_writer.writerow([current_time, image_path, client_name, json.dumps(each_data["response"])])
+                if each_data["type"] == "rating":
+                    self._csv_writer.writerow([current_time, image_path, client_name, json.dumps(each_data["rating"])])
 
         data = {}
         data["type"] = "request"
