@@ -1,5 +1,7 @@
 from common import receive, send
 
+from .utils import render_image_center
+
 
 class ClientAffectiveTask:
     def __init__(self, from_server, to_server, screen) -> None:
@@ -17,8 +19,8 @@ class ClientAffectiveTask:
                 if data["request"] == "end":
                     break
 
-            # TODO: Display data
-            print(data)
+            state = data["state"]
+            render_image_center(state["image_path"], self._screen)
             input()
 
             # TODO: submit valid responses
