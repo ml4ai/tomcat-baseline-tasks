@@ -1,7 +1,7 @@
 import pygame
 from common import CLIENT_WINDOW_HEIGHT, CLIENT_WINDOW_WIDTH
 
-from .config import COLOR_BACKGROUND, COLOR_FOREGROUND
+from .config import COLOR_BACKGROUND, COLOR_DIM, COLOR_FOREGROUND
 
 
 class Button:
@@ -15,9 +15,9 @@ class Button:
         self._screen = screen
 
         self.object = None
-        self.selected = False
+        self._selected = False
 
-    def render(self):
+    def render(self, text_box_color=COLOR_BACKGROUND):
         font = pygame.font.SysFont("Arial", 50)
         text_render = font.render(self._text, 1, COLOR_FOREGROUND)
 
@@ -30,8 +30,20 @@ class Button:
         pygame.draw.line(self._screen, COLOR_FOREGROUND, (x, y - 2), (x, y + h), 3)
         pygame.draw.line(self._screen, COLOR_FOREGROUND, (x, y + h), (x + w , y + h), 3)
         pygame.draw.line(self._screen, COLOR_FOREGROUND, (x + w , y+h), [x + w , y], 3)
-        pygame.draw.rect(self._screen, COLOR_BACKGROUND, (x, y, w , h))
+
+        pygame.draw.rect(self._screen, text_box_color, (x, y, w , h))
 
         self.object = self._screen.blit(text_render, (x, y))
 
         pygame.display.flip()
+
+    def select(self):
+        self._selected = True
+        self.render(COLOR_DIM)
+
+    def unselect(self):
+        self._selected = False
+        self.render()
+
+    def is_selected(self) -> bool:
+        return self._selected

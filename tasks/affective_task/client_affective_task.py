@@ -59,33 +59,33 @@ class ClientAffectiveTask:
                         # Check arousal buttons
                         for i, button in enumerate(arousal_buttons):
                             if button.object.collidepoint(pygame.mouse.get_pos()):
-                                button.selected = True
+                                button.select()
                                 for j, each_button in enumerate(arousal_buttons):
                                     if j != i:
-                                        each_button.selected = False
+                                        each_button.unselect()
                                 break
 
                         # Check valence buttons
                         else:
                             for i, button in enumerate(valence_buttons):
                                 if button.object.collidepoint(pygame.mouse.get_pos()):
-                                    button.selected = True
+                                    button.select()
                                     for j, each_button in enumerate(valence_buttons):
                                         if j != i:
-                                            each_button.selected = False
+                                            each_button.unselect()
                                     break
 
             timer(state["rating_timer"], [button_response], "Team: " if state["collaboration"] else "Individual: ", self._screen)
 
             arousal = 0
             for i, button in enumerate(arousal_buttons):
-                if button.selected:
+                if button.is_selected():
                     arousal = i - 2
                     break
 
             valence = 0
             for i, button in enumerate(valence_buttons):
-                if button.selected:
+                if button.is_selected():
                     valence = 2 - i
                     break
 
