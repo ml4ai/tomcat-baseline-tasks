@@ -1,25 +1,7 @@
-from enum import Enum
-
 import pygame
 from common import receive, send
 
-from .utils import (REFRESH_RATE, Button, render_image_center,
-                    render_text_center, timer)
-
-
-class IndexButtonArousal(Enum):
-    MINUS_2 = 0
-    MINUS_1 = 1
-    ZERO = 2
-    PLUS_1 = 3
-    PLUS_2 = 4
-
-class IndexButtonValence(Enum):
-    PLUS_2 = 0
-    PLUS_1 = 1
-    ZERO = 2
-    MINUS_1 = 3
-    MINUS_2 = 4
+from .utils import Button, render_image_center, timer
 
 
 class ClientAffectiveTask:
@@ -29,17 +11,19 @@ class ClientAffectiveTask:
         self._screen = screen
 
     def run(self):
-        button_arousal_minus_2 = Button((-400, -50), "-2", self._screen)
-        button_arousal_minus_1 = Button((-200, -50), "-1", self._screen)
-        button_arousal_0 = Button((0, -50), "0", self._screen)
-        button_arousal_plus_1 = Button((200, -50), "+1", self._screen)
-        button_arousal_plus_2 = Button((400, -50), "+2", self._screen)
+        arousal_buttons = []
+        arousal_buttons.append(Button((-400, -50), "-2", self._screen))
+        arousal_buttons.append(Button((-200, -50), "-1", self._screen))
+        arousal_buttons.append(Button((0, -50), "0", self._screen))
+        arousal_buttons.append(Button((200, -50), "+1", self._screen))
+        arousal_buttons.append(Button((400, -50), "+2", self._screen))
 
-        button_valence_plus_2 = Button((-400, 350), "+2", self._screen)
-        button_valence_plus_1 = Button((-200, 350), "+1", self._screen)
-        button_valence_0 = Button((0, 350), "0", self._screen)
-        button_valence_minus_1 = Button((200, 350), "-1", self._screen)
-        button_valence_minus_2 = Button((400, 350), "-2", self._screen)
+        valence_buttons = []
+        valence_buttons.append(Button((-400, 350), "+2", self._screen))
+        valence_buttons.append(Button((-200, 350), "+1", self._screen))
+        valence_buttons.append(Button((0, 350), "0", self._screen))
+        valence_buttons.append(Button((200, 350), "-1", self._screen))
+        valence_buttons.append(Button((400, 350), "-2", self._screen))
 
         print("[STATUS] Running affective task")
 
@@ -63,23 +47,33 @@ class ClientAffectiveTask:
                                 self._screen, 
                                 y_offset=200)
 
-            button_arousal_minus_2.render()
-            button_arousal_minus_1.render()
-            button_arousal_0.render()
-            button_arousal_plus_1.render()
-            button_arousal_plus_2.render()
+            for button in arousal_buttons:
+                button.render()
 
-            button_valence_plus_2.render()
-            button_valence_plus_1.render()
-            button_valence_0.render()
-            button_valence_minus_1.render()
-            button_valence_minus_2.render()
+            for button in valence_buttons:
+                button.render()
 
             def button_response():
                 for event in pygame.event.get():
                     if event.type == pygame.MOUSEBUTTONDOWN:
-                        if button_arousal_minus_2.object.collidepoint(pygame.mouse.get_pos()):
-                            print("Something")
+                        # Check arousal buttons
+                        for i, button in enumerate(arousal_buttons):
+                            if button.object.collidepoint(pygame.mouse.get_pos()):
+                                button.selected = True
+                                for j, each_button in enumerate(arousal_buttons):
+                                    if j != i:
+                                        each_button.selected = False
+                                break
+
+                        # Check valence buttons
+                        else:
+                            for i, button in enumerate(valence_buttons):
+                                if button.object.collidepoint(pygame.mouse.get_pos()):
+                                    button.selected = True
+                                    for j, each_button in enumerate(valence_buttons):
+                                        if j != i:
+                                            each_button.selected = False
+                                    break
 
             timer(state["image_timer"], [button_response], "Team: " if state["collaboration"] else "Individual: ", self._screen)
 
