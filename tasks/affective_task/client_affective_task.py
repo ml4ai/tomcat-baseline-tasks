@@ -1,6 +1,6 @@
 from common import receive, send
 
-from .utils import render_image_center
+from .utils import Button, render_image_center
 
 
 class ClientAffectiveTask:
@@ -10,6 +10,20 @@ class ClientAffectiveTask:
         self._screen = screen
 
     def run(self):
+        button_arousal_minus_2 = Button((-400, -50), "-2", self._screen)
+        button_arousal_minus_1 = Button((-200, -50), "-1", self._screen)
+        button_arousal_0 = Button((0, -50), "0", self._screen)
+        button_arousal_plus_1 = Button((200, -50), "+1", self._screen)
+        button_arousal_plus_2 = Button((400, -50), "+2", self._screen)
+
+        button_valence_plus_2 = Button((-400, 350), "+2", self._screen)
+        button_valence_plus_1 = Button((-200, 350), "+1", self._screen)
+        button_valence_0 = Button((0, 350), "0", self._screen)
+        button_valence_minus_1 = Button((200, 350), "-1", self._screen)
+        button_valence_minus_2 = Button((400, 350), "-2", self._screen)
+
+        button_submit = Button((0, 450), "Submit", self._screen)
+
         print("[STATUS] Running affective task")
 
         while True:
@@ -30,6 +44,21 @@ class ClientAffectiveTask:
             render_image_center("./tasks/affective_task/images/buttons_images/Arousal.jpg", 
                                 self._screen, 
                                 y_offset=200)
+
+            button_arousal_minus_2.render()
+            button_arousal_minus_1.render()
+            button_arousal_0.render()
+            button_arousal_plus_1.render()
+            button_arousal_plus_2.render()
+
+            button_valence_plus_2.render()
+            button_valence_plus_1.render()
+            button_valence_0.render()
+            button_valence_minus_1.render()
+            button_valence_minus_2.render()
+
+            button_submit.render()
+
             input()
 
             # TODO: submit valid responses
