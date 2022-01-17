@@ -9,6 +9,7 @@ from instructions import (exit_instruction, finger_tapping_task_instruction,
                           ping_pong_task_cooperative_instruction,
                           wait_for_experimenter)
 from network import Client
+from tasks.affective_task import ClientAffectiveTask
 from tasks.finger_tapping_task import ClientFingerTappingTask
 from tasks.ping_pong_task import ClientPingPongTask
 
@@ -28,7 +29,11 @@ if __name__ == "__main__":
 
     client = Client(server_address, server_port, client_name)
 
+    # Introduction slides
+
     introduction_instruction(client.screen)
+    
+    # Finger tapping task
 
     finger_tapping_task_instruction(client.screen)
 
@@ -40,6 +45,38 @@ if __name__ == "__main__":
                                                          client.client_name)
     client_finger_tapping_task.run()
 
+    # Affective task
+
+    pygame.mouse.set_visible(True)
+
+    # Individual
+    # TODO: write instruction for affective task
+    finger_tapping_task_instruction(client.screen)
+
+    wait_for_experimenter(client.to_server, client.screen, client.client_name)
+
+    client_affective_task = ClientAffectiveTask(client.from_server, 
+                                                client.to_server, 
+                                                client.screen)
+
+    client_affective_task.run()
+
+    # Team
+    # TODO: write instruction for affective task
+    finger_tapping_task_instruction(client.screen)
+
+    wait_for_experimenter(client.to_server, client.screen, client.client_name)
+
+    client_affective_task = ClientAffectiveTask(client.from_server, 
+                                                client.to_server, 
+                                                client.screen)
+
+    client_affective_task.run()
+
+    pygame.mouse.set_visible(False)
+
+    # Ping pong competitive task
+
     ping_pong_task_competitive_instruction(client.screen)
 
     wait_for_experimenter(client.to_server, client.screen, client.client_name)
@@ -49,6 +86,8 @@ if __name__ == "__main__":
                                                     client.screen, 
                                                     client.client_name)
     client_ping_pong_task.run()
+
+    # Ping pong cooperative task
 
     ping_pong_task_cooperative_instruction(client.screen)
 

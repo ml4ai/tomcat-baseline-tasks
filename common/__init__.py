@@ -7,4 +7,5 @@ from .config import (BLANK_SCREEN_COUNT_DOWN_MILLISECONDS,
 from .get_terminal_command import get_terminal_command
 from .pairing_clients import pairing_clients
 from .receive import receive
+from .receive_all import receive_all
 from .send import send
