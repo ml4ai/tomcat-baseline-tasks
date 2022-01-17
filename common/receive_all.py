@@ -9,7 +9,7 @@ from common import HEADER
 def receive_all(senders: dict, wait_time: Optional[float] = None) -> list:
     data = {}
 
-    waiting_for_senders = senders.keys().copy()
+    waiting_for_senders = list(senders.keys()).copy()
 
     start_time = time()
 

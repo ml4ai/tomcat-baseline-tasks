@@ -23,13 +23,15 @@ class ServerAffectiveTask:
         self._csv_file = open(csv_file_name + ".csv", 'w', newline='')
         self._csv_writer = csv.writer(self._csv_file, delimiter=';')
 
-    def run(self, image_timer: float, rating_timer: float, collaboration: bool = False):
+    def run(self, images_dir: str, image_timer: float, rating_timer: float, collaboration: bool = False):
         # Extract images
-        image_paths = sorted(get_image_paths("./images/task_images"))
+        image_paths = sorted(get_image_paths(images_dir))
         if collaboration:
             image_paths = [path for path in image_paths if "Team" in path]
         else:
             image_paths = [path for path in image_paths if "Indivijual" in path]
+
+        print("[STATUS] Running affective task")
 
         for image_path in image_paths:
             data = {}
