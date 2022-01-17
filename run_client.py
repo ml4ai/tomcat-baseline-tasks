@@ -29,21 +29,21 @@ if __name__ == "__main__":
 
     client = Client(server_address, server_port, client_name)
 
-    # # Introduction slides
+    # Introduction slides
 
-    # introduction_instruction(client.screen)
+    introduction_instruction(client.screen)
     
-    # # Finger tapping task
+    # Finger tapping task
 
-    # finger_tapping_task_instruction(client.screen)
+    finger_tapping_task_instruction(client.screen)
 
-    # wait_for_experimenter(client.to_server, client.screen, client.client_name)
+    wait_for_experimenter(client.to_server, client.screen, client.client_name)
 
-    # client_finger_tapping_task = ClientFingerTappingTask(client.from_server, 
-    #                                                      client.to_server, 
-    #                                                      client.screen, 
-    #                                                      client.client_name)
-    # client_finger_tapping_task.run()
+    client_finger_tapping_task = ClientFingerTappingTask(client.from_server, 
+                                                         client.to_server, 
+                                                         client.screen, 
+                                                         client.client_name)
+    client_finger_tapping_task.run()
 
     # Affective task
 
@@ -73,33 +73,33 @@ if __name__ == "__main__":
 
     client_affective_task.run()
 
-    # pygame.mouse.set_visible(False)
+    pygame.mouse.set_visible(False)
 
-    # # Ping pong competitive task
+    # Ping pong competitive task
 
-    # ping_pong_task_competitive_instruction(client.screen)
+    ping_pong_task_competitive_instruction(client.screen)
 
-    # wait_for_experimenter(client.to_server, client.screen, client.client_name)
+    wait_for_experimenter(client.to_server, client.screen, client.client_name)
 
-    # client_ping_pong_task = ClientPingPongTask(client.from_server, 
-    #                                                 client.to_server, 
-    #                                                 client.screen, 
-    #                                                 client.client_name)
-    # client_ping_pong_task.run()
+    client_ping_pong_task = ClientPingPongTask(client.from_server, 
+                                                    client.to_server, 
+                                                    client.screen, 
+                                                    client.client_name)
+    client_ping_pong_task.run()
 
-    # # Ping pong cooperative task
+    # Ping pong cooperative task
 
-    # ping_pong_task_cooperative_instruction(client.screen)
+    ping_pong_task_cooperative_instruction(client.screen)
 
-    # wait_for_experimenter(client.to_server, client.screen, client.client_name)
+    wait_for_experimenter(client.to_server, client.screen, client.client_name)
 
-    # client_ping_pong_task = ClientPingPongTask(client.from_server, 
-    #                                                 client.to_server, 
-    #                                                 client.screen, 
-    #                                                 client.client_name,
-    #                                                 easy_mode=False)
-    # client_ping_pong_task.run()
+    client_ping_pong_task = ClientPingPongTask(client.from_server, 
+                                                    client.to_server, 
+                                                    client.screen, 
+                                                    client.client_name,
+                                                    easy_mode=False)
+    client_ping_pong_task.run()
 
-    # exit_instruction(client.to_server, client.screen, client.client_name)
+    exit_instruction(client.to_server, client.screen, client.client_name)
 
     client.close()

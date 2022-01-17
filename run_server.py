@@ -31,12 +31,12 @@ if __name__ == "__main__":
 
     server.establish_connections()
 
-    # # Finger tapping task
-    # server_finger_tapping_task = ServerFingerTappingTask(list(server.to_client_connections.values()), 
-    #                                                      server.from_client_connections)
-    # server_finger_tapping_task.run()
+    # Finger tapping task
+    server_finger_tapping_task = ServerFingerTappingTask(list(server.to_client_connections.values()), 
+                                                         server.from_client_connections)
+    server_finger_tapping_task.run()
 
-    # server.establish_connections()
+    server.establish_connections()
 
     # Affective task
     server_affective_task = ServerAffectiveTask(list(server.to_client_connections.values()), 
@@ -58,44 +58,44 @@ if __name__ == "__main__":
 
     server.establish_connections()
 
-    # # Ping pong competitive
-    # client_pairs = pairing_clients(server.to_client_connections, server.from_client_connections)
+    # Ping pong competitive
+    client_pairs = pairing_clients(server.to_client_connections, server.from_client_connections)
 
-    # ping_pong_processes = []
-    # for session_id, (to_client_connection_pair, from_client_connection_pair) in enumerate(client_pairs):
-    #     to_client_connections = []
-    #     for to_client_connection_team in to_client_connection_pair:
-    #         to_client_connections = to_client_connections + list(to_client_connection_team.values())
+    ping_pong_processes = []
+    for session_id, (to_client_connection_pair, from_client_connection_pair) in enumerate(client_pairs):
+        to_client_connections = []
+        for to_client_connection_team in to_client_connection_pair:
+            to_client_connections = to_client_connections + list(to_client_connection_team.values())
 
-    #     session_name = "competitive_" + str(session_id)
-    #     process = Process(target=run_ping_pong, args=(to_client_connections, from_client_connection_pair, session_name))
-    #     ping_pong_processes.append(process)
+        session_name = "competitive_" + str(session_id)
+        process = Process(target=run_ping_pong, args=(to_client_connections, from_client_connection_pair, session_name))
+        ping_pong_processes.append(process)
 
-    # for process in ping_pong_processes:
-    #     process.start()
+    for process in ping_pong_processes:
+        process.start()
     
-    # for process in ping_pong_processes:
-    #     process.join()
+    for process in ping_pong_processes:
+        process.join()
 
-    # server.establish_connections()
+    server.establish_connections()
 
-    # # Ping pong cooperative
-    # client_pairs = client_ai_teaming(server.to_client_connections, server.from_client_connections)
+    # Ping pong cooperative
+    client_pairs = client_ai_teaming(server.to_client_connections, server.from_client_connections)
 
-    # ping_pong_processes = []
-    # for session_id, (to_client_connection_teams, from_client_connection_teams) in enumerate(client_pairs):
-    #     to_client_connections = []
-    #     for to_client_connection_team in to_client_connection_teams:
-    #         to_client_connections = to_client_connections + list(to_client_connection_team.values())
+    ping_pong_processes = []
+    for session_id, (to_client_connection_teams, from_client_connection_teams) in enumerate(client_pairs):
+        to_client_connections = []
+        for to_client_connection_team in to_client_connection_teams:
+            to_client_connections = to_client_connections + list(to_client_connection_team.values())
 
-    #     session_name = "cooperative_" + str(session_id)
-    #     process = Process(target=run_ping_pong, args=(to_client_connections, from_client_connection_teams, session_name, False))
-    #     ping_pong_processes.append(process)
+        session_name = "cooperative_" + str(session_id)
+        process = Process(target=run_ping_pong, args=(to_client_connections, from_client_connection_teams, session_name, False))
+        ping_pong_processes.append(process)
 
-    # for process in ping_pong_processes:
-    #     process.start()
+    for process in ping_pong_processes:
+        process.start()
 
-    # for process in ping_pong_processes:
-    #     process.join()
+    for process in ping_pong_processes:
+        process.join()
 
-    # server.establish_connections()
+    server.establish_connections()
