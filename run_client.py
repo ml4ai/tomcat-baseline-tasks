@@ -61,15 +61,17 @@ if __name__ == "__main__":
 
     client_affective_task.run()
 
-    # # Team
-    # # TODO: write instruction for affective task
-    # finger_tapping_task_instruction(client.screen)
+    # Team
+    # TODO: write instruction for affective task
+    finger_tapping_task_instruction(client.screen)
 
-    # client_affective_task = ClientAffectiveTask(client.from_server, 
-    #                                             client.to_server, 
-    #                                             client.screen)
+    wait_for_experimenter(client.to_server, client.screen, client.client_name)
 
-    # client_affective_task.run()
+    client_affective_task = ClientAffectiveTask(client.from_server, 
+                                                client.to_server, 
+                                                client.screen)
+
+    client_affective_task.run()
 
     # pygame.mouse.set_visible(False)
 

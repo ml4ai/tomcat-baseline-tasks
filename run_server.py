@@ -50,13 +50,13 @@ if __name__ == "__main__":
 
     server.establish_connections()
 
-    # # Team
-    # server_affective_task.run("./tasks/affective_task/images/task_images", 
-    #                           TEAM_IMAGE_TIMER, 
-    #                           TEAM_RATING_TIMER, 
-    #                           collaboration=True)
+    # Team
+    server_affective_task.run("./tasks/affective_task/images/task_images", 
+                              TEAM_IMAGE_TIMER, 
+                              TEAM_RATING_TIMER, 
+                              collaboration=True)
 
-    # server.establish_connections()
+    server.establish_connections()
 
     # # Ping pong competitive
     # client_pairs = pairing_clients(server.to_client_connections, server.from_client_connections)

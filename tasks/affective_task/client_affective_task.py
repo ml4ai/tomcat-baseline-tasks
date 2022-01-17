@@ -1,5 +1,6 @@
 import pygame
 from common import receive, send
+from tasks.affective_task.utils.render_text_center import render_text_center
 
 from .utils import Button, render_image_center, timer
 
@@ -46,6 +47,8 @@ class ClientAffectiveTask:
             render_image_center("./tasks/affective_task/images/buttons_images/Arousal.jpg", 
                                 self._screen, 
                                 y_offset=200)
+            render_text_center("Arousal score", (400, 50), self._screen, y_offset=-320)
+            render_text_center("Valence score", (400, 50), self._screen, y_offset=80)
 
             for button in arousal_buttons:
                 button.render()

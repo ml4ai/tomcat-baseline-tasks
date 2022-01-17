@@ -20,6 +20,6 @@ def timer(seconds: int, callbacks: List[Callable], pre_text: str, screen):
             break
         else:
             seconds_left_to_count = 0 if seconds_left_to_count < 0.0 else int(seconds_left_to_count)
-            render_text_center(pre_text + str(seconds_left_to_count), (300, 50), screen, y_offset=-420)
+            render_text_center(pre_text + str(seconds_left_to_count + 1), (300, 50), screen, y_offset=-420)
 
     clock.tick(REFRESH_RATE)
