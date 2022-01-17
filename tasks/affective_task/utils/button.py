@@ -15,7 +15,7 @@ class Button:
         self._screen = screen
 
         self.object = None
-        self._selected = False
+        self.selected = False
 
     def render(self):
         font = pygame.font.SysFont("Arial", 50)

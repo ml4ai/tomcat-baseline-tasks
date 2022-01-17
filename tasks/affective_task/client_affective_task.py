@@ -1,7 +1,25 @@
+from enum import Enum
+
 import pygame
 from common import receive, send
 
-from .utils import REFRESH_RATE, Button, render_image_center
+from .utils import (REFRESH_RATE, Button, render_image_center,
+                    render_text_center)
+
+
+class IndexButtonArousal(Enum):
+    MINUS_2 = 0
+    MINUS_1 = 1
+    ZERO = 2
+    PLUS_1 = 3
+    PLUS_2 = 4
+
+class IndexButtonValence(Enum):
+    PLUS_2 = 0
+    PLUS_1 = 1
+    ZERO = 2
+    MINUS_1 = 3
+    MINUS_2 = 4
 
 
 class ClientAffectiveTask:
@@ -23,8 +41,6 @@ class ClientAffectiveTask:
         button_valence_minus_1 = Button((200, 350), "-1", self._screen)
         button_valence_minus_2 = Button((400, 350), "-2", self._screen)
 
-        button_submit = Button((0, 450), "Submit", self._screen)
-
         clock = pygame.time.Clock()
 
         print("[STATUS] Running affective task")
@@ -38,7 +54,21 @@ class ClientAffectiveTask:
 
             state = data["state"]
             render_image_center(state["image_path"], self._screen, refresh=True)
-            input()
+            
+            start_ticks = pygame.time.get_ticks()
+            while True:
+                seconds_has_passed = (pygame.time.get_ticks() - start_ticks) / 1000.0
+                seconds_left_to_count = state["image_timer"] - seconds_has_passed
+                if seconds_left_to_count < 0.0:
+                    break
+                else:
+                    seconds_left_to_count = 0 if seconds_left_to_count < 0.0 else int(seconds_left_to_count)
+                    if state["collaboration"]:
+                        render_text_center("Team: " + str(seconds_left_to_count), (300, 50), self._screen, y_offset=-420)
+                    else:
+                        render_text_center("Individual: " + str(seconds_left_to_count), (300, 50), self._screen, y_offset=-420)
+
+                clock.tick(REFRESH_RATE)
 
             render_image_center("./tasks/affective_task/images/buttons_images/Valence.jpg", 
                                 self._screen, 
@@ -60,15 +90,23 @@ class ClientAffectiveTask:
             button_valence_minus_1.render()
             button_valence_minus_2.render()
 
-            button_submit.render()
-
-            submitted = False
-            while not submitted:
+            start_ticks = pygame.time.get_ticks()
+            while True:
                 for event in pygame.event.get():
                     if event.type == pygame.MOUSEBUTTONDOWN:
-                        if button_submit.object.collidepoint(pygame.mouse.get_pos()):
-                            print("Submitted")
-                            submitted = True
+                        if button_arousal_minus_2.object.collidepoint(pygame.mouse.get_pos()):
+                            print("Something")
+            
+                seconds_has_passed = (pygame.time.get_ticks() - start_ticks) / 1000.0
+                seconds_left_to_count = state["rating_timer"] - seconds_has_passed
+                if seconds_left_to_count < 0.0:
+                    break
+                else:
+                    seconds_left_to_count = 0 if seconds_left_to_count < 0.0 else int(seconds_left_to_count)
+                    if state["collaboration"]:
+                        render_text_center("Team: " + str(seconds_left_to_count), (300, 50), self._screen, y_offset=-420)
+                    else:
+                        render_text_center("Individual: " + str(seconds_left_to_count), (300, 50), self._screen, y_offset=-420)
 
                 clock.tick(REFRESH_RATE)
 

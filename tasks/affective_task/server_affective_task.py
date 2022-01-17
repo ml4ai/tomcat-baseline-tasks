@@ -39,7 +39,8 @@ class ServerAffectiveTask:
             data["state"] = {
                 "image_path": image_path,
                 "image_timer": image_timer,
-                "rating_timer": rating_timer
+                "rating_timer": rating_timer,
+                "collaboration": False
             }
             send(self._to_client_connections, data)
             data = receive_all(self._from_client_connections)
