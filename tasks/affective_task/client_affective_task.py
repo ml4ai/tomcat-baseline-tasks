@@ -23,6 +23,15 @@ class ClientAffectiveTask:
             render_image_center(state["image_path"], self._screen)
             input()
 
+            render_image_center("./tasks/affective_task/images/buttons_images/Valence.jpg", 
+                                self._screen, 
+                                y_offset=-200, 
+                                refresh=True)
+            render_image_center("./tasks/affective_task/images/buttons_images/Arousal.jpg", 
+                                self._screen, 
+                                y_offset=200)
+            input()
+
             # TODO: submit valid responses
             response = {
                 "type": "response",
