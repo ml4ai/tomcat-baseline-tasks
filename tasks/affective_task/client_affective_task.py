@@ -1,6 +1,7 @@
+import pygame
 from common import receive, send
 
-from .utils import Button, render_image_center
+from .utils import REFRESH_RATE, Button, render_image_center
 
 
 class ClientAffectiveTask:
@@ -24,6 +25,8 @@ class ClientAffectiveTask:
 
         button_submit = Button((0, 450), "Submit", self._screen)
 
+        clock = pygame.time.Clock()
+
         print("[STATUS] Running affective task")
 
         while True:
@@ -34,7 +37,7 @@ class ClientAffectiveTask:
                     break
 
             state = data["state"]
-            render_image_center(state["image_path"], self._screen)
+            render_image_center(state["image_path"], self._screen, refresh=True)
             input()
 
             render_image_center("./tasks/affective_task/images/buttons_images/Valence.jpg", 
@@ -59,7 +62,15 @@ class ClientAffectiveTask:
 
             button_submit.render()
 
-            input()
+            submitted = False
+            while not submitted:
+                for event in pygame.event.get():
+                    if event.type == pygame.MOUSEBUTTONDOWN:
+                        if button_submit.object.collidepoint(pygame.mouse.get_pos()):
+                            print("Submitted")
+                            submitted = True
+
+                clock.tick(REFRESH_RATE)
 
             # TODO: submit valid responses
             response = {
