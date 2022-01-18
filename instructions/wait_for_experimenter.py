@@ -1,7 +1,9 @@
 import pygame
-from common import CLIENT_WINDOW_HEIGHT, CLIENT_WINDOW_WIDTH, send
+from common import COLOR_BACKGROUND, COLOR_FOREGROUND
+from config import CLIENT_WINDOW_HEIGHT, CLIENT_WINDOW_WIDTH
+from network import send
 
-from .utils import COLOR_BACKGROUND, COLOR_FOREGROUND, FONT_SIZE
+from .utils import FONT_SIZE
 
 
 def wait_for_experimenter(to_server, screen, client_name):

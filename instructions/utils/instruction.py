@@ -1,8 +1,8 @@
 import pygame
-from common import CLIENT_WINDOW_HEIGHT, CLIENT_WINDOW_WIDTH
+from common import COLOR_BACKGROUND, COLOR_FOREGROUND
+from config import CLIENT_WINDOW_HEIGHT, CLIENT_WINDOW_WIDTH
 
-from .config_instructions import (COLOR_BACKGROUND, COLOR_FOREGROUND,
-                                  FONT_SIZE, READY_MSG)
+from .config_instructions import FONT_SIZE, READY_MSG
 
 
 def instruction(image, screen):

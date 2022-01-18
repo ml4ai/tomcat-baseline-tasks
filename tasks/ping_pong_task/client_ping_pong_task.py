@@ -1,12 +1,13 @@
 import threading
 
 import pygame
-from common import (BLANK_SCREEN_COUNT_DOWN_MILLISECONDS, CLIENT_WINDOW_HEIGHT,
-                    CLIENT_WINDOW_WIDTH, COLOR_BACKGROUND, COLOR_DIM,
-                    COLOR_FOREGROUND, COLOR_PLAYER, UPDATE_RATE, receive, send)
+from common import COLOR_BACKGROUND, COLOR_DIM, COLOR_FOREGROUND, COLOR_PLAYER
+from config import (BLANK_SCREEN_COUNT_DOWN_MILLISECONDS, CLIENT_WINDOW_HEIGHT,
+                    CLIENT_WINDOW_WIDTH, UPDATE_RATE)
+from network import receive, send
 
-from .config_ping_pong_task import (SHOW_SCORE_COUNT_DOWN_MILLISECONDS,
-                                    COUNT_DOWN_MESSAGE)
+from .config_ping_pong_task import (COUNT_DOWN_MESSAGE,
+                                    SHOW_SCORE_COUNT_DOWN_MILLISECONDS)
 from .utils import BALL_SIZE, WINDOW_HEIGHT, WINDOW_WIDTH, Ball, Paddle
 
 

@@ -2,7 +2,7 @@ import argparse
 
 import pygame
 
-from common import DEFAULT_SERVER_ADDR
+from config import DEFAULT_SERVER_ADDR
 from instructions import (ping_pong_task_competitive_instruction,
                           wait_for_experimenter)
 from network import Client
@@ -24,13 +24,15 @@ if __name__ == "__main__":
 
     client = Client(server_address, server_port, client_name)
 
-    ping_pong_task_competitive_instruction(client.screen)
+    screen = pygame.display.set_mode((0, 0), pygame.FULLSCREEN)
 
-    wait_for_experimenter(client.to_server, client.screen, client.client_name)
+    ping_pong_task_competitive_instruction(screen)
+
+    wait_for_experimenter(client.to_server, screen, client.client_name)
 
     client_ping_pong_task = ClientPingPongTask(client.from_server, 
                                                client.to_server, 
-                                               client.screen, 
+                                               screen, 
                                                client.client_name)
     client_ping_pong_task.run()
 

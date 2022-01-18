@@ -5,8 +5,8 @@ import threading
 from time import time
 
 import pygame
-from common import (CLIENT_WINDOW_HEIGHT, CLIENT_WINDOW_WIDTH, UPDATE_RATE,
-                    receive, send)
+from config import CLIENT_WINDOW_HEIGHT, CLIENT_WINDOW_WIDTH, UPDATE_RATE
+from network import receive, send
 
 from .config_ping_pong_task import (COUNT_DOWN_MESSAGE, SECONDS_COUNT_DOWN,
                                     SESSION_TIME_SECONDS)

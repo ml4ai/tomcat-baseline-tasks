@@ -1,6 +1,7 @@
 import threading
 
-from common import UPDATE_RATE, receive, send
+from config import UPDATE_RATE
+from network import receive, send
 from pygame import time
 
 from .utils import BALL_SIZE

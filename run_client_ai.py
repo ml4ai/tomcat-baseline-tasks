@@ -2,7 +2,7 @@ import argparse
 
 import pygame
 
-from common import DEFAULT_SERVER_ADDR
+from config import DEFAULT_SERVER_ADDR
 from network import Client
 from tasks.ping_pong_task import ClientAIPingPongTask
 

@@ -2,7 +2,10 @@ import socket
 import threading
 from select import select
 
-from common import get_terminal_command, receive, send
+from common import get_terminal_command
+
+from .receive import receive
+from .send import send
 
 
 class Server:
@@ -119,13 +122,11 @@ class Server:
 
     def _from_clients(self) -> None:
         while self._establishing_connections:
-            all_data = receive(self.from_client_connections.keys(), 0.1)
+            all_data = receive(self.from_client_connections, 0.1)
 
-            for data in all_data:
+            for sender_name, data in all_data.items():
                 if data["type"] == "request":
                     if data["request"] == "close":
-                        sender_name = data["sender"]
-
                         self.to_client_connections[sender_name].close()
                         del self.to_client_connections[sender_name]
 

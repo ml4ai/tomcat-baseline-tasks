@@ -5,11 +5,13 @@ import threading
 from time import time
 
 import pygame
-from common import UPDATE_RATE, receive, send
+from config import UPDATE_RATE
+from network import receive, send
 
-from .config_finger_tapping_task import (SECONDS_COUNT_DOWN,
+from .config_finger_tapping_task import (COUNT_DOWN_MESSAGE,
+                                         SECONDS_COUNT_DOWN,
                                          SECONDS_PER_SESSION, SESSION,
-                                         SQUARE_WIDTH, COUNT_DOWN_MESSAGE)
+                                         SQUARE_WIDTH)
 from .utils import TAPPED, UNTAPPED
 
 

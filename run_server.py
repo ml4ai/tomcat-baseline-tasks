@@ -1,11 +1,10 @@
 import argparse
 from multiprocessing import Process
 
-from common import DEFAULT_SERVER_ADDR, client_ai_teaming, pairing_clients
+from common import client_ai_teaming, pairing_clients
+from config import DEFAULT_SERVER_ADDR
 from network import Server
-from tasks.affective_task import (INDIVIDUAL_IMAGE_TIMER,
-                                  INDIVIDUAL_RATING_TIMER, TEAM_IMAGE_TIMER,
-                                  TEAM_RATING_TIMER, ServerAffectiveTask)
+from tasks.affective_task import ServerAffectiveTask
 from tasks.finger_tapping_task import ServerFingerTappingTask
 from tasks.ping_pong_task import ServerPingPongTask
 
@@ -43,18 +42,12 @@ if __name__ == "__main__":
                                                      server.from_client_connections)
     
     # Individual
-    server_affective_task.run("./tasks/affective_task/images/task_images", 
-                              INDIVIDUAL_IMAGE_TIMER, 
-                              INDIVIDUAL_RATING_TIMER, 
-                              collaboration=False)
+    server_affective_task.run("./tasks/affective_task/images/task_images", collaboration=False)
 
     server.establish_connections()
 
     # Team
-    server_affective_task.run("./tasks/affective_task/images/task_images", 
-                              TEAM_IMAGE_TIMER, 
-                              TEAM_RATING_TIMER, 
-                              collaboration=True)
+    server_affective_task.run("./tasks/affective_task/images/task_images", collaboration=True)
 
     server.establish_connections()
 
