@@ -1,11 +1,12 @@
 import threading
 
 import pygame
-from common import (BLANK_SCREEN_COUNT_DOWN_MILLISECONDS, COLOR_BACKGROUND,
-                    COLOR_DIM, COLOR_FOREGROUND, COLOR_PLAYER,
-                    COLOR_PLAYER_DIM, UPDATE_RATE, receive, send)
+from common import (COLOR_BACKGROUND, COLOR_DIM, COLOR_FOREGROUND,
+                    COLOR_PLAYER, COLOR_PLAYER_DIM)
+from config import BLANK_SCREEN_COUNT_DOWN_MILLISECONDS, UPDATE_RATE
+from network import receive, send
 
-from .config_finger_tapping_task import SQUARE_WIDTH, COUNT_DOWN_MESSAGE
+from .config_finger_tapping_task import COUNT_DOWN_MESSAGE, SQUARE_WIDTH
 from .utils import PlayerSquare
 
 

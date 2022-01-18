@@ -1,7 +1,6 @@
 import pygame
-from common import CLIENT_WINDOW_HEIGHT, CLIENT_WINDOW_WIDTH
-
-from .config import COLOR_BACKGROUND, COLOR_FOREGROUND
+from common import COLOR_BACKGROUND, COLOR_FOREGROUND
+from config import CLIENT_WINDOW_HEIGHT, CLIENT_WINDOW_WIDTH
 
 
 def render_text_center(text: str, text_box_shape, screen, y_offset: int = 0):

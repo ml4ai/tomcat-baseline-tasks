@@ -2,8 +2,9 @@ from typing import Callable, List
 
 import pygame
 
-from .config import REFRESH_RATE
 from .render_text_center import render_text_center
+
+REFRESH_RATE = 20
 
 
 def timer(seconds: int, callbacks: List[Callable], pre_text: str, screen):

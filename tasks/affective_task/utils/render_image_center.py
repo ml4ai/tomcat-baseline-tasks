@@ -1,7 +1,6 @@
 import pygame
-from common import CLIENT_WINDOW_HEIGHT, CLIENT_WINDOW_WIDTH
-
-from .config import COLOR_BACKGROUND
+from common import COLOR_BACKGROUND
+from config import CLIENT_WINDOW_HEIGHT, CLIENT_WINDOW_WIDTH
 
 
 def render_image_center(image_path: str, screen, y_offset: int = 0, refresh: bool = False):

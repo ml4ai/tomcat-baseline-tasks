@@ -1,9 +1,8 @@
-import json
 from select import select
 from time import time
 from typing import Optional
 
-from common import HEADER
+from .utils import read_message
 
 
 def receive_all(senders: dict, wait_time: Optional[float] = None) -> list:
@@ -20,12 +19,8 @@ def receive_all(senders: dict, wait_time: Optional[float] = None) -> list:
             raise RuntimeError("Connection lost")
 
         for connection in senders_replied:
-            message = connection.recv(HEADER)
-
-            try:
-                message = json.loads(message.decode('utf-8'))
-            except json.decoder.JSONDecodeError:
-                print("[INFO] JSON failed to decode message")
+            message = read_message(connection)
+            if message is None:
                 continue
 
             data[senders[connection]] = message

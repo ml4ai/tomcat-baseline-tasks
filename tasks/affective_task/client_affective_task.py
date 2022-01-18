@@ -1,12 +1,11 @@
 import pygame
-from common import receive, send
-from tasks.affective_task.utils.render_text_center import render_text_center
+from network import receive, send
 
-from .utils import Button, render_image_center, timer
+from .utils import Button, render_image_center, render_text_center, timer
 
 
 class ClientAffectiveTask:
-    def __init__(self, from_server, to_server, screen) -> None:
+    def __init__(self, from_server, to_server, screen):
         self._from_server = from_server
         self._to_server = to_server
         self._screen = screen

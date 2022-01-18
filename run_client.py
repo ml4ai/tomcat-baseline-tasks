@@ -2,7 +2,7 @@ import argparse
 
 import pygame
 
-from common import DEFAULT_SERVER_ADDR
+from config import DEFAULT_SERVER_ADDR
 from instructions import (exit_instruction, finger_tapping_task_instruction,
                           introduction_instruction,
                           ping_pong_task_competitive_instruction,
@@ -29,19 +29,21 @@ if __name__ == "__main__":
 
     client = Client(server_address, server_port, client_name)
 
+    screen = pygame.display.set_mode((0, 0), pygame.FULLSCREEN)
+
     # Introduction slides
 
-    introduction_instruction(client.screen)
+    introduction_instruction(screen)
     
     # Finger tapping task
 
-    finger_tapping_task_instruction(client.screen)
+    finger_tapping_task_instruction(screen)
 
-    wait_for_experimenter(client.to_server, client.screen, client.client_name)
+    wait_for_experimenter(client.to_server, screen, client.client_name)
 
     client_finger_tapping_task = ClientFingerTappingTask(client.from_server, 
                                                          client.to_server, 
-                                                         client.screen, 
+                                                         screen, 
                                                          client.client_name)
     client_finger_tapping_task.run()
 
@@ -51,25 +53,25 @@ if __name__ == "__main__":
 
     # Individual
     # TODO: write instruction for affective task
-    finger_tapping_task_instruction(client.screen)
+    finger_tapping_task_instruction(screen)
 
-    wait_for_experimenter(client.to_server, client.screen, client.client_name)
+    wait_for_experimenter(client.to_server, screen, client.client_name)
 
     client_affective_task = ClientAffectiveTask(client.from_server, 
                                                 client.to_server, 
-                                                client.screen)
+                                                screen)
 
     client_affective_task.run()
 
     # Team
     # TODO: write instruction for affective task
-    finger_tapping_task_instruction(client.screen)
+    finger_tapping_task_instruction(screen)
 
-    wait_for_experimenter(client.to_server, client.screen, client.client_name)
+    wait_for_experimenter(client.to_server, screen, client.client_name)
 
     client_affective_task = ClientAffectiveTask(client.from_server, 
                                                 client.to_server, 
-                                                client.screen)
+                                                screen)
 
     client_affective_task.run()
 
@@ -77,29 +79,29 @@ if __name__ == "__main__":
 
     # Ping pong competitive task
 
-    ping_pong_task_competitive_instruction(client.screen)
+    ping_pong_task_competitive_instruction(screen)
 
-    wait_for_experimenter(client.to_server, client.screen, client.client_name)
+    wait_for_experimenter(client.to_server, screen, client.client_name)
 
     client_ping_pong_task = ClientPingPongTask(client.from_server, 
                                                     client.to_server, 
-                                                    client.screen, 
+                                                    screen, 
                                                     client.client_name)
     client_ping_pong_task.run()
 
     # Ping pong cooperative task
 
-    ping_pong_task_cooperative_instruction(client.screen)
+    ping_pong_task_cooperative_instruction(screen)
 
-    wait_for_experimenter(client.to_server, client.screen, client.client_name)
+    wait_for_experimenter(client.to_server, screen, client.client_name)
 
     client_ping_pong_task = ClientPingPongTask(client.from_server, 
                                                     client.to_server, 
-                                                    client.screen, 
+                                                    screen, 
                                                     client.client_name,
                                                     easy_mode=False)
     client_ping_pong_task.run()
 
-    exit_instruction(client.to_server, client.screen, client.client_name)
+    exit_instruction(client.to_server, screen, client.client_name)
 
     client.close()
