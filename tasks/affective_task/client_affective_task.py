@@ -1,6 +1,9 @@
 import pygame
+from common import render_blank_screen
 from network import receive, send
 
+from .config_affective_task import (BLANK_SCREEN_MILLISECONDS,
+                                    CROSS_SCREEN_MILLISECONDS)
 from .utils import Button, render_image_center, render_text_center, timer
 
 
@@ -35,6 +38,12 @@ class ClientAffectiveTask:
                     break
 
             state = data["state"]
+
+            render_blank_screen(self._screen, BLANK_SCREEN_MILLISECONDS)
+
+            render_image_center("./tasks/affective_task/images/plus.png", self._screen, refresh=True)
+            pygame.time.wait(CROSS_SCREEN_MILLISECONDS)
+
             render_image_center(state["image_path"], self._screen, refresh=True)
             
             timer(state["image_timer"], [], "Team: " if state["collaboration"] else "Individual: ", self._screen)
@@ -54,6 +63,8 @@ class ClientAffectiveTask:
 
             for button in valence_buttons:
                 button.render()
+
+            pygame.mouse.set_visible(True)
 
             def button_response():
                 for event in pygame.event.get():
@@ -78,6 +89,8 @@ class ClientAffectiveTask:
                                     break
 
             timer(state["rating_timer"], [button_response], "Team: " if state["collaboration"] else "Individual: ", self._screen)
+
+            pygame.mouse.set_visible(False)
 
             arousal = 0
             for i, button in enumerate(arousal_buttons):

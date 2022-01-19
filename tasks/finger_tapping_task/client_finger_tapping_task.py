@@ -3,7 +3,7 @@ import threading
 import pygame
 from common import (COLOR_BACKGROUND, COLOR_DIM, COLOR_FOREGROUND,
                     COLOR_PLAYER, COLOR_PLAYER_DIM)
-from config import BLANK_SCREEN_COUNT_DOWN_MILLISECONDS, UPDATE_RATE
+from config import UPDATE_RATE
 from network import receive, send
 
 from .config_finger_tapping_task import COUNT_DOWN_MESSAGE, SQUARE_WIDTH
@@ -43,8 +43,6 @@ class ClientFingerTappingTask:
             else:
                 [data] = data
 
-            self._screen.fill(COLOR_BACKGROUND)
-
             if data["type"] == "state":
                 self._state = data["state"]
                 reveal_others = data["reveal"]
@@ -52,12 +50,12 @@ class ClientFingerTappingTask:
             elif data["type"] == "request":
                 if data["request"] == "end":
                     self._running = False
-                    pygame.display.flip()
-                    pygame.time.wait(BLANK_SCREEN_COUNT_DOWN_MILLISECONDS)
                     break
 
             num_other_players = len(self._state) - 1
             player_counter = 0
+
+            self._screen.fill(COLOR_BACKGROUND)
 
             # Add sprites to sprite group
             all_sprites_list = pygame.sprite.Group()

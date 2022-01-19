@@ -2,6 +2,7 @@ import argparse
 
 import pygame
 
+from common import wait_for_server
 from config import DEFAULT_SERVER_ADDR
 from network import Client
 from tasks.ping_pong_task import ClientAIPingPongTask
@@ -21,7 +22,9 @@ if __name__ == "__main__":
 
     pygame.init()
 
-    client = Client(server_address, server_port, client_name, screen=False)
+    client = Client(server_address, server_port, client_name)
+
+    wait_for_server(client.to_server, client.from_server)
 
     client_ai_ping_pong_task = ClientAIPingPongTask(client.from_server, 
                                                     client.to_server,

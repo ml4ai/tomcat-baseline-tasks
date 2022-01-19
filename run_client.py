@@ -2,7 +2,8 @@ import argparse
 
 import pygame
 
-from config import DEFAULT_SERVER_ADDR
+from common import render_blank_screen
+from config import BLANK_SCREEN_COUNT_DOWN_MILLISECONDS, DEFAULT_SERVER_ADDR
 from instructions import (exit_instruction, finger_tapping_task_instruction,
                           introduction_instruction,
                           ping_pong_task_competitive_instruction,
@@ -39,7 +40,7 @@ if __name__ == "__main__":
 
     finger_tapping_task_instruction(screen)
 
-    wait_for_experimenter(client.to_server, screen, client.client_name)
+    wait_for_experimenter(client.to_server, client.from_server, screen)
 
     client_finger_tapping_task = ClientFingerTappingTask(client.from_server, 
                                                          client.to_server, 
@@ -47,27 +48,29 @@ if __name__ == "__main__":
                                                          client.client_name)
     client_finger_tapping_task.run()
 
-    # Affective task
+    render_blank_screen(screen, BLANK_SCREEN_COUNT_DOWN_MILLISECONDS)
 
-    pygame.mouse.set_visible(True)
+    # Affective task
 
     # Individual
     # TODO: write instruction for affective task
     finger_tapping_task_instruction(screen)
 
-    wait_for_experimenter(client.to_server, screen, client.client_name)
+    wait_for_experimenter(client.to_server, client.from_server, screen)
 
     client_affective_task = ClientAffectiveTask(client.from_server, 
                                                 client.to_server, 
                                                 screen)
 
     client_affective_task.run()
+
+    render_blank_screen(screen, BLANK_SCREEN_COUNT_DOWN_MILLISECONDS)
 
     # Team
     # TODO: write instruction for affective task
     finger_tapping_task_instruction(screen)
 
-    wait_for_experimenter(client.to_server, screen, client.client_name)
+    wait_for_experimenter(client.to_server, client.from_server, screen)
 
     client_affective_task = ClientAffectiveTask(client.from_server, 
                                                 client.to_server, 
@@ -75,32 +78,36 @@ if __name__ == "__main__":
 
     client_affective_task.run()
 
-    pygame.mouse.set_visible(False)
+    render_blank_screen(screen, BLANK_SCREEN_COUNT_DOWN_MILLISECONDS)
 
     # Ping pong competitive task
 
     ping_pong_task_competitive_instruction(screen)
 
-    wait_for_experimenter(client.to_server, screen, client.client_name)
+    wait_for_experimenter(client.to_server, client.from_server, screen)
 
     client_ping_pong_task = ClientPingPongTask(client.from_server, 
-                                                    client.to_server, 
-                                                    screen, 
-                                                    client.client_name)
+                                               client.to_server, 
+                                               screen, 
+                                               client.client_name)
     client_ping_pong_task.run()
+
+    render_blank_screen(screen, BLANK_SCREEN_COUNT_DOWN_MILLISECONDS)
 
     # Ping pong cooperative task
 
     ping_pong_task_cooperative_instruction(screen)
 
-    wait_for_experimenter(client.to_server, screen, client.client_name)
+    wait_for_experimenter(client.to_server, client.from_server, screen)
 
     client_ping_pong_task = ClientPingPongTask(client.from_server, 
-                                                    client.to_server, 
-                                                    screen, 
-                                                    client.client_name,
-                                                    easy_mode=False)
+                                               client.to_server, 
+                                               screen, 
+                                               client.client_name,
+                                               easy_mode=False)
     client_ping_pong_task.run()
+
+    render_blank_screen(screen, BLANK_SCREEN_COUNT_DOWN_MILLISECONDS)
 
     exit_instruction(client.to_server, screen, client.client_name)
 

@@ -3,13 +3,20 @@ from multiprocessing import Process
 
 from common import client_ai_teaming, pairing_clients
 from config import DEFAULT_SERVER_ADDR
-from network import Server
+from network import Server, send
 from tasks.affective_task import ServerAffectiveTask
 from tasks.finger_tapping_task import ServerFingerTappingTask
 from tasks.ping_pong_task import ServerPingPongTask
 
 
-def run_ping_pong(to_client_connections: list, from_client_connections: dict, session_name: str, easy_mode: bool = True):
+def _send_start(to_client_connections: list):
+    data = {}
+    data["type"] = "request"
+    data["request"] = "start"
+    send(to_client_connections, data)
+
+
+def _run_ping_pong(to_client_connections: list, from_client_connections: dict, session_name: str, easy_mode: bool = True):
     server_ping_pong_task = ServerPingPongTask(to_client_connections, 
                                                from_client_connections,
                                                easy_mode=easy_mode,
@@ -30,12 +37,16 @@ if __name__ == "__main__":
 
     server.establish_connections()
 
+    _send_start(list(server.to_client_connections.values()))
+
     # Finger tapping task
     server_finger_tapping_task = ServerFingerTappingTask(list(server.to_client_connections.values()), 
                                                          server.from_client_connections)
     server_finger_tapping_task.run()
 
     server.establish_connections()
+
+    _send_start(list(server.to_client_connections.values()))
 
     # Affective task
     server_affective_task = ServerAffectiveTask(list(server.to_client_connections.values()), 
@@ -46,10 +57,14 @@ if __name__ == "__main__":
 
     server.establish_connections()
 
+    _send_start(list(server.to_client_connections.values()))
+
     # Team
     server_affective_task.run("./tasks/affective_task/images/task_images", collaboration=True)
 
     server.establish_connections()
+
+    _send_start(list(server.to_client_connections.values()))
 
     # Ping pong competitive
     client_pairs = pairing_clients(server.to_client_connections, server.from_client_connections)
@@ -61,7 +76,7 @@ if __name__ == "__main__":
             to_client_connections = to_client_connections + list(to_client_connection_team.values())
 
         session_name = "competitive_" + str(session_id)
-        process = Process(target=run_ping_pong, args=(to_client_connections, from_client_connection_pair, session_name))
+        process = Process(target=_run_ping_pong, args=(to_client_connections, from_client_connection_pair, session_name))
         ping_pong_processes.append(process)
 
     for process in ping_pong_processes:
@@ -71,6 +86,8 @@ if __name__ == "__main__":
         process.join()
 
     server.establish_connections()
+
+    _send_start(list(server.to_client_connections.values()))
 
     # Ping pong cooperative
     client_pairs = client_ai_teaming(server.to_client_connections, server.from_client_connections)
@@ -82,7 +99,7 @@ if __name__ == "__main__":
             to_client_connections = to_client_connections + list(to_client_connection_team.values())
 
         session_name = "cooperative_" + str(session_id)
-        process = Process(target=run_ping_pong, args=(to_client_connections, from_client_connection_teams, session_name, False))
+        process = Process(target=_run_ping_pong, args=(to_client_connections, from_client_connection_teams, session_name, False))
         ping_pong_processes.append(process)
 
     for process in ping_pong_processes:
