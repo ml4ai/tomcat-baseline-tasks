@@ -1,12 +1,16 @@
 import pygame
-from common import COLOR_BACKGROUND, COLOR_FOREGROUND
+from common import COLOR_BACKGROUND, COLOR_FOREGROUND, notify_ready
 from config import CLIENT_WINDOW_HEIGHT, CLIENT_WINDOW_WIDTH
-from network import send
 
 from .utils import FONT_SIZE, READY_MSG
 
 
-def exit_instruction(to_server, screen, client_name):
+def exit_instruction(to_server, screen):
+    """Show exit instructions to client screen
+
+    :param to_server: channel to send data to server
+    :param screen: channel for receiving data from server
+    """
     screen.fill(COLOR_BACKGROUND)
 
     font = pygame.font.Font(None, FONT_SIZE)
@@ -27,8 +31,4 @@ def exit_instruction(to_server, screen, client_name):
         if event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE:
             break
 
-    data = {}
-    data["type"] = "ready"
-    data["sender"] = client_name
-
-    send([to_server], data)
+    notify_ready(to_server)

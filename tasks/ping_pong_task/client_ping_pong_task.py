@@ -1,7 +1,8 @@
 import threading
 
 import pygame
-from common import COLOR_BACKGROUND, COLOR_DIM, COLOR_FOREGROUND, COLOR_PLAYER
+from common import (COLOR_BACKGROUND, COLOR_DIM, COLOR_FOREGROUND,
+                    COLOR_PLAYER, render_blank_screen)
 from config import (BLANK_SCREEN_COUNT_DOWN_MILLISECONDS, CLIENT_WINDOW_HEIGHT,
                     CLIENT_WINDOW_WIDTH, UPDATE_RATE)
 from network import receive, send
@@ -53,8 +54,6 @@ class ClientPingPongTask:
             else:
                 [data] = data
 
-            self._screen.fill(COLOR_BACKGROUND)
-
             if data["type"] == "state":
                 state = data["state"]
                 score_left = data["score_left"]
@@ -65,9 +64,9 @@ class ClientPingPongTask:
                 if data["request"] == "end":
                     self._running = False
 
-                    pygame.display.flip()
-                    pygame.time.wait(BLANK_SCREEN_COUNT_DOWN_MILLISECONDS)
+                    render_blank_screen(self._screen, BLANK_SCREEN_COUNT_DOWN_MILLISECONDS)
 
+                    # display game score
                     score_left = data["score_left"]
                     score_right = data["score_right"]
 
@@ -88,6 +87,8 @@ class ClientPingPongTask:
 
                     pygame.time.wait(SHOW_SCORE_COUNT_DOWN_MILLISECONDS)
                     break
+
+            self._screen.fill(COLOR_BACKGROUND)
 
             # Add sprites to sprite group
             all_sprites_list = pygame.sprite.Group()

@@ -5,6 +5,13 @@ from .utils import read_message
 
 
 def receive(senders: Union[list, dict], wait_time: Optional[float] = None) -> Union[list, dict]:
+    """Get data from channels
+
+    :param senders: sender channels
+    :param wait_time: maximum blocking time
+    :return: data from channel, return type follows the data type of senders
+        if senders is dictionary, then return key: channel names, value: data
+    """
     if isinstance(senders, dict):
         return _receive_from_dict(senders, wait_time)
     else:

@@ -3,7 +3,7 @@ import threading
 import pygame
 from common import (COLOR_BACKGROUND, COLOR_DIM, COLOR_FOREGROUND,
                     COLOR_PLAYER, COLOR_PLAYER_DIM)
-from config import BLANK_SCREEN_COUNT_DOWN_MILLISECONDS, UPDATE_RATE
+from config import UPDATE_RATE
 from network import receive, send
 
 from .config_finger_tapping_task import COUNT_DOWN_MESSAGE, SQUARE_WIDTH
@@ -27,23 +27,23 @@ class ClientFingerTappingTask:
         client_input_thread = threading.Thread(target=self._client_input_handle, daemon=True)
         client_input_thread.start()
 
-        print("[STATUS] Running finger tapping task")
-
+        # compute coordinate to place the player squares
         win_width, win_height = pygame.display.get_surface().get_size()
         main_player_coordinate = ((win_width - SQUARE_WIDTH) / 2, (win_height / 2) - SQUARE_WIDTH - 1)
         other_player_height = (win_height / 2) + 1
         other_player_width_offset = (SQUARE_WIDTH / 2) + 1
 
+        print("[STATUS] Running finger tapping task")
+
         while self._running:
             pygame.event.get()
 
+            # get state from server
             data = receive([self._from_server], 0.0)
             if not data:
                 continue
             else:
                 [data] = data
-
-            self._screen.fill(COLOR_BACKGROUND)
 
             if data["type"] == "state":
                 self._state = data["state"]
@@ -52,12 +52,12 @@ class ClientFingerTappingTask:
             elif data["type"] == "request":
                 if data["request"] == "end":
                     self._running = False
-                    pygame.display.flip()
-                    pygame.time.wait(BLANK_SCREEN_COUNT_DOWN_MILLISECONDS)
                     break
 
             num_other_players = len(self._state) - 1
             player_counter = 0
+
+            self._screen.fill(COLOR_BACKGROUND)
 
             # Add sprites to sprite group
             all_sprites_list = pygame.sprite.Group()
@@ -104,8 +104,7 @@ class ClientFingerTappingTask:
         print("[STATUS] Finger tapping task ended")
 
     def _client_input_handle(self):
-        """
-        Send user's input command to server
+        """Send user's input command to server
         """
         clock = pygame.time.Clock()
         while self._running:
@@ -115,6 +114,7 @@ class ClientFingerTappingTask:
             if self._state is None:
                 continue
 
+            # only send user commands when state does not reflect user's interaction
             data = None
 
             if keys[pygame.K_SPACE]:
