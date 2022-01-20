@@ -4,11 +4,12 @@ import pygame
 
 from common import render_blank_screen
 from config import BLANK_SCREEN_COUNT_DOWN_MILLISECONDS, DEFAULT_SERVER_ADDR
-from instructions import (exit_instruction, finger_tapping_task_instruction,
+from instructions import (MultiSubjectAffectiveTask_Instruction_Individual,
+                          MultiSubjectAffectiveTask_Instruction_Team,
+                          exit_instruction, finger_tapping_task_instruction,
                           introduction_instruction,
                           ping_pong_task_competitive_instruction,
                           ping_pong_task_cooperative_instruction,
-                          MultiSubjectAffectiveTask_Instruction,
                           wait_for_experimenter)
 from network import Client
 from tasks.affective_task import ClientAffectiveTask
@@ -55,7 +56,7 @@ if __name__ == "__main__":
 
     # Individual
     # TODO: write instruction for affective task
-    MultiSubjectAffectiveTask_Instruction(client.screen)
+    MultiSubjectAffectiveTask_Instruction_Individual(client.screen)
 
     wait_for_experimenter(client.to_server, client.from_server, screen)
 
@@ -69,7 +70,7 @@ if __name__ == "__main__":
 
     # Team
     # TODO: write instruction for affective task
-    finger_tapping_task_instruction(screen)
+    MultiSubjectAffectiveTask_Instruction_Team(client.screen)
 
     wait_for_experimenter(client.to_server, client.from_server, screen)
 
