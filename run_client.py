@@ -8,6 +8,7 @@ from instructions import (exit_instruction, finger_tapping_task_instruction,
                           introduction_instruction,
                           ping_pong_task_competitive_instruction,
                           ping_pong_task_cooperative_instruction,
+                          MultiSubjectAffectiveTask_Instruction,
                           wait_for_experimenter)
 from network import Client
 from tasks.affective_task import ClientAffectiveTask
@@ -54,7 +55,7 @@ if __name__ == "__main__":
 
     # Individual
     # TODO: write instruction for affective task
-    finger_tapping_task_instruction(screen)
+    MultiSubjectAffectiveTask_Instruction(client.screen)
 
     wait_for_experimenter(client.to_server, client.from_server, screen)
 
