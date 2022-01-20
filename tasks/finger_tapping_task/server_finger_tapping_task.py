@@ -5,6 +5,7 @@ import threading
 from time import time
 
 import pygame
+from common import record_metadata, request_clients_end
 from config import UPDATE_RATE
 from network import receive, send
 
@@ -43,8 +44,7 @@ class ServerFingerTappingTask:
 
         json_file_name = csv_file_name + "_metadata"
 
-        with open(json_file_name + ".json", 'w') as json_file:
-            json.dump(metadata, json_file, indent=4)
+        record_metadata(json_file_name, metadata)
 
         self._running = False
 
@@ -65,11 +65,7 @@ class ServerFingerTappingTask:
 
         self._csv_file.close()
 
-        data = {}
-        data["type"] = "request"
-        data["request"] = "end"
-
-        send(self._to_client_connections, data)
+        request_clients_end(self._to_client_connections)
 
         print("[STATUS] Finger tapping task ended")
 

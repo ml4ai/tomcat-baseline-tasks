@@ -66,6 +66,7 @@ class ClientPingPongTask:
 
                     render_blank_screen(self._screen, BLANK_SCREEN_COUNT_DOWN_MILLISECONDS)
 
+                    # display game score
                     score_left = data["score_left"]
                     score_right = data["score_right"]
 

@@ -109,3 +109,4 @@ if __name__ == "__main__":
         process.join()
 
     server.establish_connections()
+    server.close_connections()

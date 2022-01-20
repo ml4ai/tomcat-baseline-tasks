@@ -6,6 +6,12 @@ from .utils import HEADER
 
 
 def send(receivers: list, payload, wait_time: Optional[float] = None) -> None:
+    """Send data to receiving channels
+
+    :param receivers: receiving channels
+    :param payload: data to send
+    :param wait_time: maximum blocking time
+    """
     _, receivers, exceptional = select([], receivers, receivers, wait_time)
 
     if exceptional:

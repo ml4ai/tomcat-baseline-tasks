@@ -39,15 +39,20 @@ class ClientAffectiveTask:
 
             state = data["state"]
 
+            # show a blank screen and a cross before showing an image
             render_blank_screen(self._screen, BLANK_SCREEN_MILLISECONDS)
 
             render_image_center("./tasks/affective_task/images/plus.png", self._screen, refresh=True)
+            
             pygame.time.wait(CROSS_SCREEN_MILLISECONDS)
 
+            # show an image
             render_image_center(state["image_path"], self._screen, refresh=True)
-            
+
+            # show timer above image until timer runs out
             timer(state["image_timer"], [], "Team: " if state["collaboration"] else "Individual: ", self._screen)
 
+            # show valence and arousal scoring
             render_image_center("./tasks/affective_task/images/buttons_images/Valence.jpg", 
                                 self._screen, 
                                 y_offset=-200, 
@@ -66,6 +71,7 @@ class ClientAffectiveTask:
 
             pygame.mouse.set_visible(True)
 
+            # render button response while timer is running
             def button_response():
                 for event in pygame.event.get():
                     if event.type == pygame.MOUSEBUTTONDOWN:
@@ -92,6 +98,7 @@ class ClientAffectiveTask:
 
             pygame.mouse.set_visible(False)
 
+            # send valence and arousal data to server
             arousal = 0
             for i, button in enumerate(arousal_buttons):
                 if button.is_selected():

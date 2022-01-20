@@ -27,16 +27,18 @@ class ClientFingerTappingTask:
         client_input_thread = threading.Thread(target=self._client_input_handle, daemon=True)
         client_input_thread.start()
 
-        print("[STATUS] Running finger tapping task")
-
+        # compute coordinate to place the player squares
         win_width, win_height = pygame.display.get_surface().get_size()
         main_player_coordinate = ((win_width - SQUARE_WIDTH) / 2, (win_height / 2) - SQUARE_WIDTH - 1)
         other_player_height = (win_height / 2) + 1
         other_player_width_offset = (SQUARE_WIDTH / 2) + 1
 
+        print("[STATUS] Running finger tapping task")
+
         while self._running:
             pygame.event.get()
 
+            # get state from server
             data = receive([self._from_server], 0.0)
             if not data:
                 continue
@@ -102,8 +104,7 @@ class ClientFingerTappingTask:
         print("[STATUS] Finger tapping task ended")
 
     def _client_input_handle(self):
-        """
-        Send user's input command to server
+        """Send user's input command to server
         """
         clock = pygame.time.Clock()
         while self._running:
@@ -113,6 +114,7 @@ class ClientFingerTappingTask:
             if self._state is None:
                 continue
 
+            # only send user commands when state does not reflect user's interaction
             data = None
 
             if keys[pygame.K_SPACE]:

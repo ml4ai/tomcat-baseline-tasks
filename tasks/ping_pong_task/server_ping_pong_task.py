@@ -5,6 +5,7 @@ import threading
 from time import time
 
 import pygame
+from common import record_metadata, request_clients_end
 from config import CLIENT_WINDOW_HEIGHT, CLIENT_WINDOW_WIDTH, UPDATE_RATE
 from network import receive, send
 
@@ -42,12 +43,14 @@ class ServerPingPongTask:
 
         from_client_connection_team_left, from_client_connection_team_right = from_client_connection_teams
 
+        # spread the segment distance uniformly
         segment_length_left = int((self._game_y_upper_bound - self._paddle_height - self._game_y_lower_bound) / 
                                   (len(from_client_connection_team_left) + 1))
 
         segment_length_right = int((self._game_y_upper_bound - self._paddle_height - self._game_y_lower_bound) / 
                                    (len(from_client_connection_team_right) + 1))
 
+        # setup paddles for each team
         for count, (from_client_connection, client_name) in enumerate(from_client_connection_team_left.items()):
             self._from_client_connections[from_client_connection] = client_name
             self._paddles[client_name] = Paddle(position=(self._game_x_lower_bound, 
@@ -74,6 +77,7 @@ class ServerPingPongTask:
                                                           team=RIGHT_TEAM)
             metadata["right_team"].append(client_name)
 
+        # setup ball
         self._ball = Ball(BALL_SIZE, cfg.BALL_X_SPEED)
         self._ball.rect.y = self._game_y_lower_bound + int((WINDOW_HEIGHT + BALL_SIZE) / 2)
         self._ball.rect.x = self._game_x_lower_bound + int((WINDOW_WIDTH + BALL_SIZE) / 2)
@@ -106,8 +110,7 @@ class ServerPingPongTask:
 
         json_file_name = csv_file_name + "_metadata"
 
-        with open(json_file_name + ".json", 'w') as json_file:
-            json.dump(metadata, json_file, indent=4)
+        record_metadata(json_file_name, metadata)
 
         self._running = False
 
@@ -128,17 +131,16 @@ class ServerPingPongTask:
 
         self._csv_file.close()
 
-        data = {}
-        data["type"] = "request"
-        data["request"] = "end"
-        data["score_left"] = self._score_left
-        data["score_right"] = self._score_right
-
-        send(self._to_client_connections, data)
+        extra_data = {}
+        extra_data["score_left"] = self._score_left
+        extra_data["score_right"] = self._score_right
+        request_clients_end(self._to_client_connections, extra_data)
 
         print("[STATUS] Ping pong task ended")
 
     def _to_client_update_state(self):
+        """Update the state of the game and reply to clients
+        """
         counter_target = SECONDS_COUNT_DOWN
         game_started = False
 
@@ -148,6 +150,7 @@ class ServerPingPongTask:
 
         clock = pygame.time.Clock()
         while self._running:
+            # manage timer
             if seconds >= counter_target:
                 if game_started:
                     self._running = False
@@ -240,6 +243,8 @@ class ServerPingPongTask:
             clock.tick(UPDATE_RATE)
 
     def _from_client_commands(self):
+        """Update state of paddles from user commands
+        """
         while self._running:
             all_data = receive(self._from_client_connections.keys(), 0.1)
 

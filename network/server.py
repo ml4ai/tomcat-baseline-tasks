@@ -9,6 +9,8 @@ from .send import send
 
 
 class Server:
+    """Establish connection with client channels and handle requests
+    """
     def __init__(self, host: str, port: int) -> None:
         # Establish connection where clients can get game state update
         self._to_client_request = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -30,6 +32,8 @@ class Server:
         self._establishing_connections = False
 
     def establish_connections(self) -> None:
+        """Open to establishing new connections
+        """
         self._establishing_connections = True
 
         to_client_request_thread = threading.Thread(target=self._dispatch_to_client_request, daemon=True)
@@ -59,8 +63,7 @@ class Server:
         self._from_client_request.close()
 
     def _dispatch_to_client_request(self) -> None:
-        """
-        Dispatch client's connection for receiving game state updates from server
+        """Dispatch client's connection for receiving game state updates from server
         """
         # Listen for client connection
         self._to_client_request.listen()
@@ -73,6 +76,7 @@ class Server:
                 client_conn, client_addr = connection.accept()
                 client_conn.setblocking(False)
 
+                # get connection name from client
                 [client_name] = receive([client_conn])
 
                 if client_name in self.to_client_connections:
@@ -90,8 +94,7 @@ class Server:
                     print("Sending replies to [" + client_addr[0] + ", " + str(client_addr[1]) + ']')
 
     def _dispatch_from_client_request(self) -> None:
-        """
-        Establish connection to receive clients' command
+        """Establish connection to receive clients' command
         """
         # Listen for client connection
         self._from_client_request.listen()
@@ -104,6 +107,7 @@ class Server:
                 client_conn, client_addr = connection.accept()
                 client_conn.setblocking(False)
 
+                # get connection name from client
                 [client_name] = receive([client_conn])
 
                 if client_name in self.to_client_connections.values():
@@ -121,6 +125,8 @@ class Server:
                     print("Receiving commands from [" + client_name + ", " + client_addr[0] + ", " + str(client_addr[1]) + ']')
 
     def _from_clients(self) -> None:
+        """Get request and status from clients
+        """
         while self._establishing_connections:
             all_data = receive(self.from_client_connections, 0.1)
 
@@ -142,8 +148,7 @@ class Server:
                     print(f"[INFO] Client {sender_name} is ready")
 
     def _terminal_input(self) -> None:
-        """
-        Control the server 
+        """Control the server 
         """
         while self._establishing_connections:
             command = get_terminal_command(wait_time=0.5)

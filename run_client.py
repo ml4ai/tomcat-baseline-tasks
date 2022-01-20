@@ -109,6 +109,6 @@ if __name__ == "__main__":
 
     render_blank_screen(screen, BLANK_SCREEN_COUNT_DOWN_MILLISECONDS)
 
-    exit_instruction(client.to_server, screen, client.client_name)
+    exit_instruction(client.to_server, screen)
 
     client.close()
