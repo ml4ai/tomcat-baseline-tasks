@@ -1,5 +1,6 @@
 import pygame
-from common import cursor_visibility, render_blank_screen
+from common import cursor_visibility, render_blank_screen, set_cursor_position
+from config import CLIENT_WINDOW_HEIGHT, CLIENT_WINDOW_WIDTH
 from network import receive, send
 
 from .config_affective_task import (BLANK_SCREEN_MILLISECONDS,
@@ -70,6 +71,7 @@ class ClientAffectiveTask:
                 button.render()
 
             cursor_visibility(True)
+            set_cursor_position(CLIENT_WINDOW_WIDTH / 2, CLIENT_WINDOW_HEIGHT / 2)
 
             # render button response while timer is running
             def button_response():
