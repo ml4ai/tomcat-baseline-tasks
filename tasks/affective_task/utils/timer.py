@@ -12,6 +12,8 @@ def timer(seconds: int, callbacks: List[Callable], pre_text: str, screen):
 
     clock = pygame.time.Clock()
     while True:
+        pygame.event.get()
+
         for callback in callbacks:
             callback()
 
