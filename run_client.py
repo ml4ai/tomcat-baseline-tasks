@@ -2,7 +2,7 @@ import argparse
 
 import pygame
 
-from common import render_blank_screen
+from common import cursor_visibility, render_blank_screen
 from config import BLANK_SCREEN_COUNT_DOWN_MILLISECONDS, DEFAULT_SERVER_ADDR
 from instructions import (affective_task_instruction_individual,
                           affective_task_instruction_team, exit_instruction,
@@ -28,7 +28,8 @@ if __name__ == "__main__":
     client_name = args.name
 
     pygame.init()
-    pygame.mouse.set_visible(False)
+
+    cursor_visibility(False)
 
     client = Client(server_address, server_port, client_name)
 
