@@ -70,8 +70,8 @@ class ClientAffectiveTask:
             for button in valence_buttons:
                 button.render()
 
-            cursor_visibility(True)
             set_cursor_position(CLIENT_WINDOW_WIDTH / 2, CLIENT_WINDOW_HEIGHT / 2)
+            cursor_visibility(True)
 
             # render button response while timer is running
             def button_response():
