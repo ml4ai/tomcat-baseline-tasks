@@ -37,7 +37,7 @@ if __name__ == "__main__":
 
     # Introduction slides
 
-    introduction_instruction(screen)
+    # introduction_instruction(screen)
     
     # Finger tapping task
 
