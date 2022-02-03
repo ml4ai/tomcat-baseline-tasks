@@ -9,4 +9,5 @@ from .record_metadata import record_metadata
 from .render_blank_screen import render_blank_screen
 from .request_clients_end import request_clients_end
 from .set_cursor_position import set_cursor_position
+from .wait import wait
 from .wait_for_server import wait_for_server
