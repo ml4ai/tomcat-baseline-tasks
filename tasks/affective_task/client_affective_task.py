@@ -1,5 +1,6 @@
 import pygame
-from common import cursor_visibility, render_blank_screen, set_cursor_position
+from common import (cursor_visibility, render_blank_screen,
+                    set_cursor_position, wait)
 from config import CLIENT_WINDOW_HEIGHT, CLIENT_WINDOW_WIDTH
 from network import receive, send
 
@@ -44,8 +45,7 @@ class ClientAffectiveTask:
             render_blank_screen(self._screen, BLANK_SCREEN_MILLISECONDS)
 
             render_image_center("./tasks/affective_task/images/plus.png", self._screen, refresh=True)
-            
-            pygame.time.wait(CROSS_SCREEN_MILLISECONDS)
+            wait(CROSS_SCREEN_MILLISECONDS)
 
             # show an image
             render_image_center(state["image_path"], self._screen, refresh=True)
