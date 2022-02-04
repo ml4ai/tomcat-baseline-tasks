@@ -24,11 +24,11 @@ class ClientAffectiveTask:
         arousal_buttons.append(Button((400, -50), "+2", self._screen))
 
         valence_buttons = []
-        valence_buttons.append(Button((-400, 350), "+2", self._screen))
-        valence_buttons.append(Button((-200, 350), "+1", self._screen))
+        valence_buttons.append(Button((-400, 350), "-2", self._screen))
+        valence_buttons.append(Button((-200, 350), "-1", self._screen))
         valence_buttons.append(Button((0, 350), "0", self._screen))
-        valence_buttons.append(Button((200, 350), "-1", self._screen))
-        valence_buttons.append(Button((400, 350), "-2", self._screen))
+        valence_buttons.append(Button((200, 350), "+1", self._screen))
+        valence_buttons.append(Button((400, 350), "+2", self._screen))
 
         print("[STATUS] Running affective task")
 
