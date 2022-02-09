@@ -17,18 +17,18 @@ class ClientAffectiveTask:
 
     def run(self):
         arousal_buttons = []
-        arousal_buttons.append(Button((-400, -50), self._screen))
-        arousal_buttons.append(Button((-200, -50), self._screen))
-        arousal_buttons.append(Button((0, -50), self._screen))
-        arousal_buttons.append(Button((200, -50), self._screen))
-        arousal_buttons.append(Button((400, -50), self._screen))
+        arousal_buttons.append(Button((-345, -150), self._screen))
+        arousal_buttons.append(Button((-175, -150), self._screen))
+        arousal_buttons.append(Button((-2, -150), self._screen))
+        arousal_buttons.append(Button((173, -150), self._screen))
+        arousal_buttons.append(Button((343, -150), self._screen))
 
         valence_buttons = []
-        valence_buttons.append(Button((-400, 350), self._screen))
-        valence_buttons.append(Button((-200, 350), self._screen))
-        valence_buttons.append(Button((0, 350), self._screen))
-        valence_buttons.append(Button((200, 350), self._screen))
-        valence_buttons.append(Button((400, 350), self._screen))
+        valence_buttons.append(Button((-345, 200), self._screen))
+        valence_buttons.append(Button((-175, 200), self._screen))
+        valence_buttons.append(Button((-2, 200), self._screen))
+        valence_buttons.append(Button((173, 200), self._screen))
+        valence_buttons.append(Button((343, 200), self._screen))
 
         print("[STATUS] Running affective task")
 
@@ -56,12 +56,12 @@ class ClientAffectiveTask:
             # show valence and arousal scoring
             render_image_center("./tasks/affective_task/images/buttons_images/Valence.jpg", 
                                 self._screen, 
-                                y_offset=-200, 
+                                y_offset=-150, 
                                 refresh=True)
             render_image_center("./tasks/affective_task/images/buttons_images/Arousal.jpg", 
                                 self._screen, 
                                 y_offset=200)
-            render_text_center("Arousal score", (400, 50), self._screen, y_offset=-320)
+            render_text_center("Arousal score", (400, 50), self._screen, y_offset=-270)
             render_text_center("Valence score", (400, 50), self._screen, y_offset=80)
 
             for button in arousal_buttons:
