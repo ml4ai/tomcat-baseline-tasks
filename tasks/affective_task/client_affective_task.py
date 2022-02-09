@@ -17,18 +17,18 @@ class ClientAffectiveTask:
 
     def run(self):
         arousal_buttons = []
-        arousal_buttons.append(Button((-400, -50), "-2", self._screen))
-        arousal_buttons.append(Button((-200, -50), "-1", self._screen))
-        arousal_buttons.append(Button((0, -50), "0", self._screen))
-        arousal_buttons.append(Button((200, -50), "+1", self._screen))
-        arousal_buttons.append(Button((400, -50), "+2", self._screen))
+        arousal_buttons.append(Button((-400, -50), self._screen))
+        arousal_buttons.append(Button((-200, -50), self._screen))
+        arousal_buttons.append(Button((0, -50), self._screen))
+        arousal_buttons.append(Button((200, -50), self._screen))
+        arousal_buttons.append(Button((400, -50), self._screen))
 
         valence_buttons = []
-        valence_buttons.append(Button((-400, 350), "-2", self._screen))
-        valence_buttons.append(Button((-200, 350), "-1", self._screen))
-        valence_buttons.append(Button((0, 350), "0", self._screen))
-        valence_buttons.append(Button((200, 350), "+1", self._screen))
-        valence_buttons.append(Button((400, 350), "+2", self._screen))
+        valence_buttons.append(Button((-400, 350), self._screen))
+        valence_buttons.append(Button((-200, 350), self._screen))
+        valence_buttons.append(Button((0, 350), self._screen))
+        valence_buttons.append(Button((200, 350), self._screen))
+        valence_buttons.append(Button((400, 350), self._screen))
 
         print("[STATUS] Running affective task")
 
