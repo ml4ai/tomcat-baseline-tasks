@@ -4,6 +4,9 @@ import pygame
 from common import COLOR_DIM, COLOR_FOREGROUND
 from config import CLIENT_WINDOW_HEIGHT, CLIENT_WINDOW_WIDTH
 
+BOX_WIDTH = 100
+BOX_HEIGHT = 200
+
 
 class Button:
     def __init__(self, offset: Tuple[int, int], screen):
@@ -19,13 +22,15 @@ class Button:
 
     def render(self):
         x, y = self._position
+        x -= int(BOX_WIDTH / 2)
+        y -= int(BOX_HEIGHT / 2)
 
         if self._selected:
             color = COLOR_FOREGROUND
         else:
             color = COLOR_DIM
 
-        self.object = pygame.draw.rect(self._screen, color, (x, y, 100, 200))
+        self.object = pygame.draw.rect(self._screen, color, (x, y, BOX_WIDTH, BOX_HEIGHT))
 
         pygame.display.flip()
 
