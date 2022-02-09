@@ -80,6 +80,7 @@ class ClientAffectiveTask:
                         # Check arousal buttons
                         for i, button in enumerate(arousal_buttons):
                             if button.object.collidepoint(pygame.mouse.get_pos()):
+                                print("Selected")
                                 button.select()
                                 for j, each_button in enumerate(arousal_buttons):
                                     if j != i:
@@ -90,6 +91,7 @@ class ClientAffectiveTask:
                         else:
                             for i, button in enumerate(valence_buttons):
                                 if button.object.collidepoint(pygame.mouse.get_pos()):
+                                    print("Selected")
                                     button.select()
                                     for j, each_button in enumerate(valence_buttons):
                                         if j != i:

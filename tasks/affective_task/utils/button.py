@@ -20,7 +20,7 @@ class Button:
     def render(self):
         x, y = self._position
 
-        self.object = pygame.draw.rect(self._screen, COLOR_FOREGROUND, pygame.Rect(x, y, 100, 200))
+        self.object = pygame.draw.rect(self._screen, COLOR_FOREGROUND, (x, y, 100, 200))
 
         pygame.display.flip()
 
