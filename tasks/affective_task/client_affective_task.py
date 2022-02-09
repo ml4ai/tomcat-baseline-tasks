@@ -74,13 +74,12 @@ class ClientAffectiveTask:
             cursor_visibility(True)
 
             # render button response while timer is running
-            def button_response():
-                for event in pygame.event.get():
+            def button_response(events):
+                for event in events:
                     if event.type == pygame.MOUSEBUTTONDOWN:
                         # Check arousal buttons
                         for i, button in enumerate(arousal_buttons):
                             if button.object.collidepoint(pygame.mouse.get_pos()):
-                                print("Selected")
                                 button.select()
                                 for j, each_button in enumerate(arousal_buttons):
                                     if j != i:
@@ -91,7 +90,6 @@ class ClientAffectiveTask:
                         else:
                             for i, button in enumerate(valence_buttons):
                                 if button.object.collidepoint(pygame.mouse.get_pos()):
-                                    print("Selected")
                                     button.select()
                                     for j, each_button in enumerate(valence_buttons):
                                         if j != i:

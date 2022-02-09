@@ -1,7 +1,7 @@
 from typing import Tuple
 
 import pygame
-from common import COLOR_FOREGROUND
+from common import COLOR_DIM, COLOR_FOREGROUND
 from config import CLIENT_WINDOW_HEIGHT, CLIENT_WINDOW_WIDTH
 
 
@@ -20,7 +20,12 @@ class Button:
     def render(self):
         x, y = self._position
 
-        self.object = pygame.draw.rect(self._screen, COLOR_FOREGROUND, (x, y, 100, 200))
+        if self._selected:
+            color = COLOR_FOREGROUND
+        else:
+            color = COLOR_DIM
+
+        self.object = pygame.draw.rect(self._screen, color, (x, y, 100, 200))
 
         pygame.display.flip()
 
