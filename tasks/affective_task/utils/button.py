@@ -21,7 +21,7 @@ class Button:
         self.object = pygame.draw.rect(self._screen, pygame.Color(0, 0, 0, 0), pygame.Rect(x, y, BOX_WIDTH, BOX_HEIGHT), BOX_THICKNESS)
         self._selected = False
 
-    def render(self):
+    def _render(self):
         x, y = self._position
 
         if self._selected:
@@ -38,11 +38,11 @@ class Button:
 
     def select(self):
         self._selected = True
-        self.render()
+        self._render()
 
     def unselect(self):
         self._selected = False
-        self.render()
+        self._render()
 
     def is_selected(self) -> bool:
         return self._selected

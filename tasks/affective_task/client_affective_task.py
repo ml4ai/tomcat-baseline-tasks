@@ -73,10 +73,10 @@ class ClientAffectiveTask:
 
 
             for button in arousal_buttons:
-                button.render()
+                button.unselect()
 
             for button in valence_buttons:
-                button.render()
+                button.unselect()
 
             set_cursor_position(CLIENT_WINDOW_WIDTH / 2, CLIENT_WINDOW_HEIGHT / 2)
             cursor_visibility(True)

@@ -1,9 +1,16 @@
+from typing import Tuple
+
 import pygame
 from common import COLOR_BACKGROUND, COLOR_FOREGROUND
 from config import CLIENT_WINDOW_HEIGHT, CLIENT_WINDOW_WIDTH
 
 
-def render_text_center(text: str, text_box_shape, screen, font_size = 50, x_offset = 0, y_offset: int = 0):
+def render_text_center(text: str,
+                       text_box_shape: Tuple[int, int],
+                       screen,
+                       font_size: int = 50,
+                       x_offset: int = 0,
+                       y_offset: int = 0) -> None:
     font = pygame.font.SysFont("Arial", font_size)
     text_render = font.render(text, True, COLOR_FOREGROUND)
 
