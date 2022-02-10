@@ -61,8 +61,16 @@ class ClientAffectiveTask:
             render_image_center("./tasks/affective_task/images/buttons_images/Arousal.jpg", 
                                 self._screen, 
                                 y_offset=200)
-            render_text_center("Arousal score", (400, 50), self._screen, y_offset=-270)
-            render_text_center("Valence score", (400, 50), self._screen, y_offset=80)
+            render_text_center("Valence score", (400, 50), self._screen, y_offset=-270)
+
+            render_text_center("Frowning SAM", (300, 50), self._screen, font_size = 30 , x_offset = -550, y_offset=-150)
+            render_text_center("Smiling SAM", (300, 50), self._screen, font_size = 30 ,x_offset = 540,y_offset=-150)
+
+            render_text_center("Arousal score", (400, 50), self._screen, y_offset=80)
+
+            render_text_center("Calm SAM", (300, 50), self._screen, font_size = 30 , x_offset = -550, y_offset=200)
+            render_text_center("Excited SAM", (300, 50), self._screen, font_size = 30 ,x_offset = 540,y_offset=200)
+
 
             for button in arousal_buttons:
                 button.render()
