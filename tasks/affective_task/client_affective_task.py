@@ -17,18 +17,18 @@ class ClientAffectiveTask:
 
     def run(self):
         arousal_buttons = []
-        arousal_buttons.append(Button((-400, -50), "-2", self._screen))
-        arousal_buttons.append(Button((-200, -50), "-1", self._screen))
-        arousal_buttons.append(Button((0, -50), "0", self._screen))
-        arousal_buttons.append(Button((200, -50), "+1", self._screen))
-        arousal_buttons.append(Button((400, -50), "+2", self._screen))
+        arousal_buttons.append(Button((-345, -150), self._screen))
+        arousal_buttons.append(Button((-175, -150), self._screen))
+        arousal_buttons.append(Button((-2, -150), self._screen))
+        arousal_buttons.append(Button((173, -150), self._screen))
+        arousal_buttons.append(Button((343, -150), self._screen))
 
         valence_buttons = []
-        valence_buttons.append(Button((-400, 350), "-2", self._screen))
-        valence_buttons.append(Button((-200, 350), "-1", self._screen))
-        valence_buttons.append(Button((0, 350), "0", self._screen))
-        valence_buttons.append(Button((200, 350), "+1", self._screen))
-        valence_buttons.append(Button((400, 350), "+2", self._screen))
+        valence_buttons.append(Button((-345, 200), self._screen))
+        valence_buttons.append(Button((-175, 200), self._screen))
+        valence_buttons.append(Button((-2, 200), self._screen))
+        valence_buttons.append(Button((173, 200), self._screen))
+        valence_buttons.append(Button((343, 200), self._screen))
 
         print("[STATUS] Running affective task")
 
@@ -56,26 +56,34 @@ class ClientAffectiveTask:
             # show valence and arousal scoring
             render_image_center("./tasks/affective_task/images/buttons_images/Valence.jpg", 
                                 self._screen, 
-                                y_offset=-200, 
+                                y_offset=-150, 
                                 refresh=True)
             render_image_center("./tasks/affective_task/images/buttons_images/Arousal.jpg", 
                                 self._screen, 
                                 y_offset=200)
-            render_text_center("Arousal score", (400, 50), self._screen, y_offset=-320)
-            render_text_center("Valence score", (400, 50), self._screen, y_offset=80)
+            render_text_center("Valence score", (400, 50), self._screen, y_offset=-270)
+
+            render_text_center("Frowning SAM", (300, 50), self._screen, font_size = 30 , x_offset = -550, y_offset=-150)
+            render_text_center("Smiling SAM", (300, 50), self._screen, font_size = 30 ,x_offset = 540,y_offset=-150)
+
+            render_text_center("Arousal score", (400, 50), self._screen, y_offset=80)
+
+            render_text_center("Calm SAM", (300, 50), self._screen, font_size = 30 , x_offset = -550, y_offset=200)
+            render_text_center("Excited SAM", (300, 50), self._screen, font_size = 30 ,x_offset = 540,y_offset=200)
+
 
             for button in arousal_buttons:
-                button.render()
+                button.unselect()
 
             for button in valence_buttons:
-                button.render()
+                button.unselect()
 
             set_cursor_position(CLIENT_WINDOW_WIDTH / 2, CLIENT_WINDOW_HEIGHT / 2)
             cursor_visibility(True)
 
             # render button response while timer is running
-            def button_response():
-                for event in pygame.event.get():
+            def button_response(events):
+                for event in events:
                     if event.type == pygame.MOUSEBUTTONDOWN:
                         # Check arousal buttons
                         for i, button in enumerate(arousal_buttons):

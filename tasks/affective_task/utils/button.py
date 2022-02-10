@@ -1,48 +1,48 @@
+from typing import Tuple
+
 import pygame
-from common import COLOR_BACKGROUND, COLOR_DIM, COLOR_FOREGROUND
+from common import COLOR_FOREGROUND
 from config import CLIENT_WINDOW_HEIGHT, CLIENT_WINDOW_WIDTH
+
+BOX_WIDTH = 157
+BOX_HEIGHT = 170
+BOX_THICKNESS = 10
 
 
 class Button:
-    def __init__(self, offset, text, screen):
+    def __init__(self, offset: Tuple[int, int], screen):
         x_offset, y_offset = offset
-        x = CLIENT_WINDOW_WIDTH / 2 + x_offset
-        y = CLIENT_WINDOW_HEIGHT / 2 + y_offset
+        x = CLIENT_WINDOW_WIDTH / 2 + x_offset - BOX_WIDTH / 2
+        y = CLIENT_WINDOW_HEIGHT / 2 + y_offset - BOX_HEIGHT / 2
 
         self._position = (x, y)
-        self._text = text
         self._screen = screen
 
-        self.object = None
+        self.object = pygame.draw.rect(self._screen, pygame.Color(0, 0, 0, 0), pygame.Rect(x, y, BOX_WIDTH, BOX_HEIGHT), BOX_THICKNESS)
         self._selected = False
 
-    def render(self, text_box_color=COLOR_BACKGROUND):
-        font = pygame.font.SysFont("Arial", 50)
-        text_render = font.render(self._text, 1, COLOR_FOREGROUND)
-
-        _, _, w, h = text_render.get_rect()
+    def _render(self):
         x, y = self._position
-        x -= int(w / 2)
-        y -= int(h / 2)
 
-        pygame.draw.line(self._screen, COLOR_FOREGROUND, (x, y), (x + w , y), 3)
-        pygame.draw.line(self._screen, COLOR_FOREGROUND, (x, y - 2), (x, y + h), 3)
-        pygame.draw.line(self._screen, COLOR_FOREGROUND, (x, y + h), (x + w , y + h), 3)
-        pygame.draw.line(self._screen, COLOR_FOREGROUND, (x + w , y+h), [x + w , y], 3)
+        if self._selected:
+            color = COLOR_FOREGROUND
+        else:
+            color = (35, 35, 35)
 
-        pygame.draw.rect(self._screen, text_box_color, (x, y, w , h))
-
-        self.object = self._screen.blit(text_render, (x, y))
+        pygame.draw.line(self._screen, color, (x, y), (x + BOX_WIDTH , y), BOX_THICKNESS)
+        pygame.draw.line(self._screen, color, (x, y - 2), (x, y + BOX_HEIGHT), BOX_THICKNESS)
+        pygame.draw.line(self._screen, color, (x, y + BOX_HEIGHT), (x + BOX_WIDTH , y + BOX_HEIGHT), BOX_THICKNESS)
+        pygame.draw.line(self._screen, color, (x + BOX_WIDTH , y+BOX_HEIGHT), [x + BOX_WIDTH , y], BOX_THICKNESS)
 
         pygame.display.flip()
 
     def select(self):
         self._selected = True
-        self.render(COLOR_DIM)
+        self._render()
 
     def unselect(self):
         self._selected = False
-        self.render()
+        self._render()
 
     def is_selected(self) -> bool:
         return self._selected
