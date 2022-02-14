@@ -1,6 +1,7 @@
 import socket
 import threading
 from select import select
+from typing import List
 
 from common import get_terminal_command
 
@@ -31,10 +32,12 @@ class Server:
 
         self._establishing_connections = False
 
-    def establish_connections(self) -> None:
+    def establish_connections(self, required_num_connections: List[int] = []) -> None:
         """Open to establishing new connections
         """
         self._establishing_connections = True
+
+        self._required_num_connections = required_num_connections
 
         to_client_request_thread = threading.Thread(target=self._dispatch_to_client_request, daemon=True)
         to_client_request_thread.start()
@@ -58,7 +61,7 @@ class Server:
 
         print("[STATUS] Closed connection gate")
 
-    def close_connections(self) -> None:
+    def close_connections_listener(self) -> None:
         self._to_client_request.close()
         self._from_client_request.close()
 
@@ -163,7 +166,11 @@ class Server:
                 print("-----")
 
             elif command == "close":
-                self._establishing_connections = False
+                if self._required_num_connections and \
+                   len(self.from_client_connections) not in self._required_num_connections:
+                    print("[ERROR] Cannot close: must have " + str(self._required_num_connections) + " number of connections")
+                else:
+                    self._establishing_connections = False
 
             else:
                 print("Unknown command")

@@ -2,11 +2,16 @@ import argparse
 from multiprocessing import Process
 
 from common import client_ai_teaming, pairing_clients
-from config import DEFAULT_SERVER_ADDR
+from config import DEFAULT_SERVER_ADDR, DEFAULT_SERVER_PORT
 from network import Server, send
 from tasks.affective_task import ServerAffectiveTask
 from tasks.finger_tapping_task import ServerFingerTappingTask
 from tasks.ping_pong_task import ServerPingPongTask
+
+REQUIRED_NUM_CONNECTIONS_FINGER_TAPPING_TASK = [1, 2, 3]
+REQUIRED_NUM_CONNECTIONS_AFFECTIVE_TASK = [1, 2, 3]
+REQUIRED_NUM_CONNECTIONS_COMPETITIVE_PING_PONG_TASK = [2, 4]
+REQUIRED_NUM_CONNECTIONS_COOPERATIVE_PING_PONG_TASK = [3, 4]
 
 
 def _send_start(to_client_connections: list):
@@ -26,47 +31,47 @@ def _run_ping_pong(to_client_connections: list, from_client_connections: dict, s
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Run server of finger tapping task.')
-    parser.add_argument("-a", "--address", metavar='', help="IP address of server")
-    parser.add_argument("-p", "--port", type=int, required=True, metavar='', help="Port of server")
+    parser.add_argument("-a", "--address", default=DEFAULT_SERVER_ADDR, help="IP address of server")
+    parser.add_argument("-p", "--port", type=int, default=DEFAULT_SERVER_PORT, help="Port of server")
     args = parser.parse_args()
 
-    server_address = DEFAULT_SERVER_ADDR if args.address is None else args.address
-    server_port = args.port
+    server = Server(args.address, args.port)
 
-    server = Server(server_address, server_port)
+    # Finger tapping task
 
-    server.establish_connections()
+    server.establish_connections(REQUIRED_NUM_CONNECTIONS_FINGER_TAPPING_TASK)
 
     _send_start(list(server.to_client_connections.values()))
 
-    # Finger tapping task
     server_finger_tapping_task = ServerFingerTappingTask(list(server.to_client_connections.values()), 
                                                          server.from_client_connections)
     server_finger_tapping_task.run()
 
-    server.establish_connections()
+    # Individual affective task
+
+    server.establish_connections(REQUIRED_NUM_CONNECTIONS_AFFECTIVE_TASK)
 
     _send_start(list(server.to_client_connections.values()))
 
-    # Affective task
     server_affective_task = ServerAffectiveTask(list(server.to_client_connections.values()), 
                                                      server.from_client_connections)
     
-    # Individual
     server_affective_task.run("./tasks/affective_task/images/task_images", collaboration=False)
 
-    server.establish_connections()
+    # Team affective task
+
+    server.establish_connections(REQUIRED_NUM_CONNECTIONS_AFFECTIVE_TASK)
 
     _send_start(list(server.to_client_connections.values()))
 
-    # Team
     server_affective_task.run("./tasks/affective_task/images/task_images", collaboration=True)
 
-    server.establish_connections()
+    # Ping pong competitive
+
+    server.establish_connections(REQUIRED_NUM_CONNECTIONS_COMPETITIVE_PING_PONG_TASK)
 
     _send_start(list(server.to_client_connections.values()))
 
-    # Ping pong competitive
     client_pairs = pairing_clients(server.to_client_connections, server.from_client_connections)
 
     ping_pong_processes = []
@@ -85,11 +90,12 @@ if __name__ == "__main__":
     for process in ping_pong_processes:
         process.join()
 
-    server.establish_connections()
+    # Ping pong cooperative
+
+    server.establish_connections(REQUIRED_NUM_CONNECTIONS_COOPERATIVE_PING_PONG_TASK)
 
     _send_start(list(server.to_client_connections.values()))
 
-    # Ping pong cooperative
     client_pairs = client_ai_teaming(server.to_client_connections, server.from_client_connections)
 
     ping_pong_processes = []
@@ -109,4 +115,4 @@ if __name__ == "__main__":
         process.join()
 
     server.establish_connections()
-    server.close_connections()
+    server.close_connections_listener()
