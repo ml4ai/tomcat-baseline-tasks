@@ -1,5 +1,4 @@
 import csv
-from curses import meta
 import json
 import os
 from time import time
