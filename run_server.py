@@ -66,6 +66,8 @@ if __name__ == "__main__":
 
     server_affective_task.run("./tasks/affective_task/images/task_images", collaboration=True)
 
+    server_affective_task.close_file()
+
     # Ping pong competitive
 
     server.establish_connections(REQUIRED_NUM_CONNECTIONS_COMPETITIVE_PING_PONG_TASK)

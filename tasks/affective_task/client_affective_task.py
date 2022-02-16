@@ -15,7 +15,7 @@ class ClientAffectiveTask:
         self._to_server = to_server
         self._screen = screen
 
-    def run(self):
+    def run(self, collaboration: bool = False):
         arousal_buttons = []
         arousal_buttons.append(Button((-345, -150), self._screen))
         arousal_buttons.append(Button((-175, -150), self._screen))
@@ -38,8 +38,11 @@ class ClientAffectiveTask:
             if data["type"] == "request":
                 if data["request"] == "end":
                     break
-
-            state = data["state"]
+            elif data["type"] == "state":
+                state = data["state"]
+            else:
+                # Read the next message
+                continue
 
             # show a blank screen and a cross before showing an image
             render_blank_screen(self._screen, BLANK_SCREEN_MILLISECONDS)
@@ -79,56 +82,99 @@ class ClientAffectiveTask:
                 button.unselect()
 
             set_cursor_position(CLIENT_WINDOW_WIDTH / 2, CLIENT_WINDOW_HEIGHT / 2)
-            cursor_visibility(True)
+            
+            if not collaboration or state["selected"]:
+                cursor_visibility(True)
 
             # render button response while timer is running
             def button_response(events):
-                for event in events:
-                    if event.type == pygame.MOUSEBUTTONDOWN:
-                        # Check arousal buttons
-                        for i, button in enumerate(arousal_buttons):
-                            if button.object.collidepoint(pygame.mouse.get_pos()):
-                                button.select()
-                                for j, each_button in enumerate(arousal_buttons):
-                                    if j != i:
-                                        each_button.unselect()
-                                break
-
-                        # Check valence buttons
-                        else:
-                            for i, button in enumerate(valence_buttons):
+                if not collaboration or state["selected"]:
+                    for event in events:
+                        if event.type == pygame.MOUSEBUTTONDOWN:
+                            # Check arousal buttons
+                            for i, button in enumerate(arousal_buttons):
                                 if button.object.collidepoint(pygame.mouse.get_pos()):
                                     button.select()
-                                    for j, each_button in enumerate(valence_buttons):
+                                    for j, each_button in enumerate(arousal_buttons):
                                         if j != i:
                                             each_button.unselect()
+
+                                    if collaboration:
+                                        update = {
+                                            "type": "update",
+                                            "update": {
+                                                "rating_type": "arousal",
+                                                "rating_index": i
+                                            }
+                                        }
+                                        send([self._to_server], update)
+
                                     break
+
+                            # Check valence buttons
+                            else:
+                                for i, button in enumerate(valence_buttons):
+                                    if button.object.collidepoint(pygame.mouse.get_pos()):
+                                        button.select()
+                                        for j, each_button in enumerate(valence_buttons):
+                                            if j != i:
+                                                each_button.unselect()
+
+                                        if collaboration and state["selected"]:
+                                            update = {
+                                                "type": "update",
+                                                "update": {
+                                                    "rating_type": "valence",
+                                                    "rating_index": i
+                                                }
+                                            }
+                                            send([self._to_server], update)
+
+                                        break
+                else:
+                    data = receive([self._from_server], 0.0)
+                    if data:
+                        data = data[0]
+                        if data["type"] == "update":
+                            update = data["update"]
+                            if update["rating_type"] == "arousal":
+                                arousal_buttons[update["rating_index"]].select()
+                                for j, button in enumerate(arousal_buttons):
+                                    if j != update["rating_index"]:
+                                        button.unselect()
+                            else:
+                                valence_buttons[update["rating_index"]].select()
+                                for j, button in enumerate(valence_buttons):
+                                    if j != update["rating_index"]:
+                                        button.unselect()
+
 
             timer(state["rating_timer"], [button_response], "Team: " if state["collaboration"] else "Individual: ", self._screen)
 
-            cursor_visibility(False)
+            if not collaboration or state["selected"]:
+                cursor_visibility(False)
 
-            # send valence and arousal data to server
-            arousal = 0
-            for i, button in enumerate(arousal_buttons):
-                if button.is_selected():
-                    arousal = i - 2
-                    break
+                # send valence and arousal data to server
+                arousal = 0
+                for i, button in enumerate(arousal_buttons):
+                    if button.is_selected():
+                        arousal = i - 2
+                        break
 
-            valence = 0
-            for i, button in enumerate(valence_buttons):
-                if button.is_selected():
-                    valence = 2 - i
-                    break
+                valence = 0
+                for i, button in enumerate(valence_buttons):
+                    if button.is_selected():
+                        valence = 2 - i
+                        break
 
-            response = {
-                "type": "rating",
-                "rating": {
-                    "arousal": arousal,
-                    "valence": valence
+                response = {
+                    "type": "rating",
+                    "rating": {
+                        "arousal": arousal,
+                        "valence": valence
+                    }
                 }
-            }
 
-            send([self._to_server], response)
+                send([self._to_server], response)
 
         print("[STATUS] Affective task ended")

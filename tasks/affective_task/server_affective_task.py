@@ -1,10 +1,10 @@
 import csv
 import json
 import os
-from time import time
+from time import sleep, time
 
 from common import record_metadata, request_clients_end
-from network import receive_all, send
+from network import receive, receive_all, send
 
 from .config_affective_task import (BLANK_SCREEN_MILLISECONDS,
                                     CROSS_SCREEN_MILLISECONDS,
@@ -62,19 +62,50 @@ class ServerAffectiveTask:
 
         print("[STATUS] Running affective task")
 
+        selected_rating_participant = 0 # cycling through participant during collaboration
+
         for image_path in image_paths:
             data["state"]["image_path"] = image_path
-            send(self._to_client_connections, data)
 
-            # wait for response from all clients
-            responses = receive_all(self._from_client_connections)
+            if not collaboration:
+                send(self._to_client_connections, data)
 
+                # wait for response from all clients
+                responses = receive_all(self._from_client_connections)
+            else:
+                selected_rating_participant %= len(self._to_client_connections)
+
+                for i, to_client_connection in enumerate(self._to_client_connections):
+                    if i == selected_rating_participant:
+                        data["state"]["selected"] = True
+                    else:
+                        data["state"]["selected"] = False
+                    send([to_client_connection], data)
+
+                while(True):
+                    responses = receive(self._from_client_connections)
+                    response = list(responses.values())[0]
+                    if response["type"] == "update":
+                        for i, to_client_connection in enumerate(self._to_client_connections):
+                            if i != selected_rating_participant:
+                                send([to_client_connection], response)
+                    else:
+                        break
+                
             # record clients' responses
             current_time = time()
             for client_name, response in responses.items():
                 if response["type"] == "rating":
                     self._csv_writer.writerow([current_time, image_path, client_name, json.dumps(response["rating"])])
 
+                selected_rating_participant += 1
+
+            # wait for the client timers to finish before sending the next image
+            sleep(0.1)
+
         request_clients_end(self._to_client_connections)
 
         print("[STATUS] Affective task ended")
+
+    def close_file(self):
+        self._csv_file.close()
