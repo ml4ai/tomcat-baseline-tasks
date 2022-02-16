@@ -34,6 +34,8 @@ class ClientAffectiveTask:
         print("[STATUS] Running affective task")
 
         while True:
+            discuss = True
+
             [data] = receive([self._from_server])
 
             if data["type"] == "request":
@@ -53,7 +55,19 @@ class ClientAffectiveTask:
 
             # show timer above image until timer runs out
             timer(state["image_timer"], [], "Team: " if state["collaboration"] else "Individual: ", self._screen)
+            
+            # show the same image again
+            render_image_center(state["image_path"], self._screen, refresh=True)
 
+            if state["collaboration"]:
+                if discuss == True:
+                    stmnt = "Now you may discuss with other members!"
+                    render_text_center(stmnt, (950, 50), self._screen, font_size = 45 , x_offset = 0, y_offset=450)
+                    timer(state["discussion_timer"], [], "Team: ", self._screen)
+                    discuss = False
+                else:
+                    discuss = True
+            
             # show valence and arousal scoring
             render_image_center("./tasks/affective_task/images/buttons_images/Valence.jpg", 
                                 self._screen, 
@@ -62,6 +76,7 @@ class ClientAffectiveTask:
             render_image_center("./tasks/affective_task/images/buttons_images/Arousal.jpg", 
                                 self._screen, 
                                 y_offset=200)
+                                       
             render_text_center("Valence score", (400, 50), self._screen, y_offset=-270)
 
             render_text_center("Frowning", (300, 50), self._screen, font_size = 30 , x_offset = -530, y_offset=-120)
@@ -115,8 +130,8 @@ class ClientAffectiveTask:
                                         if j != i:
                                             each_button.unselect()
                                     break
-
-            timer(state["rating_timer"], [button_response], "Team: " if state["collaboration"] else "Individual: ", self._screen, Rating = True)
+            
+            timer(state["rating_timer"], [button_response], "Team: " if state["collaboration"] else "Individual: ", self._screen)
 
             cursor_visibility(False)
 

@@ -10,7 +10,7 @@ from .config_affective_task import (BLANK_SCREEN_MILLISECONDS,
                                     CROSS_SCREEN_MILLISECONDS,
                                     INDIVIDUAL_IMAGE_TIMER,
                                     INDIVIDUAL_RATING_TIMER, TEAM_IMAGE_TIMER,
-                                    TEAM_RATING_TIMER)
+                                    TEAM_RATING_TIMER,DISCUSSION_TIMER)
 from .utils import get_image_paths
 
 
@@ -35,6 +35,7 @@ class ServerAffectiveTask:
         metadata["individual_image_timer"] = INDIVIDUAL_IMAGE_TIMER
         metadata["individual_rating_timer"] = INDIVIDUAL_RATING_TIMER
         metadata["team_image_timer"] = TEAM_IMAGE_TIMER
+        metadata["team_discussion_timer"] = DISCUSSION_TIMER
         metadata["team_rating_timer"] = TEAM_RATING_TIMER
 
         json_file_name = csv_file_name + "_metadata"
@@ -55,6 +56,7 @@ class ServerAffectiveTask:
 
         if collaboration:
             data["state"]["image_timer"] = TEAM_IMAGE_TIMER
+            data["state"]["discussion_timer"] = DISCUSSION_TIMER
             data["state"]["rating_timer"] = TEAM_RATING_TIMER
         else:
             data["state"]["image_timer"] = INDIVIDUAL_IMAGE_TIMER

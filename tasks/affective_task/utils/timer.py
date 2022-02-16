@@ -4,13 +4,11 @@ import pygame
 
 from .render_text_center import render_text_center
 
-from ..config_affective_task import DISCUSSION_TIMER
-
 REFRESH_RATE = 20
 
 TIM = 0
 
-def timer(seconds: int, callbacks: List[Callable], pre_text: str, screen, Rating = False):
+def timer(seconds: int, callbacks: List[Callable], pre_text: str, screen):
     start_ticks = pygame.time.get_ticks()
 
     clock = pygame.time.Clock()
@@ -28,9 +26,5 @@ def timer(seconds: int, callbacks: List[Callable], pre_text: str, screen, Rating
             seconds_left_to_count = 0 if seconds_left_to_count < 0.0 else int(seconds_left_to_count)
             TIM = seconds_left_to_count
             render_text_center(pre_text + str(seconds_left_to_count + 1), (300, 50), screen, y_offset=-420)
-        
-        if pre_text == "Team: " and Rating == False:
-            if TIM <= DISCUSSION_TIMER:
-                render_text_center("Discuss with other members!", (600, 50), screen, font_size = 45 , x_offset = -10, y_offset=450)
-
+    
     clock.tick(REFRESH_RATE)
