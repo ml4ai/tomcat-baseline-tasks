@@ -155,13 +155,13 @@ class ClientAffectiveTask:
                 cursor_visibility(False)
 
                 # send valence and arousal data to server
-                arousal = 0
+                arousal = None
                 for i, button in enumerate(arousal_buttons):
                     if button.is_selected():
                         arousal = i - 2
                         break
 
-                valence = 0
+                valence = None
                 for i, button in enumerate(valence_buttons):
                     if button.is_selected():
                         valence = 2 - i
