@@ -6,7 +6,9 @@ from network import receive, send
 
 from .config_affective_task import (BLANK_SCREEN_MILLISECONDS,
                                     CROSS_SCREEN_MILLISECONDS)
-from .utils import Button, render_image_center, render_text_center, timer
+from .utils import (Button, render_image_center, render_text_center,
+                    submit_button, timer)
+
 
 class ClientAffectiveTask:
     def __init__(self, from_server, to_server, screen):
@@ -109,12 +111,33 @@ class ClientAffectiveTask:
             
             if not collaboration or state["selected"]:
                 cursor_visibility(True)
+            
+            if collaboration and state["selected"]:
+                submit = submit_button(self._screen, y_offset_from_center=400)
 
             # render button response while timer is running
-            def button_response(events):
+            def button_response(events) -> bool:
                 if not collaboration or state["selected"]:
                     for event in events:
                         if event.type == pygame.MOUSEBUTTONDOWN:
+                            if collaboration and state["selected"] and submit.collidepoint(pygame.mouse.get_pos()):
+                                arousal_rating_selected = False
+                                for button in arousal_buttons:
+                                    if button.is_selected():
+                                        arousal_rating_selected = True
+                                        break
+
+                                valence_rating_selected = False
+                                for button in valence_buttons:
+                                    if button.is_selected():
+                                        valence_rating_selected = True
+                                        break
+                                
+                                if arousal_rating_selected and valence_rating_selected:
+                                    update = {"type": "update_end"}
+                                    send([self._to_server], update)
+                                    return True
+
                             # Check arousal buttons
                             for i, button in enumerate(arousal_buttons):
                                 if button.object.collidepoint(pygame.mouse.get_pos()):
@@ -155,6 +178,7 @@ class ClientAffectiveTask:
                                             send([self._to_server], update)
 
                                         break
+                    return False
                 else:
                     data = receive([self._from_server], 0.0)
                     if data:
@@ -171,6 +195,12 @@ class ClientAffectiveTask:
                                 for j, button in enumerate(valence_buttons):
                                     if j != update["rating_index"]:
                                         button.unselect(no_frame=True)
+                        elif data["type"] == "update_end":
+                            return True
+                        else:
+                            raise RuntimeError("Cannot handle message type: " + data["type"])
+
+                    return False
 
 
             timer(state["rating_timer"], [button_response], "Team: " if collaboration else "Individual: ", self._screen)
@@ -188,7 +218,7 @@ class ClientAffectiveTask:
                 valence = None
                 for i, button in enumerate(valence_buttons):
                     if button.is_selected():
-                        valence = 2 - i
+                        valence = i - 2
                         break
 
                 response = {

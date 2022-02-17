@@ -17,7 +17,8 @@ def timer(seconds: int, callbacks: List[Callable], pre_text: str, screen):
         events = pygame.event.get()
 
         for callback in callbacks:
-            callback(events)
+            if callback(events):
+                return
 
         seconds_has_passed = (pygame.time.get_ticks() - start_ticks) / 1000.0
         seconds_left_to_count = seconds - seconds_has_passed

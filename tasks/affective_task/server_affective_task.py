@@ -87,18 +87,20 @@ class ServerAffectiveTask:
                 while(True):
                     responses = receive(self._from_client_connections)
                     response = list(responses.values())[0]
-                    if response["type"] == "update":
+                    if response["type"] == "rating":
+                        break
+                    else:
                         for i, to_client_connection in enumerate(self._to_client_connections):
                             if i != selected_rating_participant:
                                 send([to_client_connection], response)
-                    else:
-                        break
-                
+
             # record clients' responses
             current_time = time()
             for client_name, response in responses.items():
                 if response["type"] == "rating":
                     self._csv_writer.writerow([current_time, image_path, client_name, json.dumps(response["rating"])])
+                else:
+                    raise RuntimeError("Cannot handle message type: " + response["type"])
 
                 selected_rating_participant += 1
 
