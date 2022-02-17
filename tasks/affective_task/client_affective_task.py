@@ -97,11 +97,13 @@ class ClientAffectiveTask:
             render_text_center("+1", (300, 50), self._screen, font_size=25, x_offset=165, y_offset=290)
             render_text_center("-2", (300, 50), self._screen, font_size=25, x_offset=335, y_offset=290)
 
+            remove_button_frame = collaboration and not state["selected"]
+
             for button in arousal_buttons:
-                button.unselect()
+                button.unselect(remove_button_frame)
 
             for button in valence_buttons:
-                button.unselect()
+                button.unselect(remove_button_frame)
 
             set_cursor_position(CLIENT_WINDOW_WIDTH / 2, CLIENT_WINDOW_HEIGHT / 2)
             
@@ -163,12 +165,12 @@ class ClientAffectiveTask:
                                 arousal_buttons[update["rating_index"]].select()
                                 for j, button in enumerate(arousal_buttons):
                                     if j != update["rating_index"]:
-                                        button.unselect()
+                                        button.unselect(no_frame=True)
                             else:
                                 valence_buttons[update["rating_index"]].select()
                                 for j, button in enumerate(valence_buttons):
                                     if j != update["rating_index"]:
-                                        button.unselect()
+                                        button.unselect(no_frame=True)
 
 
             timer(state["rating_timer"], [button_response], "Team: " if collaboration else "Individual: ", self._screen)

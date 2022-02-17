@@ -1,7 +1,7 @@
 from typing import Tuple
 
 import pygame
-from common import COLOR_FOREGROUND
+from common import COLOR_BACKGROUND, COLOR_FOREGROUND
 from config import CLIENT_WINDOW_HEIGHT, CLIENT_WINDOW_WIDTH
 
 BOX_WIDTH = 157
@@ -21,11 +21,13 @@ class Button:
         self.object = pygame.draw.rect(self._screen, pygame.Color(0, 0, 0, 0), pygame.Rect(x, y, BOX_WIDTH, BOX_HEIGHT), BOX_THICKNESS)
         self._selected = False
 
-    def _render(self):
+    def _render(self, no_frame: bool = False):
         x, y = self._position
 
         if self._selected:
             color = COLOR_FOREGROUND
+        elif no_frame:
+            color = COLOR_BACKGROUND
         else:
             color = (35, 35, 35)
 
@@ -40,9 +42,9 @@ class Button:
         self._selected = True
         self._render()
 
-    def unselect(self):
+    def unselect(self, no_frame: bool = False):
         self._selected = False
-        self._render()
+        self._render(no_frame)
 
     def is_selected(self) -> bool:
         return self._selected
