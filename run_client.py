@@ -74,7 +74,7 @@ if __name__ == "__main__":
                                                 client.to_server, 
                                                 screen)
 
-    client_affective_task.run()
+    client_affective_task.run(collaboration=True)
 
     render_blank_screen(screen, BLANK_SCREEN_COUNT_DOWN_MILLISECONDS)
 

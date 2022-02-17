@@ -67,6 +67,8 @@ class ServerFingerTappingTask:
 
         request_clients_end(self._to_client_connections)
 
+        self._csv_file.close()
+
         print("[STATUS] Finger tapping task ended")
 
     def _to_client_update_state(self):
