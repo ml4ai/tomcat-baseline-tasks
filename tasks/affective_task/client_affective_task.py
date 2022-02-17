@@ -5,9 +5,9 @@ from config import CLIENT_WINDOW_HEIGHT, CLIENT_WINDOW_WIDTH
 from network import receive, send
 
 from .config_affective_task import (BLANK_SCREEN_MILLISECONDS,
-                                    CROSS_SCREEN_MILLISECONDS)
+                                    CROSS_SCREEN_MILLISECONDS,
+                                    DISCUSSION_TIMER)
 from .utils import Button, render_image_center, render_text_center, timer
-
 
 class ClientAffectiveTask:
     def __init__(self, from_server, to_server, screen):
@@ -16,23 +16,25 @@ class ClientAffectiveTask:
         self._screen = screen
 
     def run(self, collaboration: bool = False):
-        arousal_buttons = []
-        arousal_buttons.append(Button((-345, -150), self._screen))
-        arousal_buttons.append(Button((-175, -150), self._screen))
-        arousal_buttons.append(Button((-2, -150), self._screen))
-        arousal_buttons.append(Button((173, -150), self._screen))
-        arousal_buttons.append(Button((343, -150), self._screen))
-
         valence_buttons = []
-        valence_buttons.append(Button((-345, 200), self._screen))
-        valence_buttons.append(Button((-175, 200), self._screen))
-        valence_buttons.append(Button((-2, 200), self._screen))
-        valence_buttons.append(Button((173, 200), self._screen))
-        valence_buttons.append(Button((343, 200), self._screen))
+        valence_buttons.append(Button((-345, 220), self._screen))
+        valence_buttons.append(Button((-175, 220), self._screen))
+        valence_buttons.append(Button((-2, 220), self._screen))
+        valence_buttons.append(Button((173, 220), self._screen))
+        valence_buttons.append(Button((343, 220), self._screen))
+
+        arousal_buttons = []
+        arousal_buttons.append(Button((-345, -130), self._screen))
+        arousal_buttons.append(Button((-175, -130), self._screen))
+        arousal_buttons.append(Button((-2, -130), self._screen))
+        arousal_buttons.append(Button((173, -130), self._screen))
+        arousal_buttons.append(Button((343, -130), self._screen))
 
         print("[STATUS] Running affective task")
 
         while True:
+            discuss = True
+
             [data] = receive([self._from_server])
 
             if data["type"] == "request":
@@ -55,7 +57,18 @@ class ClientAffectiveTask:
 
             # show timer above image until timer runs out
             timer(state["image_timer"], [], "Team: " if state["collaboration"] else "Individual: ", self._screen)
-
+            
+            if state["collaboration"]:
+                if discuss == True:
+                    # show the same image again
+                    render_image_center(state["image_path"], self._screen, refresh=True)
+                    stmnt = "Discuss"
+                    render_text_center(stmnt, (950, 50), self._screen, font_size = 45 , x_offset = 0, y_offset=450)
+                    timer(state["discussion_timer"], [], "Team: ", self._screen)
+                    discuss = False
+                else:
+                    discuss = True
+            
             # show valence and arousal scoring
             render_image_center("./tasks/affective_task/images/buttons_images/Valence.jpg", 
                                 self._screen, 
@@ -64,16 +77,26 @@ class ClientAffectiveTask:
             render_image_center("./tasks/affective_task/images/buttons_images/Arousal.jpg", 
                                 self._screen, 
                                 y_offset=200)
+                                       
             render_text_center("Valence score", (400, 50), self._screen, y_offset=-270)
-
-            render_text_center("Frowning SAM", (300, 50), self._screen, font_size = 30 , x_offset = -550, y_offset=-150)
-            render_text_center("Smiling SAM", (300, 50), self._screen, font_size = 30 ,x_offset = 540,y_offset=-150)
+            render_text_center("Frowning", (300, 50), self._screen, font_size = 30 , x_offset = -530, y_offset=-120)
+            render_text_center("Happy", (300, 50), self._screen, font_size = 30 ,x_offset = 530,y_offset=-120)
+            
+            render_text_center("-2", (300, 50), self._screen, font_size = 25 , x_offset = -340, y_offset=-55)
+            render_text_center("-1", (300, 50), self._screen, font_size = 25 , x_offset = -165, y_offset=-55)
+            render_text_center("0", (300, 50), self._screen, font_size = 25 , x_offset = 0, y_offset=-55)
+            render_text_center("+1", (300, 50), self._screen, font_size = 25 , x_offset = 165, y_offset=-55)
+            render_text_center("+2", (300, 50), self._screen, font_size = 25 , x_offset = 335, y_offset=-55)
 
             render_text_center("Arousal score", (400, 50), self._screen, y_offset=80)
-
-            render_text_center("Calm SAM", (300, 50), self._screen, font_size = 30 , x_offset = -550, y_offset=200)
-            render_text_center("Excited SAM", (300, 50), self._screen, font_size = 30 ,x_offset = 540,y_offset=200)
-
+            render_text_center("Calm", (300, 50), self._screen, font_size = 30 , x_offset = -540, y_offset=220)
+            render_text_center("Excited", (300, 50), self._screen, font_size = 30 ,x_offset = 530,y_offset=220)
+            
+            render_text_center("-2", (300, 50), self._screen, font_size = 25 , x_offset = -340, y_offset=290)
+            render_text_center("-1", (300, 50), self._screen, font_size = 25 , x_offset = -165, y_offset=290)
+            render_text_center("0", (300, 50), self._screen, font_size = 25 , x_offset = 0, y_offset=290)
+            render_text_center("+1", (300, 50), self._screen, font_size = 25 , x_offset = 165, y_offset=290)
+            render_text_center("-2", (300, 50), self._screen, font_size = 25 , x_offset = 335, y_offset=290)
 
             for button in arousal_buttons:
                 button.unselect()

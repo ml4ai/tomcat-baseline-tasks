@@ -4,10 +4,12 @@ import pygame
 
 from .render_text_center import render_text_center
 
+from ..config_affective_task import DISCUSSION_TIMER
+
 REFRESH_RATE = 20
 
 
-def timer(seconds: int, callbacks: List[Callable], pre_text: str, screen):
+def timer(seconds: int, callbacks: List[Callable], pre_text: str, screen, Rating = False):
     start_ticks = pygame.time.get_ticks()
 
     clock = pygame.time.Clock()
