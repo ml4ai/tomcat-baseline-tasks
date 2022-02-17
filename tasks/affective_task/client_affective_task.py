@@ -5,8 +5,7 @@ from config import CLIENT_WINDOW_HEIGHT, CLIENT_WINDOW_WIDTH
 from network import receive, send
 
 from .config_affective_task import (BLANK_SCREEN_MILLISECONDS,
-                                    CROSS_SCREEN_MILLISECONDS,
-                                    DISCUSSION_TIMER)
+                                    CROSS_SCREEN_MILLISECONDS)
 from .utils import Button, render_image_center, render_text_center, timer
 
 class ClientAffectiveTask:
@@ -56,9 +55,9 @@ class ClientAffectiveTask:
             render_image_center(state["image_path"], self._screen, refresh=True)
 
             # show timer above image until timer runs out
-            timer(state["image_timer"], [], "Team: " if state["collaboration"] else "Individual: ", self._screen)
-            
-            if state["collaboration"]:
+            timer(state["image_timer"], [], "Team: " if collaboration else "Individual: ", self._screen)
+
+            if collaboration:
                 if discuss == True:
                     # show the same image again
                     render_image_center(state["image_path"], self._screen, refresh=True)
@@ -79,24 +78,24 @@ class ClientAffectiveTask:
                                 y_offset=200)
                                        
             render_text_center("Valence score", (400, 50), self._screen, y_offset=-270)
-            render_text_center("Frowning", (300, 50), self._screen, font_size = 30 , x_offset = -530, y_offset=-120)
-            render_text_center("Happy", (300, 50), self._screen, font_size = 30 ,x_offset = 530,y_offset=-120)
+            render_text_center("Frowning", (300, 50), self._screen, font_size=30, x_offset=-530, y_offset=-120)
+            render_text_center("Happy", (300, 50), self._screen, font_size = 30, x_offset=530, y_offset=-120)
             
-            render_text_center("-2", (300, 50), self._screen, font_size = 25 , x_offset = -340, y_offset=-55)
-            render_text_center("-1", (300, 50), self._screen, font_size = 25 , x_offset = -165, y_offset=-55)
-            render_text_center("0", (300, 50), self._screen, font_size = 25 , x_offset = 0, y_offset=-55)
-            render_text_center("+1", (300, 50), self._screen, font_size = 25 , x_offset = 165, y_offset=-55)
-            render_text_center("+2", (300, 50), self._screen, font_size = 25 , x_offset = 335, y_offset=-55)
+            render_text_center("-2", (300, 50), self._screen, font_size=25, x_offset=-340, y_offset=-55)
+            render_text_center("-1", (300, 50), self._screen, font_size=25, x_offset=-165, y_offset=-55)
+            render_text_center("0", (300, 50), self._screen, font_size=25, x_offset = 0, y_offset=-55)
+            render_text_center("+1", (300, 50), self._screen, font_size=25, x_offset=165, y_offset=-55)
+            render_text_center("+2", (300, 50), self._screen, font_size=25, x_offset=335, y_offset=-55)
 
             render_text_center("Arousal score", (400, 50), self._screen, y_offset=80)
-            render_text_center("Calm", (300, 50), self._screen, font_size = 30 , x_offset = -540, y_offset=220)
-            render_text_center("Excited", (300, 50), self._screen, font_size = 30 ,x_offset = 530,y_offset=220)
+            render_text_center("Calm", (300, 50), self._screen, font_size=30, x_offset=-540, y_offset=220)
+            render_text_center("Excited", (300, 50), self._screen, font_size=30, x_offset=530,y_offset=220)
             
-            render_text_center("-2", (300, 50), self._screen, font_size = 25 , x_offset = -340, y_offset=290)
-            render_text_center("-1", (300, 50), self._screen, font_size = 25 , x_offset = -165, y_offset=290)
-            render_text_center("0", (300, 50), self._screen, font_size = 25 , x_offset = 0, y_offset=290)
-            render_text_center("+1", (300, 50), self._screen, font_size = 25 , x_offset = 165, y_offset=290)
-            render_text_center("-2", (300, 50), self._screen, font_size = 25 , x_offset = 335, y_offset=290)
+            render_text_center("-2", (300, 50), self._screen, font_size=25, x_offset=-340, y_offset=290)
+            render_text_center("-1", (300, 50), self._screen, font_size=25, x_offset=-165, y_offset=290)
+            render_text_center("0", (300, 50), self._screen, font_size=25, x_offset=0, y_offset=290)
+            render_text_center("+1", (300, 50), self._screen, font_size=25, x_offset=165, y_offset=290)
+            render_text_center("-2", (300, 50), self._screen, font_size=25, x_offset=335, y_offset=290)
 
             for button in arousal_buttons:
                 button.unselect()
@@ -172,7 +171,7 @@ class ClientAffectiveTask:
                                         button.unselect()
 
 
-            timer(state["rating_timer"], [button_response], "Team: " if state["collaboration"] else "Individual: ", self._screen)
+            timer(state["rating_timer"], [button_response], "Team: " if collaboration else "Individual: ", self._screen)
 
             if not collaboration or state["selected"]:
                 cursor_visibility(False)

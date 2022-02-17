@@ -52,7 +52,7 @@ class ServerAffectiveTask:
 
         data = {}
         data["type"] = "state"
-        data["state"] = {"collaboration": collaboration}
+        data["state"] = {}
 
         if collaboration:
             data["state"]["image_timer"] = TEAM_IMAGE_TIMER

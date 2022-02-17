@@ -9,7 +9,7 @@ from ..config_affective_task import DISCUSSION_TIMER
 REFRESH_RATE = 20
 
 
-def timer(seconds: int, callbacks: List[Callable], pre_text: str, screen, Rating = False):
+def timer(seconds: int, callbacks: List[Callable], pre_text: str, screen):
     start_ticks = pygame.time.get_ticks()
 
     clock = pygame.time.Clock()
