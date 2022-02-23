@@ -32,10 +32,9 @@ class ClientAffectiveTask:
         arousal_buttons.append(Button((343, -130), self._screen))
 
         print("[STATUS] Running affective task")
-
+        discuss = False
         while True:
-            discuss = True
-
+            
             [data] = receive([self._from_server])
 
             if data["type"] == "request":
@@ -52,23 +51,23 @@ class ClientAffectiveTask:
 
             render_image_center("./tasks/affective_task/images/plus.png", self._screen, refresh=True)
             wait(CROSS_SCREEN_MILLISECONDS)
-
-            # show an image
-            render_image_center(state["image_path"], self._screen, refresh=True)
-
-            # show timer above image until timer runs out
-            timer(state["image_timer"], [], "Team: " if collaboration else "Individual: ", self._screen)
-
+            
             if collaboration:
-                if discuss == True:
-                    # show the same image again
-                    render_image_center(state["image_path"], self._screen, refresh=True)
-                    stmnt = "Discuss"
-                    render_text_center(stmnt, (950, 50), self._screen, font_size = 45 , x_offset = 0, y_offset=450)
-                    timer(state["discussion_timer"], [], "Team: ", self._screen)
-                    discuss = False
-                else:
-                    discuss = True
+                # show an image for team task for the team to analyze seperately
+                render_image_center(state["image_path"], self._screen, refresh=True)
+                render_text_center("Quiet", (950, 50), self._screen, font_size = 45 , x_offset = 0, y_offset=450)
+                timer(state["image_timer"], [], "Team: " if collaboration else "Individual: ", self._screen)
+                
+                # show the same image again for team task for the team to dicuss their findings
+                render_image_center(state["image_path"], self._screen, refresh=True)
+                render_text_center("Discuss", (950, 50), self._screen, font_size = 45 , x_offset = 0, y_offset=450)
+                timer(state["discussion_timer"], [], "Team: ", self._screen)
+
+            else:
+                # show an image for individual task
+                render_image_center(state["image_path"], self._screen, refresh=True)
+                # show timer above image until timer runs out
+                timer(state["image_timer"], [], "Team: " if collaboration else "Individual: ", self._screen)
             
             # show valence and arousal scoring
             render_image_center("./tasks/affective_task/images/buttons_images/Valence.jpg", 
@@ -80,7 +79,7 @@ class ClientAffectiveTask:
                                 y_offset=200)
                                        
             render_text_center("Valence score", (400, 50), self._screen, y_offset=-270)
-            render_text_center("Frowning", (300, 50), self._screen, font_size=30, x_offset=-530, y_offset=-120)
+            render_text_center("Upset", (300, 50), self._screen, font_size=30, x_offset=-530, y_offset=-120)
             render_text_center("Happy", (300, 50), self._screen, font_size = 30, x_offset=530, y_offset=-120)
             
             render_text_center("-2", (300, 50), self._screen, font_size=25, x_offset=-340, y_offset=-55)
@@ -97,7 +96,7 @@ class ClientAffectiveTask:
             render_text_center("-1", (300, 50), self._screen, font_size=25, x_offset=-165, y_offset=290)
             render_text_center("0", (300, 50), self._screen, font_size=25, x_offset=0, y_offset=290)
             render_text_center("+1", (300, 50), self._screen, font_size=25, x_offset=165, y_offset=290)
-            render_text_center("-2", (300, 50), self._screen, font_size=25, x_offset=335, y_offset=290)
+            render_text_center("+2", (300, 50), self._screen, font_size=25, x_offset=335, y_offset=290)
 
             remove_button_frame = collaboration and not state["selected"]
 
