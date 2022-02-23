@@ -79,8 +79,8 @@ class ClientAffectiveTask:
                                 y_offset=200)
                                        
             render_text_center("Valence score", (400, 50), self._screen, y_offset=-270)
-            render_text_center("Upset", (300, 50), self._screen, font_size=30, x_offset=-530, y_offset=-120)
-            render_text_center("Happy", (300, 50), self._screen, font_size = 30, x_offset=530, y_offset=-120)
+            render_text_center("Upset", (250, 50), self._screen, font_size=30, x_offset=-530, y_offset=-120)
+            render_text_center("Happy", (250, 50), self._screen, font_size = 30, x_offset=530, y_offset=-120)
             
             render_text_center("-2", (300, 50), self._screen, font_size=25, x_offset=-340, y_offset=-55)
             render_text_center("-1", (300, 50), self._screen, font_size=25, x_offset=-165, y_offset=-55)
