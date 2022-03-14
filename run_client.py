@@ -35,11 +35,16 @@ if __name__ == "__main__":
 
     #rest state
 
+    wait_for_experimenter(client.to_server, client.from_server, screen)
+
+
     client_rest_state = ClientRestState(client.from_server, 
                                         client.to_server, 
                                         screen)
     client_rest_state.run()
 
+    render_blank_screen(screen, BLANK_SCREEN_COUNT_DOWN_MILLISECONDS)
+    
     # Introduction slides
 
     # introduction_instruction(screen)

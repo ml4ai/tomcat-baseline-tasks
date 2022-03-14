@@ -5,7 +5,7 @@ from network import receive, send
 
 from .config_rest_state import (BLANK_SCREEN_MILLISECONDS,
                                     CROSS_SCREEN_MILLISECONDS)
-from .utils import (render_text_center, timer)
+from .utils import timer
 
 class ClientRestState:
     def __init__(self, from_server, to_server, screen):
