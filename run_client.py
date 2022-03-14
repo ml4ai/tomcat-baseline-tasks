@@ -16,6 +16,7 @@ from network import Client
 from tasks.affective_task import ClientAffectiveTask
 from tasks.finger_tapping_task import ClientFingerTappingTask
 from tasks.ping_pong_task import ClientPingPongTask
+from tasks.rest_state import ClientRestState, client_rest_state
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Run client of finger tapping task.')
@@ -31,6 +32,13 @@ if __name__ == "__main__":
     client = Client(args.address, args.port, args.name)
 
     screen = pygame.display.set_mode((0, 0), pygame.FULLSCREEN)
+
+    #rest state
+
+    client_rest_state = ClientRestState(client.from_server, 
+                                        client.to_server, 
+                                        screen)
+    client_rest_state.run()
 
     # Introduction slides
 

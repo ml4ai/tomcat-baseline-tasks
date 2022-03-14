@@ -7,7 +7,9 @@ from network import Server, send
 from tasks.affective_task import ServerAffectiveTask
 from tasks.finger_tapping_task import ServerFingerTappingTask
 from tasks.ping_pong_task import ServerPingPongTask
+from tasks.rest_state import ServerRestState
 
+REQUIRED_NUM_CONNECTIONS_REST_STATE = [1, 2, 3]
 REQUIRED_NUM_CONNECTIONS_FINGER_TAPPING_TASK = [1, 2, 3]
 REQUIRED_NUM_CONNECTIONS_AFFECTIVE_TASK = [1, 2, 3]
 REQUIRED_NUM_CONNECTIONS_COMPETITIVE_PING_PONG_TASK = [2, 4]
@@ -36,6 +38,16 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     server = Server(args.address, args.port)
+
+    # Initial rest state
+
+    server.establish_connections(REQUIRED_NUM_CONNECTIONS_REST_STATE)
+
+    _send_start(list(server.to_client_connections.values()))
+
+    server_rest_state = ServerRestState(list(server.to_client_connections.values()), 
+                                                         server.from_client_connections)
+    server_rest_state.run()
 
     # Finger tapping task
 
