@@ -32,4 +32,6 @@ class ServerRestState:
                     request_clients_end(self._to_client_connections)
                     print("[STATUS] Rest state has ended")
                     break
+                else:
+                   print("[ERROR] Rest state clients didn't send STOP message for Rest state server to terminate")
 

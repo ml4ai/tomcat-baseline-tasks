@@ -16,7 +16,7 @@ from network import Client
 from tasks.affective_task import ClientAffectiveTask
 from tasks.finger_tapping_task import ClientFingerTappingTask
 from tasks.ping_pong_task import ClientPingPongTask
-from tasks.rest_state import ClientRestState, client_rest_state
+from tasks.rest_state import ClientRestState
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Run client of finger tapping task.')

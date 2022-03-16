@@ -19,15 +19,12 @@ class ClientRestState:
         while True:
 
             [data] = receive([self._from_server])
-            print(data)
+
             if data["type"] == "request":
                 if data["request"] == "end":
-                    print('im in break')
                     break
             elif data["type"] == "state":
-                print('Im in state')
                 state = data["state"]
-                print(state)
             else:
                 # Read the next message
                 continue      
@@ -38,6 +35,9 @@ class ClientRestState:
             wait(CROSS_SCREEN_MILLISECONDS)
 
             timer(state["rest_timer"], [], "Please sit back, relax and try not to move for: ", self._screen)
+            
             response = {"type": "STOP"}
+
             send([self._to_server], response)
-        print("[STATUS] Affective task ended")
+
+        print("[STATUS] Rest task ended")

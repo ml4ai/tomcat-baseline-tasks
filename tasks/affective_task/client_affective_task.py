@@ -6,9 +6,10 @@ from network import receive, send
 
 from .config_affective_task import (BLANK_SCREEN_MILLISECONDS,
                                     CROSS_SCREEN_MILLISECONDS)
-from .utils import (Button, render_image_center, render_text_center,
+from .utils import (Button, render_image_center,
                     submit_button, timer)
 
+from common import render_text_center
 
 class ClientAffectiveTask:
     def __init__(self, from_server, to_server, screen):

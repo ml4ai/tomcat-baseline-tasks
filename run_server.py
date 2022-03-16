@@ -46,7 +46,7 @@ if __name__ == "__main__":
     _send_start(list(server.to_client_connections.values()))
 
     server_rest_state = ServerRestState(list(server.to_client_connections.values()), 
-                                                         server.from_client_connections)
+                                        server.from_client_connections)
     server_rest_state.run()
 
     # Finger tapping task

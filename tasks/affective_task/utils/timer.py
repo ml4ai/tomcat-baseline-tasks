@@ -2,7 +2,7 @@ from typing import Callable, List
 
 import pygame
 
-from .render_text_center import render_text_center
+from common import render_text_center
 
 from ..config_affective_task import DISCUSSION_TIMER
 
