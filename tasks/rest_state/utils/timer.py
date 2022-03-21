@@ -4,10 +4,9 @@ import pygame
 
 from common import render_text_center
 
-from ..config_affective_task import DISCUSSION_TIMER
+from ..config_rest_state import REST_TIMER
 
 REFRESH_RATE = 20
-
 
 def timer(seconds: int, callbacks: List[Callable], pre_text: str, screen):
     start_ticks = pygame.time.get_ticks()
@@ -26,6 +25,6 @@ def timer(seconds: int, callbacks: List[Callable], pre_text: str, screen):
             break
         else:
             seconds_left_to_count = 0 if seconds_left_to_count < 0.0 else int(seconds_left_to_count)
-            render_text_center(pre_text + str(seconds_left_to_count + 1), (300, 50), screen, y_offset=-420)
+            render_text_center(pre_text + str(seconds_left_to_count + 1), (1200, 70), screen, y_offset=0)
 
     clock.tick(REFRESH_RATE)
