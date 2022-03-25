@@ -6,7 +6,7 @@ from network import receive, send
 
 from .config_affective_task import (BLANK_SCREEN_MILLISECONDS,
                                     CROSS_SCREEN_MILLISECONDS,
-                                    DISPLAY_MSG_AFFEC_DISCUSSION)
+                                    DISPLAY_AFFEC_DISCUSSION_MILLISECONDS)
 from .utils import (Button, render_image_center,
                     submit_button, timer,
                     display_msg_affective_disscussion)
@@ -58,7 +58,7 @@ class ClientAffectiveTask:
             if collaboration:
                 # displaying a slide asking subjects not to discuss 
                 render_blank_screen(self._screen, BLANK_SCREEN_MILLISECONDS)
-                display_msg_affective_disscussion(self._screen, "Please do not discuss!",DISPLAY_MSG_AFFEC_DISCUSSION/2)
+                display_msg_affective_disscussion(self._screen, "Observe",DISPLAY_AFFEC_DISCUSSION_MILLISECONDS/2)
                 render_blank_screen(self._screen, BLANK_SCREEN_MILLISECONDS)
 
                 # show an image for team task for the team to analyze seperately
@@ -68,7 +68,7 @@ class ClientAffectiveTask:
 
                 # displaying a slide asking subjects to discuss 
                 render_blank_screen(self._screen, BLANK_SCREEN_MILLISECONDS)
-                display_msg_affective_disscussion(self._screen, "Now you may discuss!",DISPLAY_MSG_AFFEC_DISCUSSION/2)
+                display_msg_affective_disscussion(self._screen, "Discuss!",DISPLAY_AFFEC_DISCUSSION_MILLISECONDS/2)
                 render_blank_screen(self._screen, BLANK_SCREEN_MILLISECONDS)
 
                 # show the same image again for team task for the team to dicuss their findings
@@ -85,7 +85,10 @@ class ClientAffectiveTask:
             if collaboration and state["selected"]:
                 # slide before that shows up based on the client that is selected before the buttons are displayed
                 render_blank_screen(self._screen, BLANK_SCREEN_MILLISECONDS)
-                display_msg_affective_disscussion(self._screen, "You have been selected for rating the images",DISPLAY_MSG_AFFEC_DISCUSSION)
+                display_msg_affective_disscussion(self._screen, "You have been selected for rating the images",DISPLAY_AFFEC_DISCUSSION_MILLISECONDS)
+                render_blank_screen(self._screen, BLANK_SCREEN_MILLISECONDS)
+            
+            else 
                 render_blank_screen(self._screen, BLANK_SCREEN_MILLISECONDS)
 
             # show valence and arousal scoring
