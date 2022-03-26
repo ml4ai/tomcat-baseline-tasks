@@ -58,7 +58,7 @@ class ClientAffectiveTask:
             if collaboration:
                 # displaying a slide asking subjects not to discuss 
                 render_blank_screen(self._screen, BLANK_SCREEN_MILLISECONDS)
-                display_msg_affective_disscussion(self._screen, "Observe",DISPLAY_AFFEC_DISCUSSION_MILLISECONDS/2)
+                display_msg_affective_disscussion(self._screen, "Observe!",DISPLAY_AFFEC_DISCUSSION_MILLISECONDS/2)
                 render_blank_screen(self._screen, BLANK_SCREEN_MILLISECONDS)
 
                 # show an image for team task for the team to analyze seperately
@@ -88,7 +88,7 @@ class ClientAffectiveTask:
                 display_msg_affective_disscussion(self._screen, "You have been selected for rating the images",DISPLAY_AFFEC_DISCUSSION_MILLISECONDS)
                 render_blank_screen(self._screen, BLANK_SCREEN_MILLISECONDS)
             
-            else 
+            else:
                 render_blank_screen(self._screen, BLANK_SCREEN_MILLISECONDS)
 
             # show valence and arousal scoring
@@ -223,8 +223,11 @@ class ClientAffectiveTask:
 
                     return False
 
-
-            timer(state["rating_timer"], [button_response], "Team: " if collaboration else "Individual: ", self._screen)
+            if collaboration:
+                timer(state["rating_timer"], [button_response], "Warning! Rating ends in: ", self._screen, display_timer = False)
+            else:
+                timer(state["rating_timer"], [button_response], "Individual: ", self._screen)
+            #timer(state["rating_timer"], [button_response], "Team: " if collaboration else "Individual: ", self._screen)
 
             if not collaboration or state["selected"]:
                 cursor_visibility(False)
