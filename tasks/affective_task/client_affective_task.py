@@ -5,9 +5,12 @@ from config import CLIENT_WINDOW_HEIGHT, CLIENT_WINDOW_WIDTH
 from network import receive, send
 
 from .config_affective_task import (BLANK_SCREEN_MILLISECONDS,
-                                    CROSS_SCREEN_MILLISECONDS)
+                                    CROSS_SCREEN_MILLISECONDS,
+                                    DISPLAY_AFFEC_DISCUSSION_MILLISECONDS)
+
 from .utils import (Button, render_image_center,
-                    submit_button, timer)
+                    submit_button, timer,
+                    display_msg_affective_disscussion)
 
 from common import render_text_center
 
@@ -54,11 +57,21 @@ class ClientAffectiveTask:
             wait(CROSS_SCREEN_MILLISECONDS)
             
             if collaboration:
+                # displaying a slide asking subjects not to discuss 
+                render_blank_screen(self._screen, BLANK_SCREEN_MILLISECONDS)
+                display_msg_affective_disscussion(self._screen, "Observe",DISPLAY_AFFEC_DISCUSSION_MILLISECONDS/2)
+                render_blank_screen(self._screen, BLANK_SCREEN_MILLISECONDS)
+
                 # show an image for team task for the team to analyze seperately
                 render_image_center(state["image_path"], self._screen, refresh=True)
                 render_text_center("Quiet", (950, 50), self._screen, font_size = 45 , x_offset = 0, y_offset=450)
                 timer(state["image_timer"], [], "Team: " if collaboration else "Individual: ", self._screen)
-                
+
+                # displaying a slide asking subjects to discuss 
+                render_blank_screen(self._screen, BLANK_SCREEN_MILLISECONDS)
+                display_msg_affective_disscussion(self._screen, "Discuss",DISPLAY_AFFEC_DISCUSSION_MILLISECONDS/2)
+                render_blank_screen(self._screen, BLANK_SCREEN_MILLISECONDS)
+
                 # show the same image again for team task for the team to dicuss their findings
                 render_image_center(state["image_path"], self._screen, refresh=True)
                 render_text_center("Discuss", (950, 50), self._screen, font_size = 45 , x_offset = 0, y_offset=450)
@@ -69,7 +82,16 @@ class ClientAffectiveTask:
                 render_image_center(state["image_path"], self._screen, refresh=True)
                 # show timer above image until timer runs out
                 timer(state["image_timer"], [], "Team: " if collaboration else "Individual: ", self._screen)
+
+            if collaboration and state["selected"]:
+                # slide before that shows up based on the client that is selected before the buttons are displayed
+                render_blank_screen(self._screen, BLANK_SCREEN_MILLISECONDS)
+                display_msg_affective_disscussion(self._screen, "You have been selected for rating the images",DISPLAY_AFFEC_DISCUSSION_MILLISECONDS)
+                render_blank_screen(self._screen, BLANK_SCREEN_MILLISECONDS)
             
+            else:
+                render_blank_screen(self._screen, 2 * BLANK_SCREEN_MILLISECONDS + DISPLAY_AFFEC_DISCUSSION_MILLISECONDS)
+
             # show valence and arousal scoring
             render_image_center("./tasks/affective_task/images/buttons_images/Valence.jpg", 
                                 self._screen, 
@@ -114,7 +136,7 @@ class ClientAffectiveTask:
             
             if collaboration and state["selected"]:
                 submit = submit_button(self._screen, y_offset_from_center=400)
-
+                
             # render button response while timer is running
             def button_response(events) -> bool:
                 if not collaboration or state["selected"]:
@@ -202,8 +224,10 @@ class ClientAffectiveTask:
 
                     return False
 
-
-            timer(state["rating_timer"], [button_response], "Team: " if collaboration else "Individual: ", self._screen)
+            if collaboration:
+                timer(state["rating_timer"], [button_response], "Rating ends in: ", self._screen, display_timer = 2)
+            else:
+                timer(state["rating_timer"], [button_response], "Individual: ", self._screen)
 
             if not collaboration or state["selected"]:
                 cursor_visibility(False)
