@@ -225,7 +225,7 @@ class ClientAffectiveTask:
                     return False
 
             if collaboration:
-                timer(state["rating_timer"], [button_response], "Rating ends in: ", self._screen, display_timer = False)
+                timer(state["rating_timer"], [button_response], "Rating ends in: ", self._screen, display_timer = 2)
             else:
                 timer(state["rating_timer"], [button_response], "Individual: ", self._screen)
 
