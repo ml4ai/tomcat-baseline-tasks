@@ -10,3 +10,4 @@ def display_msg_affective_disscussion(screen ,msg: str,milliseconds: int):
         render_text_center(msg, (1250, 90), screen, font_size = 55 , x_offset = 0, y_offset=0)
         pygame.event.get()
         clock.tick(UPDATE_RATE)
+        
