@@ -228,7 +228,6 @@ class ClientAffectiveTask:
                 timer(state["rating_timer"], [button_response], "Rating ends in: ", self._screen, display_timer = False)
             else:
                 timer(state["rating_timer"], [button_response], "Individual: ", self._screen)
-            #timer(state["rating_timer"], [button_response], "Team: " if collaboration else "Individual: ", self._screen)
 
             if not collaboration or state["selected"]:
                 cursor_visibility(False)
