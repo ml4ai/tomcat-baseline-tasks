@@ -90,7 +90,7 @@ class ClientAffectiveTask:
                 render_blank_screen(self._screen, BLANK_SCREEN_MILLISECONDS)
             
             else:
-                render_blank_screen(self._screen, BLANK_SCREEN_MILLISECONDS)
+                render_blank_screen(self._screen, 2 * BLANK_SCREEN_MILLISECONDS + DISPLAY_AFFEC_DISCUSSION_MILLISECONDS)
 
             # show valence and arousal scoring
             render_image_center("./tasks/affective_task/images/buttons_images/Valence.jpg", 
