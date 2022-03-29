@@ -26,7 +26,7 @@ def timer(seconds: int, callbacks: List[Callable], pre_text: str, screen, displa
             break
         else:
             seconds_left_to_count = 0 if seconds_left_to_count < 0.0 else int(seconds_left_to_count)
-            if display_timer == 0: #1 means don't display timer but the timer runs in the background
+            if display_timer == 0: #0 means don't display timer but the timer runs in the background
                 continue
             elif display_timer == 1: #1 means display timer
                 render_text_center(pre_text + str(seconds_left_to_count + 1), (300, 50), screen, y_offset=-420)
