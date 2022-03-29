@@ -59,7 +59,7 @@ class ClientAffectiveTask:
             if collaboration:
                 # displaying a slide asking subjects not to discuss 
                 render_blank_screen(self._screen, BLANK_SCREEN_MILLISECONDS)
-                display_msg_affective_disscussion(self._screen, "Observe!",DISPLAY_AFFEC_DISCUSSION_MILLISECONDS/2)
+                display_msg_affective_disscussion(self._screen, "Observe",DISPLAY_AFFEC_DISCUSSION_MILLISECONDS/2)
                 render_blank_screen(self._screen, BLANK_SCREEN_MILLISECONDS)
 
                 # show an image for team task for the team to analyze seperately
@@ -69,7 +69,7 @@ class ClientAffectiveTask:
 
                 # displaying a slide asking subjects to discuss 
                 render_blank_screen(self._screen, BLANK_SCREEN_MILLISECONDS)
-                display_msg_affective_disscussion(self._screen, "Discuss!",DISPLAY_AFFEC_DISCUSSION_MILLISECONDS/2)
+                display_msg_affective_disscussion(self._screen, "Discuss",DISPLAY_AFFEC_DISCUSSION_MILLISECONDS/2)
                 render_blank_screen(self._screen, BLANK_SCREEN_MILLISECONDS)
 
                 # show the same image again for team task for the team to dicuss their findings
@@ -225,7 +225,7 @@ class ClientAffectiveTask:
                     return False
 
             if collaboration:
-                timer(state["rating_timer"], [button_response], "Warning! Rating ends in: ", self._screen, display_timer = False)
+                timer(state["rating_timer"], [button_response], "Rating ends in: ", self._screen, display_timer = False)
             else:
                 timer(state["rating_timer"], [button_response], "Individual: ", self._screen)
             #timer(state["rating_timer"], [button_response], "Team: " if collaboration else "Individual: ", self._screen)
