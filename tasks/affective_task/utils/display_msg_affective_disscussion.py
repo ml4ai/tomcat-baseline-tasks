@@ -2,7 +2,7 @@ import pygame
 from config import UPDATE_RATE
 from common import render_text_center
 
-def display_msg_affective_disscussion(screen ,msg: str,milliseconds: int):
+def display_msg_affective_disscussion(screen, msg: str, milliseconds: int):
     start_ticks = pygame.time.get_ticks()
 
     clock = pygame.time.Clock()
