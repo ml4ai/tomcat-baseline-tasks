@@ -69,11 +69,29 @@ class ServerAffectiveTask:
         for image_path in image_paths:
             data["state"]["image_path"] = image_path
 
+            # individual
             if not collaboration:
                 send(self._to_client_connections, data)
 
-                # wait for response from all clients
-                responses = receive_all(self._from_client_connections)
+                responses = {}
+                while(True):
+                    updates = receive(self._from_client_connections)
+                    
+                    for client_name, response in updates.items():
+                        if response["type"] == "update":
+                            record_activity = {
+                                "selected_rating_type": response["update"]["rating_type"],
+                                "selected_rating": response["update"]["rating_index"] - 2
+                            }
+                            self._csv_writer.writerow([time(), image_path, client_name, json.dumps(record_activity)])
+                        else:
+                            responses[client_name] = response
+
+                    # break loop when all clients submit their ratings
+                    if len(responses) == len(self._from_client_connections):
+                        break
+
+            # collaborate
             else:
                 selected_rating_participant %= len(self._to_client_connections)
 
@@ -87,9 +105,18 @@ class ServerAffectiveTask:
                 while(True):
                     responses = receive(self._from_client_connections)
                     response = list(responses.values())[0]
+                    client_name = list(responses.keys())[0]
                     if response["type"] == "rating":
                         break
                     else:
+                        if response["type"] == "update":
+                            record_activity = {
+                                "selected_rating_type": response["update"]["rating_type"],
+                                "selected_rating": response["update"]["rating_index"] - 2
+                            }
+                            self._csv_writer.writerow([time(), image_path, client_name, json.dumps(record_activity)])
+
+                        # forward response to other clients
                         for i, to_client_connection in enumerate(self._to_client_connections):
                             if i != selected_rating_participant:
                                 send([to_client_connection], response)
