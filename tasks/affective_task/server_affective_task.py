@@ -4,7 +4,7 @@ import os
 from time import sleep, time
 
 from common import record_metadata, request_clients_end
-from network import receive, receive_all, send
+from network import receive, send
 
 from .config_affective_task import (BLANK_SCREEN_MILLISECONDS,
                                     CROSS_SCREEN_MILLISECONDS,
@@ -15,7 +15,7 @@ from .utils import get_image_paths
 
 
 class ServerAffectiveTask:
-    def __init__(self, to_client_connections: list, from_client_connections: dict) -> None:
+    def __init__(self, to_client_connections: list, from_client_connections: dict, session_name: str = '') -> None:
         self._to_client_connections = to_client_connections
         self._from_client_connections = from_client_connections
 
@@ -24,7 +24,7 @@ class ServerAffectiveTask:
         if not os.path.exists(data_path):
             os.makedirs(data_path)
 
-        csv_file_name = data_path + '/' + str(int(time()))
+        csv_file_name = data_path + '/' + session_name + '_' + str(int(time()))
 
         self._csv_file = open(csv_file_name + ".csv", 'w', newline='')
         self._csv_writer = csv.writer(self._csv_file, delimiter=';')
@@ -69,57 +69,33 @@ class ServerAffectiveTask:
         for image_path in image_paths:
             data["state"]["image_path"] = image_path
 
-            # individual
-            if not collaboration:
-                send(self._to_client_connections, data)
+            selected_rating_participant %= len(self._to_client_connections)
 
-                responses = {}
-                while(True):
-                    updates = receive(self._from_client_connections)
-                    
-                    for client_name, response in updates.items():
-                        if response["type"] == "update":
-                            record_activity = {
-                                "selected_rating_type": response["update"]["rating_type"],
-                                "selected_rating": response["update"]["rating_index"] - 2
-                            }
-                            self._csv_writer.writerow([time(), image_path, client_name, json.dumps(record_activity)])
-                        else:
-                            responses[client_name] = response
+            for i, to_client_connection in enumerate(self._to_client_connections):
+                if i == selected_rating_participant:
+                    data["state"]["selected"] = True
+                else:
+                    data["state"]["selected"] = False
+                send([to_client_connection], data)
 
-                    # break loop when all clients submit their ratings
-                    if len(responses) == len(self._from_client_connections):
-                        break
+            while(True):
+                responses = receive(self._from_client_connections)
+                response = list(responses.values())[0]
+                client_name = list(responses.keys())[0]
+                if response["type"] == "rating":
+                    break
+                else:
+                    if response["type"] == "update":
+                        record_activity = {
+                            "selected_rating_type": response["update"]["rating_type"],
+                            "selected_rating": response["update"]["rating_index"] - 2
+                        }
+                        self._csv_writer.writerow([time(), image_path, client_name, json.dumps(record_activity)])
 
-            # collaborate
-            else:
-                selected_rating_participant %= len(self._to_client_connections)
-
-                for i, to_client_connection in enumerate(self._to_client_connections):
-                    if i == selected_rating_participant:
-                        data["state"]["selected"] = True
-                    else:
-                        data["state"]["selected"] = False
-                    send([to_client_connection], data)
-
-                while(True):
-                    responses = receive(self._from_client_connections)
-                    response = list(responses.values())[0]
-                    client_name = list(responses.keys())[0]
-                    if response["type"] == "rating":
-                        break
-                    else:
-                        if response["type"] == "update":
-                            record_activity = {
-                                "selected_rating_type": response["update"]["rating_type"],
-                                "selected_rating": response["update"]["rating_index"] - 2
-                            }
-                            self._csv_writer.writerow([time(), image_path, client_name, json.dumps(record_activity)])
-
-                        # forward response to other clients
-                        for i, to_client_connection in enumerate(self._to_client_connections):
-                            if i != selected_rating_participant:
-                                send([to_client_connection], response)
+                    # forward response to other clients
+                    for i, to_client_connection in enumerate(self._to_client_connections):
+                        if i != selected_rating_participant:
+                            send([to_client_connection], response)
 
             # record clients' responses
             current_time = time()

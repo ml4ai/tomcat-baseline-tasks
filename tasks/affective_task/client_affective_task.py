@@ -83,14 +83,14 @@ class ClientAffectiveTask:
                 # show timer above image until timer runs out
                 timer(state["image_timer"], [], "Team: " if collaboration else "Individual: ", self._screen)
 
-            if collaboration and state["selected"]:
-                # slide before that shows up based on the client that is selected before the buttons are displayed
-                render_blank_screen(self._screen, BLANK_SCREEN_MILLISECONDS)
-                display_msg_affective_disscussion(self._screen, "You have been selected for rating the images",DISPLAY_AFFEC_DISCUSSION_MILLISECONDS)
-                render_blank_screen(self._screen, BLANK_SCREEN_MILLISECONDS)
-
-            else:
-                render_blank_screen(self._screen, 2 * BLANK_SCREEN_MILLISECONDS + DISPLAY_AFFEC_DISCUSSION_MILLISECONDS)
+            if collaboration:
+                if state["selected"]:
+                    # slide before that shows up based on the client that is selected before the buttons are displayed
+                    render_blank_screen(self._screen, BLANK_SCREEN_MILLISECONDS)
+                    display_msg_affective_disscussion(self._screen, "You have been selected for rating the images",DISPLAY_AFFEC_DISCUSSION_MILLISECONDS)
+                    render_blank_screen(self._screen, BLANK_SCREEN_MILLISECONDS)
+                else:
+                    render_blank_screen(self._screen, 2 * BLANK_SCREEN_MILLISECONDS + DISPLAY_AFFEC_DISCUSSION_MILLISECONDS)
 
             # show valence and arousal scoring
             render_image_center("./tasks/affective_task/images/buttons_images/Valence.jpg", 
@@ -121,7 +121,7 @@ class ClientAffectiveTask:
             render_text_center("+1", (300, 50), self._screen, font_size=25, x_offset=165, y_offset=290)
             render_text_center("+2", (300, 50), self._screen, font_size=25, x_offset=335, y_offset=290)
 
-            remove_button_frame = collaboration and not state["selected"]
+            remove_button_frame = not state["selected"]
 
             for button in arousal_buttons:
                 button.unselect(remove_button_frame)
@@ -132,20 +132,20 @@ class ClientAffectiveTask:
             # center cursor
             set_cursor_position(CLIENT_WINDOW_WIDTH / 2, CLIENT_WINDOW_HEIGHT / 2)
 
-            if not collaboration or state["selected"]:
+            if state["selected"]:
                 cursor_visibility(True)
 
-            if collaboration and state["selected"]:
+            if state["selected"]:
                 submit = submit_button(self._screen, y_offset_from_center=400)
 
             # render button response while timer is running
             def button_response(events) -> bool:
                 # participant must select the ratings
-                if not collaboration or state["selected"]:
+                if state["selected"]:
                     for event in events:
                         if event.type == pygame.MOUSEBUTTONDOWN:
                             # submit button is selected
-                            if collaboration and state["selected"] and submit.collidepoint(pygame.mouse.get_pos()):
+                            if state["selected"] and submit.collidepoint(pygame.mouse.get_pos()):
                                 # ensure that arousal rating is selected
                                 arousal_rating_selected = False
                                 for button in arousal_buttons:
@@ -232,12 +232,9 @@ class ClientAffectiveTask:
 
                     return False
 
-            if collaboration:
-                timer(state["rating_timer"], [button_response], "Rating ends in: ", self._screen, display_timer = 2)
-            else:
-                timer(state["rating_timer"], [button_response], "Individual: ", self._screen)
+            timer(state["rating_timer"], [button_response], "Rating ends in: ", self._screen, display_timer = 2)
 
-            if not collaboration or state["selected"]:
+            if state["selected"]:
                 cursor_visibility(False)
 
                 # send valence and arousal data to server

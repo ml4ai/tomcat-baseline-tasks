@@ -92,7 +92,7 @@ class ServerPingPongTask:
 
         csv_file_name = csv_data_path + '/' + session_name + '_' + str(int(time()))
 
-        self._csv_file = open(csv_data_path + '/' + session_name + '_' + str(int(time())) + ".csv", 'w', newline='')
+        self._csv_file = open(csv_file_name + ".csv", 'w', newline='')
         self._csv_writer = csv.writer(self._csv_file, delimiter=';')
 
         metadata["client_window_height"] = CLIENT_WINDOW_HEIGHT
