@@ -36,9 +36,9 @@ class ClientAffectiveTask:
         arousal_buttons.append(Button((343, -130), self._screen))
 
         print("[STATUS] Running affective task")
-        discuss = False
+
         while True:
-            
+
             [data] = receive([self._from_server])
 
             if data["type"] == "request":
@@ -55,7 +55,7 @@ class ClientAffectiveTask:
 
             render_image_center("./tasks/affective_task/images/plus.png", self._screen, refresh=True)
             wait(CROSS_SCREEN_MILLISECONDS)
-            
+
             if collaboration:
                 # displaying a slide asking subjects not to discuss 
                 render_blank_screen(self._screen, BLANK_SCREEN_MILLISECONDS)
@@ -88,7 +88,7 @@ class ClientAffectiveTask:
                 render_blank_screen(self._screen, BLANK_SCREEN_MILLISECONDS)
                 display_msg_affective_disscussion(self._screen, "You have been selected for rating the images",DISPLAY_AFFEC_DISCUSSION_MILLISECONDS)
                 render_blank_screen(self._screen, BLANK_SCREEN_MILLISECONDS)
-            
+
             else:
                 render_blank_screen(self._screen, 2 * BLANK_SCREEN_MILLISECONDS + DISPLAY_AFFEC_DISCUSSION_MILLISECONDS)
 
@@ -100,11 +100,11 @@ class ClientAffectiveTask:
             render_image_center("./tasks/affective_task/images/buttons_images/Arousal.jpg", 
                                 self._screen, 
                                 y_offset=200)
-                                       
+
             render_text_center("Valence score", (400, 50), self._screen, y_offset=-270)
             render_text_center("Upset", (250, 50), self._screen, font_size=30, x_offset=-530, y_offset=-120)
             render_text_center("Happy", (250, 50), self._screen, font_size = 30, x_offset=530, y_offset=-120)
-            
+
             render_text_center("-2", (300, 50), self._screen, font_size=25, x_offset=-340, y_offset=-55)
             render_text_center("-1", (300, 50), self._screen, font_size=25, x_offset=-165, y_offset=-55)
             render_text_center("0", (300, 50), self._screen, font_size=25, x_offset = 0, y_offset=-55)
@@ -114,7 +114,7 @@ class ClientAffectiveTask:
             render_text_center("Arousal score", (400, 50), self._screen, y_offset=80)
             render_text_center("Calm", (300, 50), self._screen, font_size=30, x_offset=-540, y_offset=220)
             render_text_center("Excited", (300, 50), self._screen, font_size=30, x_offset=530,y_offset=220)
-            
+
             render_text_center("-2", (300, 50), self._screen, font_size=25, x_offset=-340, y_offset=290)
             render_text_center("-1", (300, 50), self._screen, font_size=25, x_offset=-165, y_offset=290)
             render_text_center("0", (300, 50), self._screen, font_size=25, x_offset=0, y_offset=290)
@@ -129,38 +129,46 @@ class ClientAffectiveTask:
             for button in valence_buttons:
                 button.unselect(remove_button_frame)
 
+            # center cursor
             set_cursor_position(CLIENT_WINDOW_WIDTH / 2, CLIENT_WINDOW_HEIGHT / 2)
-            
+
             if not collaboration or state["selected"]:
                 cursor_visibility(True)
-            
+
             if collaboration and state["selected"]:
                 submit = submit_button(self._screen, y_offset_from_center=400)
-                
+
             # render button response while timer is running
             def button_response(events) -> bool:
+                # participant must select the ratings
                 if not collaboration or state["selected"]:
                     for event in events:
                         if event.type == pygame.MOUSEBUTTONDOWN:
+                            # submit button is selected
                             if collaboration and state["selected"] and submit.collidepoint(pygame.mouse.get_pos()):
+                                # ensure that arousal rating is selected
                                 arousal_rating_selected = False
                                 for button in arousal_buttons:
                                     if button.is_selected():
                                         arousal_rating_selected = True
                                         break
 
+                                # ensure that valence rating is selected
                                 valence_rating_selected = False
                                 for button in valence_buttons:
                                     if button.is_selected():
                                         valence_rating_selected = True
                                         break
-                                
+
+                                # end the current rating period
                                 if arousal_rating_selected and valence_rating_selected:
                                     update = {"type": "update_end"}
                                     send([self._to_server], update)
+
+                                    # return True to end the timer
                                     return True
 
-                            # Check arousal buttons
+                            # if any of the arousal buttons is selected
                             for i, button in enumerate(arousal_buttons):
                                 if button.object.collidepoint(pygame.mouse.get_pos()):
                                     button.select()
@@ -168,19 +176,18 @@ class ClientAffectiveTask:
                                         if j != i:
                                             each_button.unselect()
 
-                                    if collaboration:
-                                        update = {
-                                            "type": "update",
-                                            "update": {
-                                                "rating_type": "arousal",
-                                                "rating_index": i
-                                            }
+                                    update = {
+                                        "type": "update",
+                                        "update": {
+                                            "rating_type": "arousal",
+                                            "rating_index": i
                                         }
-                                        send([self._to_server], update)
+                                    }
+                                    send([self._to_server], update)
 
                                     break
 
-                            # Check valence buttons
+                            # if any of the valence buttons is selected
                             else:
                                 for i, button in enumerate(valence_buttons):
                                     if button.object.collidepoint(pygame.mouse.get_pos()):
@@ -189,18 +196,19 @@ class ClientAffectiveTask:
                                             if j != i:
                                                 each_button.unselect()
 
-                                        if collaboration and state["selected"]:
-                                            update = {
-                                                "type": "update",
-                                                "update": {
-                                                    "rating_type": "valence",
-                                                    "rating_index": i
-                                                }
+                                        update = {
+                                            "type": "update",
+                                            "update": {
+                                                "rating_type": "valence",
+                                                "rating_index": i
                                             }
-                                            send([self._to_server], update)
+                                        }
+                                        send([self._to_server], update)
 
                                         break
                     return False
+
+                # participants do not select the rating
                 else:
                     data = receive([self._from_server], 0.0)
                     if data:
