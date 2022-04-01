@@ -3,7 +3,8 @@ import argparse
 import pygame
 
 from common import render_blank_screen
-from config import BLANK_SCREEN_COUNT_DOWN_MILLISECONDS, DEFAULT_SERVER_ADDR
+from config import (BLANK_SCREEN_COUNT_DOWN_MILLISECONDS, DEFAULT_SERVER_ADDR,
+                    DEFAULT_SERVER_PORT)
 from instructions import (ping_pong_task_competitive_instruction,
                           wait_for_experimenter)
 from network import Client
@@ -11,19 +12,15 @@ from tasks.ping_pong_task import ClientPingPongTask
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Run client of finger tapping task.')
-    parser.add_argument("-a", "--address", metavar='', help="IP address of server")
-    parser.add_argument("-p", "--port", type=int, required=True, metavar='', help="Port of server")
-    parser.add_argument("-n", "--name", required=True, metavar='', help="Name of client")
+    parser.add_argument("-a", "--address", default=DEFAULT_SERVER_ADDR, help="IP address of server")
+    parser.add_argument("-p", "--port", type=int, default=DEFAULT_SERVER_PORT, help="Port of server")
+    parser.add_argument("-n", "--name", required=True, help="Name of client")
     args = parser.parse_args()
-
-    server_address = DEFAULT_SERVER_ADDR if args.address is None else args.address
-    server_port = args.port
-    client_name = args.name
 
     pygame.init()
     pygame.mouse.set_visible(False)
 
-    client = Client(server_address, server_port, client_name)
+    client = Client(args.address, args.port, args.name)
 
     screen = pygame.display.set_mode((0, 0), pygame.FULLSCREEN)
 

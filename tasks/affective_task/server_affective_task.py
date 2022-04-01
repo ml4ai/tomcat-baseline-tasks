@@ -4,13 +4,14 @@ import os
 from time import sleep, time
 
 from common import record_metadata, request_clients_end
+from config import DATA_SAVE_PATH
 from network import receive, send
 
 from .config_affective_task import (BLANK_SCREEN_MILLISECONDS,
                                     CROSS_SCREEN_MILLISECONDS,
-                                    INDIVIDUAL_IMAGE_TIMER,
+                                    DISCUSSION_TIMER, INDIVIDUAL_IMAGE_TIMER,
                                     INDIVIDUAL_RATING_TIMER, TEAM_IMAGE_TIMER,
-                                    TEAM_RATING_TIMER,DISCUSSION_TIMER)
+                                    TEAM_RATING_TIMER)
 from .utils import get_image_paths
 
 
@@ -19,7 +20,7 @@ class ServerAffectiveTask:
         self._to_client_connections = to_client_connections
         self._from_client_connections = from_client_connections
 
-        data_path = "./data/affective"
+        data_path = DATA_SAVE_PATH + "/affective"
 
         if not os.path.exists(data_path):
             os.makedirs(data_path)
