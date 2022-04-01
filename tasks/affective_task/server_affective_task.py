@@ -20,7 +20,7 @@ class ServerAffectiveTask:
         self._to_client_connections = to_client_connections
         self._from_client_connections = from_client_connections
 
-        data_path = DATA_SAVE_PATH + "/data/affective"
+        data_path = DATA_SAVE_PATH + "/affective"
 
         if not os.path.exists(data_path):
             os.makedirs(data_path)

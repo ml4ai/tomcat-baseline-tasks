@@ -86,7 +86,7 @@ class ServerPingPongTask:
         self._score_left = 0
         self._score_right = 0
 
-        csv_data_path = DATA_SAVE_PATH + "/data/ping_pong"
+        csv_data_path = DATA_SAVE_PATH + "/ping_pong"
 
         if not os.path.exists(csv_data_path):
             os.makedirs(csv_data_path)

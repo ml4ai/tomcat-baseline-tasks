@@ -25,7 +25,7 @@ class ServerFingerTappingTask:
         for client_name in from_client_connections.values():
             self._state[client_name] = UNTAPPED
 
-        data_path = DATA_SAVE_PATH + "/data/finger_tapping"
+        data_path = DATA_SAVE_PATH + "/finger_tapping"
 
         if not os.path.exists(data_path):
             os.makedirs(data_path)
