@@ -31,6 +31,14 @@ def _run_ping_pong(to_client_connections: list, from_client_connections: dict, s
     server_ping_pong_task.run()
 
 
+def _run_affective_task(to_client_connections: list, from_client_connections: dict, session_name: str):
+    server_affective_task = ServerAffectiveTask(to_client_connections, 
+                                                from_client_connections,
+                                                session_name=session_name)
+
+    server_affective_task.run("./tasks/affective_task/images/task_images", collaboration=False)
+
+
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Run server of finger tapping task.')
     parser.add_argument("-a", "--address", default=DEFAULT_SERVER_ADDR, help="IP address of server")
@@ -65,16 +73,29 @@ if __name__ == "__main__":
 
     _send_start(list(server.to_client_connections.values()))
 
-    server_affective_task = ServerAffectiveTask(list(server.to_client_connections.values()), 
-                                                     server.from_client_connections)
-    
-    server_affective_task.run("./tasks/affective_task/images/task_images", collaboration=False)
+    affective_task_processes = []
+    for from_client_connection, client_name in server.from_client_connections.items():
+        to_client_connection = server.to_client_connections[client_name]
+        session_name = "individual_" + client_name
+        process = Process(target=_run_affective_task, 
+                          args=([to_client_connection], {from_client_connection: client_name}, session_name))
+        affective_task_processes.append(process)
+
+    for process in affective_task_processes:
+        process.start()
+
+    for process in affective_task_processes:
+        process.join()
 
     # Team affective task
 
     server.establish_connections(REQUIRED_NUM_CONNECTIONS_AFFECTIVE_TASK)
 
     _send_start(list(server.to_client_connections.values()))
+
+    server_affective_task = ServerAffectiveTask(list(server.to_client_connections.values()), 
+                                                     server.from_client_connections,
+                                                     session_name="team")
 
     server_affective_task.run("./tasks/affective_task/images/task_images", collaboration=True)
 
@@ -100,7 +121,7 @@ if __name__ == "__main__":
 
     for process in ping_pong_processes:
         process.start()
-    
+
     for process in ping_pong_processes:
         process.join()
 
