@@ -88,9 +88,6 @@ class ServerPingPongTask:
 
         csv_data_path = DATA_SAVE_PATH + "/ping_pong"
 
-        if not os.path.exists(csv_data_path):
-            os.makedirs(csv_data_path)
-
         csv_file_name = csv_data_path + '/' + session_name + '_' + str(int(time()))
 
         self._csv_file = open(csv_file_name + ".csv", 'w', newline='')

@@ -22,9 +22,6 @@ class ServerAffectiveTask:
 
         data_path = DATA_SAVE_PATH + "/affective"
 
-        if not os.path.exists(data_path):
-            os.makedirs(data_path)
-
         csv_file_name = data_path + '/' + session_name + '_' + str(int(time()))
 
         self._csv_file = open(csv_file_name + ".csv", 'w', newline='')

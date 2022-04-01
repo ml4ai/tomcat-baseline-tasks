@@ -1,8 +1,9 @@
 import argparse
+import os
 from multiprocessing import Process
 
 from common import client_ai_teaming, pairing_clients
-from config import DEFAULT_SERVER_ADDR, DEFAULT_SERVER_PORT
+from config import DATA_SAVE_PATH, DEFAULT_SERVER_ADDR, DEFAULT_SERVER_PORT
 from network import Server, send
 from tasks.affective_task import ServerAffectiveTask
 from tasks.finger_tapping_task import ServerFingerTappingTask
@@ -44,6 +45,18 @@ if __name__ == "__main__":
     parser.add_argument("-a", "--address", default=DEFAULT_SERVER_ADDR, help="IP address of server")
     parser.add_argument("-p", "--port", type=int, default=DEFAULT_SERVER_PORT, help="Port of server")
     args = parser.parse_args()
+
+    data_path = DATA_SAVE_PATH + "/finger_tapping"
+    if not os.path.exists(data_path):
+        os.makedirs(data_path)
+
+    data_path = DATA_SAVE_PATH + "/affective"
+    if not os.path.exists(data_path):
+        os.makedirs(data_path)
+
+    data_path = DATA_SAVE_PATH + "/ping_pong"
+    if not os.path.exists(data_path):
+        os.makedirs(data_path)
 
     server = Server(args.address, args.port)
 
