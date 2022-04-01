@@ -6,7 +6,8 @@ from time import time
 
 import pygame
 from common import record_metadata, request_clients_end
-from config import CLIENT_WINDOW_HEIGHT, CLIENT_WINDOW_WIDTH, UPDATE_RATE
+from config import (CLIENT_WINDOW_HEIGHT, CLIENT_WINDOW_WIDTH, DATA_SAVE_PATH,
+                    UPDATE_RATE)
 from network import receive, send
 
 from .config_ping_pong_task import (COUNT_DOWN_MESSAGE, SECONDS_COUNT_DOWN,
@@ -85,7 +86,7 @@ class ServerPingPongTask:
         self._score_left = 0
         self._score_right = 0
 
-        csv_data_path = "./data/ping_pong"
+        csv_data_path = DATA_SAVE_PATH + "/data/ping_pong"
 
         if not os.path.exists(csv_data_path):
             os.makedirs(csv_data_path)

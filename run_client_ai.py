@@ -3,26 +3,22 @@ import argparse
 import pygame
 
 from common import wait_for_server
-from config import DEFAULT_SERVER_ADDR
+from config import DEFAULT_SERVER_ADDR, DEFAULT_SERVER_PORT
 from network import Client
 from tasks.ping_pong_task import ClientAIPingPongTask
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Run client of finger tapping task.')
-    parser.add_argument("-a", "--address", metavar='', help="IP address of server")
-    parser.add_argument("-p", "--port", type=int, required=True, metavar='', help="Port of server")
+    parser.add_argument("-a", "--address", default=DEFAULT_SERVER_ADDR, help="IP address of server")
+    parser.add_argument("-p", "--port", type=int, default=DEFAULT_SERVER_PORT, help="Port of server")
     parser.add_argument("-n", "--name", default="ai", metavar='', help="Name of client")
     args = parser.parse_args()
 
-    server_address = DEFAULT_SERVER_ADDR if args.address is None else args.address
-    server_port = args.port
-    client_name = args.name
-
-    assert "ai" in client_name
+    assert "ai" in args.name
 
     pygame.init()
 
-    client = Client(server_address, server_port, client_name)
+    client = Client(args.address, args.port, args.name)
 
     wait_for_server(client.to_server, client.from_server)
 

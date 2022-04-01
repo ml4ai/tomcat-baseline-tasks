@@ -6,7 +6,7 @@ from time import time
 
 import pygame
 from common import record_metadata, request_clients_end
-from config import UPDATE_RATE
+from config import DATA_SAVE_PATH, UPDATE_RATE
 from network import receive, send
 
 from .config_finger_tapping_task import (COUNT_DOWN_MESSAGE,
@@ -25,7 +25,7 @@ class ServerFingerTappingTask:
         for client_name in from_client_connections.values():
             self._state[client_name] = UNTAPPED
 
-        data_path = "./data/finger_tapping"
+        data_path = DATA_SAVE_PATH + "/data/finger_tapping"
 
         if not os.path.exists(data_path):
             os.makedirs(data_path)
