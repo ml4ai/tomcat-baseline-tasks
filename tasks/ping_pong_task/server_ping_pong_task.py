@@ -2,7 +2,8 @@ import csv
 import json
 import os
 import threading
-from time import time
+import time
+import psutil
 
 import pygame
 from common import record_metadata, request_clients_end
@@ -88,7 +89,7 @@ class ServerPingPongTask:
 
         csv_data_path = DATA_SAVE_PATH + "/ping_pong"
 
-        csv_file_name = csv_data_path + '/' + session_name + '_' + str(int(time()))
+        csv_file_name = csv_data_path + '/' + session_name + '_' + str(int(time.time()))
 
         self._csv_file = open(csv_file_name + ".csv", 'w', newline='')
         self._csv_writer = csv.writer(self._csv_file, delimiter=';')
@@ -232,7 +233,7 @@ class ServerPingPongTask:
             data["seconds"] = 1 if seconds_to_send <= 0 else seconds_to_send
 
             # Record state of the game
-            self._csv_writer.writerow([time(), json.dumps(data)])
+            self._csv_writer.writerow([time.time(), time.monotonic(),  psutil.boot_time(), json.dumps(data)])
 
             send(self._to_client_connections, data)
 

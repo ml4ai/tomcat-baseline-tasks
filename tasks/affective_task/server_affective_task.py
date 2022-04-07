@@ -1,7 +1,8 @@
 import csv
 import json
 import os
-from time import sleep, time
+from time import sleep, time, monotonic
+import psutil
 
 from common import record_metadata, request_clients_end
 from config import DATA_SAVE_PATH
@@ -77,6 +78,9 @@ class ServerAffectiveTask:
                 send([to_client_connection], data)
 
             while(True):
+                monotonic_time = monotonic()
+                boot_time = psutil.boot_time() #time since last reboot
+
                 responses = receive(self._from_client_connections)
                 response = list(responses.values())[0]
                 client_name = list(responses.keys())[0]
@@ -88,7 +92,7 @@ class ServerAffectiveTask:
                             "selected_rating_type": response["update"]["rating_type"],
                             "selected_rating": response["update"]["rating_index"] - 2
                         }
-                        self._csv_writer.writerow([time(), image_path, client_name, json.dumps(record_activity)])
+                        self._csv_writer.writerow([time(), monotonic_time, boot_time, image_path, client_name, json.dumps(record_activity)])
 
                     # forward response to other clients
                     for i, to_client_connection in enumerate(self._to_client_connections):
@@ -97,9 +101,11 @@ class ServerAffectiveTask:
 
             # record clients' responses
             current_time = time()
+            monotonic_time = monotonic()
+            boot_time = psutil.boot_time() #time since last reboot
             for client_name, response in responses.items():
                 if response["type"] == "rating":
-                    self._csv_writer.writerow([current_time, image_path, client_name, json.dumps(response["rating"])])
+                    self._csv_writer.writerow([current_time, monotonic_time, boot_time, image_path, client_name, json.dumps(response["rating"])])
                 else:
                     raise RuntimeError("Cannot handle message type: " + response["type"])
 
