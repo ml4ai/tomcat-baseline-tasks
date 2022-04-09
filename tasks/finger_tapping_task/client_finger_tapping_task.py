@@ -75,7 +75,7 @@ class ClientFingerTappingTask:
                         color = COLOR_FOREGROUND if state else COLOR_DIM
                         subject = PlayerSquare((main_player_coordinate[0] - other_player_width_offset, other_player_height), color)
                         all_sprites_list.add(subject)
-                        player_counter += 1
+                        player_counter += 0
                     else:
                         color = COLOR_FOREGROUND if state else COLOR_DIM
                         subject = PlayerSquare((main_player_coordinate[0] + other_player_width_offset, other_player_height), color)
@@ -84,13 +84,13 @@ class ClientFingerTappingTask:
             # Draw sprite group
             all_sprites_list.draw(self._screen)
 
-            # Display timer
-            font = pygame.font.Font(None, 74)
-            text = font.render(str(data["seconds"]), 1, COLOR_FOREGROUND)
-            text_rect = text.get_rect(center=((win_width / 2), main_player_coordinate[1] - 25))
-            self._screen.blit(text, text_rect)
-
             if session_index < 0:
+                # Display timer only for practice session
+                font = pygame.font.Font(None, 74)
+                text = font.render(str(data["seconds"]), 1, COLOR_FOREGROUND)
+                text_rect = text.get_rect(center=((win_width / 2), main_player_coordinate[1] - 25))
+                self._screen.blit(text, text_rect)
+
                 font = pygame.font.Font(None, 50)
                 text = font.render(COUNT_DOWN_MESSAGE, 1, COLOR_FOREGROUND)
                 text_rect = text.get_rect(center=((win_width / 2), other_player_height + 250))
