@@ -30,8 +30,11 @@ class ServerFingerTappingTask:
 
         csv_file_name = data_path + '/' + str(int(time.time()))
 
+        header = ['time', 'monotonic_time', 'boot_time', 'state']
+        
         self._csv_file = open(csv_file_name + ".csv", 'w', newline='')
-        self._csv_writer = csv.writer(self._csv_file, delimiter=';')
+        self._csv_writer = csv.DictWriter(self._csv_file, delimiter=';', fieldnames = header)
+        self._csv_writer.writeheader()
 
         metadata = {}
         metadata["session"] = SESSION
@@ -100,7 +103,8 @@ class ServerFingerTappingTask:
 
             # Record state of the game
             if session_index >= 0:
-                self._csv_writer.writerow([time.time(), time.monotonic(), psutil.boot_time(), json.dumps(data)])
+                self._csv_writer.writerow({"time" : time.time(), "monotonic_time" : time.monotonic(), 
+                                            "boot_time" : psutil.boot_time(), "state" : json.dumps(data)})
 
             send(self._to_client_connections, data)
 

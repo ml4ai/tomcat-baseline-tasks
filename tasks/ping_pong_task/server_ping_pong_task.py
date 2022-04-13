@@ -90,9 +90,12 @@ class ServerPingPongTask:
         csv_data_path = DATA_SAVE_PATH + "/ping_pong"
 
         csv_file_name = csv_data_path + '/' + session_name + '_' + str(int(time.time()))
+        
+        header = ['time', 'monotonic_time', 'boot_time', 'state']
 
         self._csv_file = open(csv_file_name + ".csv", 'w', newline='')
-        self._csv_writer = csv.writer(self._csv_file, delimiter=';')
+        self._csv_writer = csv.DictWriter(self._csv_file, delimiter=';', fieldnames = header)
+        self._csv_writer.writeheader()
 
         metadata["client_window_height"] = CLIENT_WINDOW_HEIGHT
         metadata["client_window_width"] = CLIENT_WINDOW_WIDTH
@@ -233,7 +236,8 @@ class ServerPingPongTask:
             data["seconds"] = 1 if seconds_to_send <= 0 else seconds_to_send
 
             # Record state of the game
-            self._csv_writer.writerow([time.time(), time.monotonic(),  psutil.boot_time(), json.dumps(data)])
+            self._csv_writer.writerow({"time" : time.time(), "monotonic_time" : time.monotonic(),  
+                                        "boot_time" : psutil.boot_time(), "state" : json.dumps(data)})
 
             send(self._to_client_connections, data)
 

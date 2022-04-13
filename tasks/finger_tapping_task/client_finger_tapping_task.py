@@ -75,7 +75,7 @@ class ClientFingerTappingTask:
                         color = COLOR_FOREGROUND if state else COLOR_DIM
                         subject = PlayerSquare((main_player_coordinate[0] - other_player_width_offset, other_player_height), color)
                         all_sprites_list.add(subject)
-                        player_counter += 0
+                        player_counter += 1
                     else:
                         color = COLOR_FOREGROUND if state else COLOR_DIM
                         subject = PlayerSquare((main_player_coordinate[0] + other_player_width_offset, other_player_height), color)
