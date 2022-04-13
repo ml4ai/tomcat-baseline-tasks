@@ -80,7 +80,6 @@ class ServerAffectiveTask:
                 send([to_client_connection], data)
 
             while(True):
-                monotonic_time = monotonic()
                 responses = receive(self._from_client_connections)
                 response = list(responses.values())[0]
                 client_name = list(responses.keys())[0]
@@ -92,7 +91,7 @@ class ServerAffectiveTask:
                             "selected_rating_type": response["update"]["rating_type"],
                             "selected_rating": response["update"]["rating_index"] - 2
                         }
-                        self._csv_writer.writerow({"time" : time(), "monotonic_time" : monotonic_time, 
+                        self._csv_writer.writerow({"time" : time(), "monotonic_time" : monotonic(), 
                                                 "boot_time" : psutil.boot_time(), "image_path" : image_path, 
                                                 "subject_id" : client_name, "rating" : json.dumps(record_activity)})
 
