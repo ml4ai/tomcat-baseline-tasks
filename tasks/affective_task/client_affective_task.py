@@ -113,7 +113,7 @@ class ClientAffectiveTask:
 
             render_text_center("Arousal score", (400, 50), self._screen, y_offset=80)
             render_text_center("Calm", (300, 50), self._screen, font_size=30, x_offset=-540, y_offset=220)
-            render_text_center("Excited", (300, 50), self._screen, font_size=30, x_offset=530,y_offset=220)
+            render_text_center("Excitation", (300, 50), self._screen, font_size=30, x_offset=530,y_offset=220)
 
             render_text_center("-2", (300, 50), self._screen, font_size=25, x_offset=-340, y_offset=290)
             render_text_center("-1", (300, 50), self._screen, font_size=25, x_offset=-165, y_offset=290)
