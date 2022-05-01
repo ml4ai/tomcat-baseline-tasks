@@ -8,4 +8,4 @@ UPDATE_RATE = 60
 
 BLANK_SCREEN_COUNT_DOWN_MILLISECONDS = 4000
 
-DATA_SAVE_PATH = "/data/cat/Exp_test/baseline_tasks"
+DEFAULT_DATA_SAVE_PATH = "/data/cat/Exp_test/baseline_tasks"

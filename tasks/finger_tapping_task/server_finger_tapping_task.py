@@ -1,13 +1,12 @@
 import csv
 import json
-import os
 import threading
 import time
 import psutil
 
 import pygame
 from common import record_metadata, request_clients_end
-from config import DATA_SAVE_PATH, UPDATE_RATE
+from config import UPDATE_RATE
 from network import receive, send
 
 from .config_finger_tapping_task import (COUNT_DOWN_MESSAGE,
@@ -18,7 +17,10 @@ from .utils import TAPPED, UNTAPPED
 
 
 class ServerFingerTappingTask:
-    def __init__(self, to_client_connections: list, from_client_connections: dict) -> None:
+    def __init__(self,
+                 to_client_connections: list,
+                 from_client_connections: dict,
+                 data_save_path: str = '') -> None:
         self._to_client_connections = to_client_connections
         self._from_client_connections = from_client_connections
 
@@ -26,7 +28,7 @@ class ServerFingerTappingTask:
         for client_name in from_client_connections.values():
             self._state[client_name] = UNTAPPED
 
-        data_path = DATA_SAVE_PATH + "/finger_tapping"
+        data_path = data_save_path + "/finger_tapping"
 
         csv_file_name = data_path + '/' + str(int(time.time()))
 
