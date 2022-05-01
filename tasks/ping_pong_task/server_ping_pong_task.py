@@ -1,14 +1,12 @@
 import csv
 import json
-import os
 import threading
 import time
-import psutil
 
+import psutil
 import pygame
 from common import record_metadata, request_clients_end
-from config import (CLIENT_WINDOW_HEIGHT, CLIENT_WINDOW_WIDTH, DATA_SAVE_PATH,
-                    UPDATE_RATE)
+from config import CLIENT_WINDOW_HEIGHT, CLIENT_WINDOW_WIDTH, UPDATE_RATE
 from network import receive, send
 
 from .config_ping_pong_task import (COUNT_DOWN_MESSAGE, SECONDS_COUNT_DOWN,
@@ -18,7 +16,12 @@ from .utils import (BALL_SIZE, LEFT_TEAM, RIGHT_TEAM, WINDOW_HEIGHT,
 
 
 class ServerPingPongTask:
-    def __init__(self, to_client_connections: list, from_client_connection_teams: dict, easy_mode: bool = True, session_name: str = '') -> None:
+    def __init__(self,
+                 to_client_connections: list,
+                 from_client_connection_teams: dict,
+                 easy_mode: bool = True,
+                 session_name: str = '',
+                 data_save_path: str = '') -> None:
         self._to_client_connections = to_client_connections
 
         if easy_mode:
@@ -87,7 +90,7 @@ class ServerPingPongTask:
         self._score_left = 0
         self._score_right = 0
 
-        csv_data_path = DATA_SAVE_PATH + "/ping_pong"
+        csv_data_path = data_save_path + "/ping_pong"
 
         csv_file_name = csv_data_path + '/' + session_name + '_' + str(int(time.time()))
         

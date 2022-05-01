@@ -5,7 +5,6 @@ from time import sleep, time, monotonic
 import psutil
 
 from common import record_metadata, request_clients_end
-from config import DATA_SAVE_PATH
 from network import receive, send
 
 from .config_affective_task import (BLANK_SCREEN_MILLISECONDS,
@@ -17,11 +16,15 @@ from .utils import get_image_paths
 
 
 class ServerAffectiveTask:
-    def __init__(self, to_client_connections: list, from_client_connections: dict, session_name: str = '') -> None:
+    def __init__(self, 
+                 to_client_connections: list,
+                 from_client_connections: dict,
+                 session_name: str = '',
+                 data_save_path: str = '') -> None:
         self._to_client_connections = to_client_connections
         self._from_client_connections = from_client_connections
 
-        data_path = DATA_SAVE_PATH + "/affective"
+        data_path = data_save_path + "/affective"
 
         csv_file_name = data_path + '/' + session_name + '_' + str(int(time()))
 
